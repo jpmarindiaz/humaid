@@ -1,13 +1,14 @@
 /** @jsxRuntime automatic */
 /** @jsxImportSource react */
-// humaid demo — three tabs in editorial-light theme:
+// humaid demo — two tabs in editorial-light theme:
 //
-//   Knowledge base  text query (role/region/phase filters)  → /api/chat JSON
-//   Flood detection 4 satellite tiles (pre+current RGB/SWIR) → /api/chat multipart
-//   Sources         the 17 PDFs that ground the KB           → /api/sources
+//   Knowledge base   chat thread + filtered document repository, side-by-side
+//                    (role/region/phase filters apply to BOTH the QA search
+//                    and which docs are highlighted as "in scope")
+//   Flood detection  4-image upload OR one of 3 pre-loaded sample pairs
 
 import { createRoot } from "react-dom/client";
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -43,6 +44,17 @@ interface Source {
   region: "la-mojana" | "putumayo" | "national" | "global";
   title: string;
   summary: string;
+}
+
+interface FloodSample {
+  id: string;
+  location: string;
+  region: "la-mojana" | "putumayo";
+  event_date: string;
+  event_label: string;
+  description: string;
+  expected_summary: string;
+  paths: { pre_rgb: string; pre_swir: string; cur_rgb: string; cur_swir: string };
 }
 
 type ChatPayload =
@@ -84,12 +96,12 @@ const PHASES = [
 ] as const;
 
 interface UserText { kind: "text"; text: string; ts: number; role: string; region: string; phase: string; }
-interface UserFlood { kind: "flood-submit"; previews: Record<FloodField, string>; ts: number; }
+interface UserFlood { kind: "flood-submit"; previews: Record<FloodField, string>; sampleId?: string; ts: number; }
 type UserTurn = UserText | UserFlood;
 interface AssistantTurn { kind: "assistant"; payload: ChatPayload; ts: number; }
 type Turn = UserTurn | AssistantTurn;
 
-type Tab = "kb" | "flood" | "sources";
+type Tab = "kb" | "flood";
 
 // ── App shell ─────────────────────────────────────────────────────────
 
@@ -100,25 +112,56 @@ function App() {
   const [role, setRole] = useState("");
   const [region, setRegion] = useState("");
   const [phase, setPhase] = useState("");
-  const [floodFiles, setFloodFiles] = useState<Partial<Record<FloodField, File>>>({});
+  const [floodFiles, setFloodFiles] = useState<Partial<Record<FloodField, Blob>>>({});
   const [floodPreviews, setFloodPreviews] = useState<Partial<Record<FloodField, string>>>({});
+  const [activeSample, setActiveSample] = useState<string | undefined>(undefined);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  // The most recently retrieved docs (slug set) — used by the docs panel
+  // to highlight which sources the model just cited.
+  const [citedSlugs, setCitedSlugs] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [turns]);
 
-  function attachFlood(field: FloodField, file: File | null) {
+  function attachFloodFile(field: FloodField, file: File | null) {
     if (!file) {
       setFloodFiles((f) => { const c = { ...f }; delete c[field]; return c; });
       setFloodPreviews((p) => { const c = { ...p }; delete c[field]; return c; });
+      setActiveSample(undefined);
       return;
     }
     const url = URL.createObjectURL(file);
     setFloodFiles((f) => ({ ...f, [field]: file }));
     setFloodPreviews((p) => ({ ...p, [field]: url }));
+    setActiveSample(undefined);
+  }
+
+  async function loadSample(s: FloodSample) {
+    setSending(true);
+    setError(null);
+    try {
+      const fields: FloodField[] = ["pre_rgb", "pre_swir", "cur_rgb", "cur_swir"];
+      const blobs: Partial<Record<FloodField, Blob>> = {};
+      const previews: Partial<Record<FloodField, string>> = {};
+      for (const f of fields) {
+        const r = await fetch(s.paths[f]);
+        if (!r.ok) throw new Error(`failed to load ${f}: ${r.status}`);
+        const b = await r.blob();
+        blobs[f] = b;
+        previews[f] = URL.createObjectURL(b);
+      }
+      setFloodFiles(blobs);
+      setFloodPreviews(previews);
+      setActiveSample(s.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSending(false);
+    }
   }
 
   async function sendKb(e: FormEvent) {
@@ -145,6 +188,9 @@ function App() {
       });
       const payload = (await resp.json()) as ChatPayload;
       setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
+      if (payload.kind === "qa") {
+        setCitedSlugs(extractCitedSlugs(payload.matches));
+      }
       if (!resp.ok && "error" in payload) setError(payload.error);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -165,10 +211,14 @@ function App() {
     setSending(true);
 
     const previews = floodPreviews as Record<FloodField, string>;
-    setTurns((p) => [...p, { kind: "flood-submit", previews, ts: Date.now() }]);
+    setTurns((p) => [...p, { kind: "flood-submit", previews, sampleId: activeSample, ts: Date.now() }]);
 
     const form = new FormData();
-    for (const slot of FLOOD_SLOTS) form.append(slot.field, floodFiles[slot.field]!);
+    for (const slot of FLOOD_SLOTS) {
+      const blob = floodFiles[slot.field]!;
+      const filename = blob instanceof File ? blob.name : `${slot.field}.png`;
+      form.append(slot.field, blob, filename);
+    }
 
     try {
       const resp = await fetch("/api/chat", { method: "POST", body: form });
@@ -176,6 +226,7 @@ function App() {
       setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
       setFloodFiles({});
       setFloodPreviews({});
+      setActiveSample(undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -189,6 +240,8 @@ function App() {
     setInput("");
     setFloodFiles({});
     setFloodPreviews({});
+    setActiveSample(undefined);
+    setCitedSlugs(new Set());
   }
 
   return (
@@ -203,29 +256,47 @@ function App() {
 
       <Tabs tab={tab} onChange={setTab} />
 
-      <div className="app-main">
-        {tab === "kb" && (
-          <KbTab
-            turns={turns} sending={sending} error={error} scrollRef={scrollRef}
-            input={input} setInput={setInput}
-            role={role} setRole={setRole}
-            region={region} setRegion={setRegion}
-            phase={phase} setPhase={setPhase}
-            onSubmit={sendKb}
-          />
-        )}
-        {tab === "flood" && (
-          <FloodTab
-            turns={turns} sending={sending} error={error} scrollRef={scrollRef}
-            previews={floodPreviews}
-            onAttach={attachFlood}
-            onSubmit={sendFlood}
-          />
-        )}
-        {tab === "sources" && <SourcesTab />}
-      </div>
+      <ProfileBar
+        role={role} setRole={setRole}
+        region={region} setRegion={setRegion}
+        phase={phase} setPhase={setPhase}
+      />
+
+      {tab === "kb" && (
+        <KbTab
+          turns={turns} sending={sending} error={error} scrollRef={scrollRef}
+          input={input} setInput={setInput}
+          role={role} region={region} phase={phase}
+          onSubmit={sendKb}
+          citedSlugs={citedSlugs}
+        />
+      )}
+      {tab === "flood" && (
+        <FloodTab
+          turns={turns} sending={sending} error={error} scrollRef={scrollRef}
+          previews={floodPreviews}
+          activeSample={activeSample}
+          onAttach={attachFloodFile}
+          onSample={loadSample}
+          onSubmit={sendFlood}
+        />
+      )}
     </div>
   );
+}
+
+function extractCitedSlugs(matches: QaMatch[]): Set<string> {
+  const out = new Set<string>();
+  for (const m of matches) {
+    if (!m.references) continue;
+    for (const ref of m.references.split("|")) {
+      const slug = ref.trim()
+        .replace(/^research\/download-md\//, "")
+        .replace(/\.md$/, "");
+      if (slug) out.add(slug);
+    }
+  }
+  return out;
 }
 
 // ── Tabs ──────────────────────────────────────────────────────────────
@@ -243,60 +314,9 @@ function Tabs({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
   );
   return (
     <div className="tabs">
-      {item("kb",      "Knowledge base",   "laptop · ollama + nomic + duckdb")}
-      {item("flood",   "Flood detection",  "satellite · llama-server + lfm2-flood")}
-      {item("sources", "Source documents", `${17} PDFs · OCHA / UNGRD / ACAPS / …`)}
+      {item("kb",    "Knowledge base",   "laptop · 471 Q&A · 17 source PDFs")}
+      {item("flood", "Flood detection",  "satellite · llama-server + lfm2-flood")}
     </div>
-  );
-}
-
-// ── KB tab ────────────────────────────────────────────────────────────
-
-function KbTab(props: {
-  turns: Turn[]; sending: boolean; error: string | null;
-  scrollRef: React.RefObject<HTMLDivElement | null>;
-  input: string; setInput: (s: string) => void;
-  role: string; setRole: (s: string) => void;
-  region: string; setRegion: (s: string) => void;
-  phase: string; setPhase: (s: string) => void;
-  onSubmit: (e: FormEvent) => void;
-}) {
-  return (
-    <>
-      <ProfileBar
-        role={props.role} setRole={props.setRole}
-        region={props.region} setRegion={props.setRegion}
-        phase={props.phase} setPhase={props.setPhase}
-      />
-      <div ref={props.scrollRef} className="scroll">
-        <div className="thread">
-          {props.turns.length === 0 && <KbWelcome onPick={props.setInput} />}
-          {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
-          {props.sending && <div className="thinking">retrieving…</div>}
-          {props.error && <div className="error-bubble">{props.error}</div>}
-        </div>
-      </div>
-      <form onSubmit={props.onSubmit} className="composer">
-        <div className="composer-inner">
-          <textarea
-            value={props.input}
-            onChange={(e) => props.setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                void props.onSubmit(e as unknown as FormEvent);
-              }
-            }}
-            disabled={props.sending}
-            rows={1}
-            placeholder="Ask about flood response — evacuation, triage, WASH, calamidad pública…"
-          />
-          <button type="submit" disabled={props.sending || !props.input.trim()} className="primary-btn">
-            {props.sending ? "…" : "send"}
-          </button>
-        </div>
-      </form>
-    </>
   );
 }
 
@@ -325,6 +345,55 @@ function ProfileBar({
   );
 }
 
+// ── Knowledge-base tab: chat (left) + docs (right) ────────────────────
+
+function KbTab(props: {
+  turns: Turn[]; sending: boolean; error: string | null;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
+  input: string; setInput: (s: string) => void;
+  role: string; region: string; phase: string;
+  onSubmit: (e: FormEvent) => void;
+  citedSlugs: Set<string>;
+}) {
+  return (
+    <div className="kb-split">
+      <section className="kb-chat">
+        <div ref={props.scrollRef} className="scroll">
+          <div className="thread">
+            {props.turns.length === 0 && <KbWelcome onPick={props.setInput} />}
+            {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
+            {props.sending && <div className="thinking">retrieving…</div>}
+            {props.error && <div className="error-bubble">{props.error}</div>}
+          </div>
+        </div>
+        <form onSubmit={props.onSubmit} className="composer">
+          <div className="composer-inner">
+            <textarea
+              value={props.input}
+              onChange={(e) => props.setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void props.onSubmit(e as unknown as FormEvent);
+                }
+              }}
+              disabled={props.sending}
+              rows={1}
+              placeholder="Ask the knowledge base…"
+            />
+            <button type="submit" disabled={props.sending || !props.input.trim()} className="primary-btn">
+              {props.sending ? "…" : "send"}
+            </button>
+          </div>
+        </form>
+      </section>
+      <aside className="kb-docs">
+        <DocsPanel region={props.region} citedSlugs={props.citedSlugs} />
+      </aside>
+    </div>
+  );
+}
+
 function KbWelcome({ onPick }: { onPick: (s: string) => void }) {
   const suggestions = [
     "How do I evacuate when the river rises overnight?",
@@ -336,9 +405,9 @@ function KbWelcome({ onPick }: { onPick: (s: string) => void }) {
     <div className="welcome">
       <p className="welcome-title">Ask the knowledge base</p>
       <p className="welcome-sub">
-        471 bilingual Q&amp;A pairs · Nomic embeddings · DuckDB cosine search.
+        471 bilingual Q&amp;A pairs grounded in 17 source PDFs (panel on the right).
         Pick your role, region and phase above so the answers fit the context
-        you're acting in.
+        you're acting in. Cited documents will be highlighted on the right.
       </p>
       <div className="suggestions">
         {suggestions.map((s) => (
@@ -351,21 +420,108 @@ function KbWelcome({ onPick }: { onPick: (s: string) => void }) {
   );
 }
 
+// ── Document repository panel ─────────────────────────────────────────
+
+function DocsPanel({ region, citedSlugs }: { region: string; citedSlugs: Set<string> }) {
+  const [sources, setSources] = useState<Source[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/sources")
+      .then((r) => r.json())
+      .then((d) => setSources(d.sources))
+      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
+  }, []);
+
+  // Filter rules:
+  //   - region empty                → show all
+  //   - region la-mojana | putumayo → show that region + national + global
+  //   - region generic              → show all (the KB's "generic" maps to no doc filter)
+  const visible = useMemo(() => {
+    if (!sources) return [] as Source[];
+    if (!region || region === "generic") return sources;
+    return sources.filter((s) => s.region === region || s.region === "national" || s.region === "global");
+  }, [sources, region]);
+
+  // When citations exist, sort cited first (within filtered set).
+  const sorted = useMemo(() => {
+    return [...visible].sort((a, b) => {
+      const ac = citedSlugs.has(a.slug) ? 0 : 1;
+      const bc = citedSlugs.has(b.slug) ? 0 : 1;
+      if (ac !== bc) return ac - bc;
+      return b.year - a.year;
+    });
+  }, [visible, citedSlugs]);
+
+  return (
+    <div className="docs-panel">
+      <header className="docs-panel-head">
+        <p className="docs-panel-title">Source documents</p>
+        <p className="docs-panel-meta">
+          {sources
+            ? `${visible.length} of ${sources.length} shown${region ? ` · region: ${region}` : ""}${citedSlugs.size ? ` · ${citedSlugs.size} cited` : ""}`
+            : "loading…"}
+        </p>
+      </header>
+      <div className="docs-list">
+        {error && <div className="error-bubble">{error}</div>}
+        {!sources && <div className="thinking">loading sources…</div>}
+        {sorted.map((s) => (
+          <SourceCard key={s.slug} source={s} cited={citedSlugs.has(s.slug)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SourceCard({ source, cited }: { source: Source; cited: boolean }) {
+  return (
+    <article className={`source-card${cited ? " source-card-cited" : ""}`}>
+      <header>
+        <span className={`region-pill region-${source.region}`}>{source.region}</span>
+        <span className="source-meta">{source.year} · {source.publisher}</span>
+        {cited && <span className="cited-pill">cited</span>}
+      </header>
+      <h3>{source.title}</h3>
+      <p>{source.summary}</p>
+      <p className="source-slug">{source.slug}.md</p>
+    </article>
+  );
+}
+
 // ── Flood tab ─────────────────────────────────────────────────────────
 
 function FloodTab(props: {
   turns: Turn[]; sending: boolean; error: string | null;
   scrollRef: React.RefObject<HTMLDivElement | null>;
   previews: Partial<Record<FloodField, string>>;
+  activeSample: string | undefined;
   onAttach: (field: FloodField, file: File | null) => void;
+  onSample: (s: FloodSample) => void;
   onSubmit: (e: FormEvent) => void;
 }) {
+  const [samples, setSamples] = useState<FloodSample[] | null>(null);
+
+  useEffect(() => {
+    fetch("/api/samples")
+      .then((r) => r.json())
+      .then((d) => setSamples(d.samples))
+      .catch(() => {});
+  }, []);
+
   const ready = FLOOD_SLOTS.every((s) => props.previews[s.field]);
+
   return (
-    <>
+    <div className="flood-tab">
       <div ref={props.scrollRef} className="scroll">
         <div className="thread">
-          {props.turns.length === 0 && <FloodWelcome />}
+          {props.turns.length === 0 && (
+            <FloodWelcome
+              samples={samples}
+              activeSample={props.activeSample}
+              onSample={props.onSample}
+            />
+          )}
           {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
           {props.sending && <div className="thinking">running lfm2-flood…</div>}
           {props.error && <div className="error-bubble">{props.error}</div>}
@@ -373,6 +529,13 @@ function FloodTab(props: {
       </div>
       <form onSubmit={props.onSubmit} className="composer">
         <div className="composer-inner composer-flood">
+          {samples && (
+            <SamplePicker
+              samples={samples}
+              activeSample={props.activeSample}
+              onPick={props.onSample}
+            />
+          )}
           <div className="flood-grid">
             {FLOOD_SLOTS.map((s) => (
               <FloodSlot key={s.field} slot={s} preview={props.previews[s.field]} onAttach={props.onAttach} />
@@ -386,22 +549,82 @@ function FloodTab(props: {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 
-function FloodWelcome() {
+function FloodWelcome({
+  samples, activeSample, onSample,
+}: {
+  samples: FloodSample[] | null;
+  activeSample: string | undefined;
+  onSample: (s: FloodSample) => void;
+}) {
   return (
-    <div className="welcome">
+    <div className="welcome welcome-wide">
       <p className="welcome-title">Satellite flood detection</p>
       <p className="welcome-sub">
-        Upload 4 Sentinel-2 tiles for the same 5 km square: a baseline (pre-event)
-        RGB + SWIR pair and a current (suspected event) RGB + SWIR pair. The
-        fine-tuned LFM2-VL-450M returns a 7-field structured assessment.
+        The fine-tuned LFM2-VL-450M ingests 4 Sentinel-2 tiles for the same 5 km
+        square — a pre-event RGB + SWIR pair and a current RGB + SWIR pair —
+        and returns a 7-field structured assessment. Pick a sample to try, or
+        upload your own PNGs in the slots below.
       </p>
+      {samples && (
+        <div className="sample-grid">
+          {samples.map((s) => (
+            <SampleCard key={s.id} sample={s} active={activeSample === s.id} onPick={onSample} />
+          ))}
+        </div>
+      )}
       <p className="welcome-note">
         Cold start on a fresh isolate takes ~60 s while the GGUF + mmproj load.
       </p>
+    </div>
+  );
+}
+
+function SampleCard({ sample, active, onPick }: {
+  sample: FloodSample; active: boolean; onPick: (s: FloodSample) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onPick(sample)}
+      className={`sample-card${active ? " sample-card-active" : ""}`}
+    >
+      <div className="sample-thumbs">
+        <img src={sample.paths.pre_rgb} alt="pre RGB" />
+        <img src={sample.paths.cur_rgb} alt="current RGB" />
+      </div>
+      <div className="sample-text">
+        <span className={`region-pill region-${sample.region}`}>{sample.region}</span>
+        <h4>{sample.event_label}</h4>
+        <p className="sample-loc">{sample.location}</p>
+        <p className="sample-desc">{sample.description}</p>
+        <p className="sample-expected">Expected · {sample.expected_summary}</p>
+      </div>
+    </button>
+  );
+}
+
+function SamplePicker({ samples, activeSample, onPick }: {
+  samples: FloodSample[]; activeSample: string | undefined;
+  onPick: (s: FloodSample) => void;
+}) {
+  return (
+    <div className="sample-picker">
+      <span className="sample-picker-label">Try a sample:</span>
+      {samples.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          onClick={() => onPick(s)}
+          className={`sample-picker-btn${activeSample === s.id ? " sample-picker-btn-active" : ""}`}
+          title={s.description}
+        >
+          {s.event_label}
+        </button>
+      ))}
     </div>
   );
 }
@@ -430,56 +653,6 @@ function FloodSlot({
   );
 }
 
-// ── Sources tab ───────────────────────────────────────────────────────
-
-function SourcesTab() {
-  const [sources, setSources] = useState<Source[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/sources")
-      .then((r) => r.json())
-      .then((d) => setSources(d.sources))
-      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
-  }, []);
-
-  if (error) return <div className="scroll"><div className="thread"><div className="error-bubble">{error}</div></div></div>;
-  if (!sources) return <div className="scroll"><div className="thread"><div className="thinking">loading sources…</div></div></div>;
-
-  return (
-    <div className="scroll">
-      <div className="sources">
-        <div className="sources-head">
-          <p className="welcome-title">{sources.length} source documents</p>
-          <p className="welcome-sub">
-            The on-the-ground knowledge base is grounded in these PDFs. Every
-            answer in the KB tab cites one or more of them. Together they cover
-            La Mojana 2021–2025, Mocoa 2017, Putumayo 2025, and the
-            cross-cutting policy + ENSO frameworks.
-          </p>
-        </div>
-        <div className="sources-grid">
-          {sources.map((s) => <SourceCard key={s.slug} source={s} />)}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SourceCard({ source }: { source: Source }) {
-  return (
-    <article className="source-card">
-      <header>
-        <span className={`region-pill region-${source.region}`}>{source.region}</span>
-        <span className="source-meta">{source.year} · {source.publisher}</span>
-      </header>
-      <h3>{source.title}</h3>
-      <p>{source.summary}</p>
-      <p className="source-slug">{source.slug}.md</p>
-    </article>
-  );
-}
-
 // ── Bubbles ───────────────────────────────────────────────────────────
 
 function TurnBubble({ turn }: { turn: Turn }) {
@@ -501,6 +674,7 @@ function UserTextBubble({ t }: { t: UserText }) {
 function UserFloodBubble({ t }: { t: UserFlood }) {
   return (
     <div className="user-bubble user-bubble-flood">
+      {t.sampleId && <p className="user-bubble-meta">sample: {t.sampleId}</p>}
       <div className="user-flood-grid">
         {FLOOD_SLOTS.map((s) => (
           <div key={s.field} className="user-flood-tile">

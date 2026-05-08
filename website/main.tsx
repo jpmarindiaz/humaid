@@ -24,6 +24,7 @@ import { config as llamaConfig, getModels as getLlamaModels, startLlamaServer } 
 import { kbStats, qaSearch } from "./lib/qa.ts";
 import { type FloodInput, predictFlood } from "./lib/flood.ts";
 import { SOURCES } from "./lib/sources.ts";
+import { FLOOD_SAMPLES } from "./lib/samples.ts";
 
 // Per-isolate request counter — paired with isolate ids from lib/ollama and
 // lib/llama to make logs traceable: same isolate_id across messages = warm,
@@ -118,20 +119,41 @@ const STATIC_TYPES: Record<string, string> = {
   webp: "image/webp",
 };
 
-async function serveFile(dir: URL, file: string) {
-  if (file.includes("/") || file.includes("..")) return null;
+async function serveFile(dir: URL, file: string, cache: "long" | "revalidate" = "long") {
+  if (file.includes("..")) return null;
   try {
     const content = await Deno.readFile(new URL(file, dir));
     const ext = file.split(".").pop() ?? "";
     const type = STATIC_TYPES[ext] ?? "application/octet-stream";
-    return new Response(content, { headers: { "content-type": type } });
+    // chat.{js,css} ride on a ?v=<deploy-id> query so the browser cache
+    // keys on URL — but the URL the server receives is bare. Send
+    // Cache-Control: no-cache, must-revalidate to force a conditional
+    // GET each time and avoid the "still seeing old UI" trap. Static
+    // images can be aggressively cached.
+    const isShellAsset = file === "chat.js" || file === "chat.css" || file === "chat.js.map";
+    const cacheControl = isShellAsset || cache === "revalidate"
+      ? "no-cache, must-revalidate"
+      : "public, max-age=86400, stale-while-revalidate=604800";
+    return new Response(content, {
+      headers: {
+        "content-type": type,
+        "cache-control": cacheControl,
+        "x-deploy-id": COMMIT,
+      },
+    });
   } catch {
     return null;
   }
 }
 
 app.get("/static/:file", async (c) => (await serveFile(STATIC_DIR, c.req.param("file"))) ?? c.notFound());
-app.get("/assets/:file", async (c) => (await serveFile(ASSETS_DIR, c.req.param("file"))) ?? c.notFound());
+// /assets supports nested paths (e.g. assets/samples/<file>.png).
+app.get("/assets/*", async (c) => {
+  const url = new URL(c.req.url);
+  const path = url.pathname.replace(/^\/assets\//, "");
+  if (path.includes("..")) return c.notFound();
+  return (await serveFile(ASSETS_DIR, path)) ?? c.notFound();
+});
 
 // ── Health / introspection ────────────────────────────────────────────
 
@@ -188,6 +210,12 @@ app.get("/api/sources", (c) => {
   const reqId = c.get("reqId" as never) as number;
   console.log(`[req ${reqId}] /api/sources total=${SOURCES.length}`);
   return c.json({ total: SOURCES.length, sources: SOURCES });
+});
+
+app.get("/api/samples", (c) => {
+  const reqId = c.get("reqId" as never) as number;
+  console.log(`[req ${reqId}] /api/samples total=${FLOOD_SAMPLES.length}`);
+  return c.json({ total: FLOOD_SAMPLES.length, samples: FLOOD_SAMPLES });
 });
 
 // ── /api/qa — knowledge-base retrieval (Ollama + Nomic + DuckDB) ──────

@@ -45,8 +45,9 @@ a:hover { text-decoration: underline; }
 .app {
   height: 100%;
   display: grid;
-  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr;
   background: var(--bg);
+  min-height: 0;
 }
 
 .app-nav {
@@ -360,28 +361,64 @@ a:hover { text-decoration: underline; }
 }
 .flood-hint { font-size: 0.8rem; color: var(--muted); margin: 0; }
 
-/* ───── Sources tab ───── */
+/* ───── Knowledge-base split layout ───── */
 
-.sources {
-  max-width: 1080px; margin: 0 auto;
-  padding: 32px 24px 60px;
+.kb-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
 }
-.sources-head { text-align: center; margin-bottom: 32px; }
+.kb-chat {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 0;
+  border-right: 1px solid var(--line);
+}
+.kb-docs {
+  background: var(--bg-deep);
+  min-height: 0;
+  overflow-y: auto;
+}
 
-.sources-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+.docs-panel { padding: 18px 18px 24px; }
+.docs-panel-head { padding-bottom: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+.docs-panel-title {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 1rem; color: var(--ink); margin: 0 0 4px;
 }
+.docs-panel-meta { font-size: 0.78rem; color: var(--muted); margin: 0; }
+
+.docs-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* Flood tab uses single-column */
+.flood-tab { display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+
+/* ───── Source card ───── */
+
 .source-card {
   background: var(--paper); border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 18px 20px;
-  display: flex; flex-direction: column; gap: 8px;
-  transition: border-color 140ms ease;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: border-color 140ms ease, background 140ms ease;
 }
 .source-card:hover { border-color: rgba(163, 67, 28, 0.35); }
+.source-card-cited {
+  background: #fff7e6;
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 1px rgba(163, 67, 28, 0.2);
+}
 .source-card header {
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.74rem; color: var(--muted);
+  display: flex; align-items: center; justify-content: flex-start; gap: 8px; flex-wrap: wrap;
+  font-size: 0.72rem; color: var(--muted);
+}
+.cited-pill {
+  margin-left: auto;
+  background: var(--terracotta); color: var(--bg);
+  padding: 2px 8px; border-radius: 999px;
+  font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase;
+  font-weight: 700;
 }
 .region-pill {
   display: inline-block;
@@ -397,24 +434,102 @@ a:hover { text-decoration: underline; }
 .source-meta { font-size: 0.74rem; }
 .source-card h3 {
   font-family: "Iowan Old Style", "Charter", "Georgia", serif;
-  font-size: 1.05rem;
-  margin: 4px 0 0;
+  font-size: 0.96rem;
+  margin: 2px 0 0;
   color: var(--ink);
   line-height: 1.25;
 }
 .source-card p {
   margin: 0;
   color: var(--ink-2);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .source-slug {
-  margin-top: 6px !important;
+  margin-top: 4px !important;
   font-family: "SF Mono", Menlo, monospace;
-  font-size: 0.72rem !important;
+  font-size: 0.7rem !important;
   color: var(--muted) !important;
 }
 
+/* ───── Sample picker (flood tab) ───── */
+
+.welcome-wide { padding: 32px 0; }
+.sample-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+  margin: 24px auto;
+  max-width: 920px;
+  text-align: left;
+}
+.sample-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex; gap: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+.sample-card:hover {
+  border-color: var(--terracotta);
+  transform: translateY(-1px);
+}
+.sample-card-active {
+  border-color: var(--terracotta);
+  background: #fff7e6;
+  box-shadow: 0 0 0 1px rgba(163, 67, 28, 0.25);
+}
+.sample-thumbs {
+  display: flex; flex-direction: column; gap: 4px;
+  flex-shrink: 0;
+}
+.sample-thumbs img {
+  width: 60px; height: 60px; object-fit: cover;
+  border-radius: 6px; border: 1px solid var(--line);
+}
+.sample-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.sample-text h4 {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 0.95rem; margin: 4px 0 0; color: var(--ink); line-height: 1.2;
+}
+.sample-loc { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.sample-desc { font-size: 0.82rem; color: var(--ink-2); margin: 0; }
+.sample-expected {
+  font-size: 0.74rem; color: var(--terra-2); margin: 4px 0 0;
+  font-style: italic;
+}
+
+.sample-picker {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+}
+.sample-picker-label { color: var(--muted); margin-right: 4px; }
+.sample-picker-btn {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.78rem;
+  transition: all 120ms ease;
+}
+.sample-picker-btn:hover { border-color: var(--terracotta); color: var(--ink); }
+.sample-picker-btn-active {
+  background: var(--terracotta); color: var(--bg);
+  border-color: var(--terracotta);
+}
+
 /* ───── Mobile ───── */
+
+/* Stack the KB split on narrower viewports — show the chat full-width with
+   the docs panel as a collapsible drawer below. */
+@media (max-width: 960px) {
+  .kb-split { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  .kb-chat { border-right: 0; border-bottom: 1px solid var(--line); }
+  .kb-docs { max-height: 40vh; }
+}
 
 @media (max-width: 720px) {
   .app-nav { padding: 10px 16px; }
@@ -427,6 +542,6 @@ a:hover { text-decoration: underline; }
   .thread { padding: 20px 16px; gap: 14px; }
   .composer { padding: 10px 16px 14px; }
   .suggestions { grid-template-columns: 1fr; }
-  .sources-grid { grid-template-columns: 1fr; }
+  .sample-grid { grid-template-columns: 1fr; }
   .flood-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
 }
