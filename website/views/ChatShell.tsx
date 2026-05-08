@@ -1,6 +1,6 @@
 /** @jsxImportSource hono/jsx */
-// Shell HTML for the React chat client. The client is bundled to
-// /static/chat.js; Tailwind output to /static/styles.css.
+// Shell HTML for the React demo client. The bundle lives at /static/chat.js
+// and the editorial-light theme CSS at /static/chat.css.
 
 import type { FC } from "hono/jsx";
 
@@ -9,10 +9,10 @@ export const ChatShell: FC = () => (
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>humaid — try the demo</title>
-      <link rel="stylesheet" href="/static/styles.css" />
+      <title>humaid — demo</title>
+      <link rel="stylesheet" href="/static/chat.css" />
     </head>
-    <body class="bg-zinc-950 text-zinc-100 antialiased">
+    <body>
       <div id="chat-root" />
       <script type="module" src="/static/chat.js" />
     </body>

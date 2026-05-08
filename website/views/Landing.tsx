@@ -11,9 +11,12 @@ export const Landing: FC = () => (
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>humaid — offline-first flood-response toolkit</title>
       <meta name="description" content="Process the flood in space. Answer the questions on the ground. An offline-first humanitarian-response toolkit for flood crises in Colombia." />
+      <link rel="canonical" href="https://humaid.app/" />
       <meta property="og:title" content="humaid — offline-first flood-response toolkit" />
       <meta property="og:description" content="Process the flood in space. Answer the questions on the ground." />
-      <meta property="og:image" content="/assets/la-mojana-ancient-canals.jpeg" />
+      <meta property="og:url" content="https://humaid.app/" />
+      <meta property="og:image" content="https://humaid.app/assets/la-mojana-ancient-canals.jpeg" />
+      <meta name="twitter:card" content="summary_large_image" />
       <link rel="stylesheet" href="/static/landing.css" />
     </head>
     <body>
@@ -336,7 +339,7 @@ export const Landing: FC = () => (
             </p>
             <div class="contact-cta">
               <p>If any of this resonates — start with a 30-minute working call. We'll show the components live and walk through the architecture.</p>
-              <a class="btn primary big" href="mailto:hello@humaid.org">hello@humaid.org</a>
+              <a class="btn primary big" href="mailto:hello@humaid.app">hello@humaid.app</a>
             </div>
           </div>
         </section>

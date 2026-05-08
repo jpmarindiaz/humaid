@@ -11,6 +11,7 @@
 //   GET  /app             chat shell that mounts the React client
 //   GET  /api/health      both subsystems' status
 //   GET  /api/kb          KB stats from DuckDB
+//   GET  /api/sources     17 source PDFs (gallery data)
 //   POST /api/qa          { query, role?, phase?, region?, limit? } → matches
 //   POST /api/flood       multipart: pre_rgb, pre_swir, cur_rgb, cur_swir → labels
 //   POST /api/chat        unified router — text → /api/qa, 4 images → /api/flood
@@ -22,13 +23,33 @@ import { listOllamaModels, ollamaConfig, startOllamaServer } from "./lib/ollama.
 import { config as llamaConfig, getModels as getLlamaModels, startLlamaServer } from "./lib/llama.ts";
 import { kbStats, qaSearch } from "./lib/qa.ts";
 import { type FloodInput, predictFlood } from "./lib/flood.ts";
+import { SOURCES } from "./lib/sources.ts";
+
+// Per-isolate request counter — paired with isolate ids from lib/ollama and
+// lib/llama to make logs traceable: same isolate_id across messages = warm,
+// different = cold-start on a new isolate.
+let requestCount = 0;
 
 // Eager-init both subsystems on isolate boot so the first user request
 // doesn't pay the full cold-start tax serially.
-startOllamaServer().catch((err) => console.error("eager ollama init failed:", err));
-startLlamaServer().catch((err) => console.error("eager llama-server init failed:", err));
+console.log(`[boot] humaid main.tsx loaded at ${new Date().toISOString()} pid=${Deno.pid}`);
+startOllamaServer().catch((err) => console.error("[boot] eager ollama init failed:", err));
+startLlamaServer().catch((err) => console.error("[boot] eager llama-server init failed:", err));
 
 const app = new Hono();
+
+// Request-level access log — fires on every route. `[req N METHOD PATH]`
+// prefix is consistent with the deno-deploy-llamacpp template style.
+app.use("*", async (c, next) => {
+  const reqId = ++requestCount;
+  const t0 = performance.now();
+  const path = new URL(c.req.url).pathname;
+  c.set("reqId" as never, reqId);
+  console.log(`[req ${reqId}] ← ${c.req.method} ${path}`);
+  await next();
+  const ms = Math.round(performance.now() - t0);
+  console.log(`[req ${reqId}] → ${c.res.status} (${ms}ms)`);
+});
 
 // ── Pages ─────────────────────────────────────────────────────────────
 
@@ -70,6 +91,7 @@ app.get("/assets/:file", async (c) => (await serveFile(ASSETS_DIR, c.req.param("
 // ── Health / introspection ────────────────────────────────────────────
 
 app.get("/api/health", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
   const out: Record<string, unknown> = {
     kb: { status: "unknown" },
     flood: { status: "unknown" },
@@ -81,8 +103,10 @@ app.get("/api/health", async (c) => {
       ollama_version: ollamaConfig.OLLAMA_VERSION,
       models: await listOllamaModels(),
     };
+    console.log(`[req ${reqId}] /api/health kb=ok`);
   } catch (err) {
     out.kb = { status: "down", error: (err as Error).message };
+    console.warn(`[req ${reqId}] /api/health kb=down: ${(err as Error).message}`);
   }
   try {
     await startLlamaServer();
@@ -93,8 +117,10 @@ app.get("/api/health", async (c) => {
       mmproj: llamaConfig.MMPROJ_FILENAME,
       models: await getLlamaModels(),
     };
+    console.log(`[req ${reqId}] /api/health flood=ok`);
   } catch (err) {
     out.flood = { status: "down", error: (err as Error).message };
+    console.warn(`[req ${reqId}] /api/health flood=down: ${(err as Error).message}`);
   }
   const overall = out.kb && (out.kb as { status: string }).status === "ok" &&
     out.flood && (out.flood as { status: string }).status === "ok";
@@ -102,8 +128,21 @@ app.get("/api/health", async (c) => {
 });
 
 app.get("/api/kb", async (c) => {
-  try { return c.json(await kbStats()); }
-  catch (err) { return c.json({ error: String(err) }, 500); }
+  const reqId = c.get("reqId" as never) as number;
+  try {
+    const stats = await kbStats();
+    console.log(`[req ${reqId}] /api/kb total=${stats.total}`);
+    return c.json(stats);
+  } catch (err) {
+    console.error(`[req ${reqId}] /api/kb error: ${err}`);
+    return c.json({ error: String(err) }, 500);
+  }
+});
+
+app.get("/api/sources", (c) => {
+  const reqId = c.get("reqId" as never) as number;
+  console.log(`[req ${reqId}] /api/sources total=${SOURCES.length}`);
+  return c.json({ total: SOURCES.length, sources: SOURCES });
 });
 
 // ── /api/qa — knowledge-base retrieval (Ollama + Nomic + DuckDB) ──────
@@ -120,6 +159,7 @@ interface QaRequest {
 }
 
 app.post("/api/qa", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
   let body: QaRequest;
   try { body = await c.req.json(); }
   catch { return c.json({ error: "JSON body required" }, 400); }
@@ -127,6 +167,14 @@ app.post("/api/qa", async (c) => {
   const query = (body.query ?? body.q ?? "").trim();
   if (!query) return c.json({ error: "query is required" }, 400);
 
+  const filters = [
+    body.role && `role=${body.role}`,
+    body.phase && `phase=${body.phase}`,
+    body.region && `region=${body.region}`,
+  ].filter(Boolean).join(" ");
+  console.log(`[req ${reqId}] /api/qa q=${JSON.stringify(query.slice(0, 60))} ${filters || "(no filters)"}`);
+
+  const t0 = performance.now();
   try {
     const matches = await qaSearch(query, {
       limit:         body.limit ?? body.k,
@@ -135,17 +183,17 @@ app.post("/api/qa", async (c) => {
       phase:         body.phase,
       region:        body.region,
     });
+    const ms = Math.round(performance.now() - t0);
+    const top = matches[0];
+    console.log(`[req ${reqId}] /api/qa → ${matches.length} matches in ${ms}ms top=${top?.id ?? "—"} sim=${top?.similarity.toFixed(3) ?? "—"}`);
     return c.json({ query, matches });
   } catch (err) {
+    console.error(`[req ${reqId}] /api/qa error: ${err}`);
     return c.json({ error: String(err) }, 500);
   }
 });
 
 // ── /api/flood — 4-image satellite flood detection ────────────────────
-//
-// Multipart contract from `finetune-flood/docs/06-deploy-website.md`:
-// fields pre_rgb, pre_swir, cur_rgb, cur_swir (all PNG). The order is
-// load-bearing — the system prompt tells the model which image is which.
 
 const FLOOD_FIELDS = {
   pre_rgb:  "preRgb",
@@ -166,34 +214,34 @@ async function readFloodFiles(form: FormData): Promise<FloodInput | { missing: s
 }
 
 app.post("/api/flood", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
   let form: FormData;
   try { form = await c.req.formData(); }
   catch { return c.json({ ok: false, error: "multipart form required" }, 400); }
 
   const result = await readFloodFiles(form);
   if ("missing" in result) {
+    console.warn(`[req ${reqId}] /api/flood missing fields: ${result.missing.join(",")}`);
     return c.json({ ok: false, error: `missing fields: ${result.missing.join(", ")}` }, 400);
   }
+  const totalBytes = Object.values(result).reduce((n, b) => n + b.byteLength, 0);
+  console.log(`[req ${reqId}] /api/flood images received: 4 PNGs, ${(totalBytes / 1024).toFixed(0)} KB total`);
+
   const out = await predictFlood(result);
+  if (out.ok) {
+    console.log(`[req ${reqId}] /api/flood → flood=${out.labels.flood_present} severity=${out.labels.flood_severity} ${out.latency_ms}ms`);
+  } else {
+    console.error(`[req ${reqId}] /api/flood error: ${out.error}`);
+  }
   return c.json(out, out.ok ? 200 : 500);
 });
 
 // ── /api/chat — unified router ────────────────────────────────────────
-//
-// Single endpoint the chat UI sends every message to. Routing rule:
-//   - text only          → KB retrieval
-//   - 4 images attached  → flood detection (text becomes optional context,
-//                          ignored by the model — the prompt is fixed)
-//   - any other count    → 400 with a helpful message
-//
-// The 4-image rule mirrors the satellite model's calibration: images must
-// be {pre_rgb, pre_swir, cur_rgb, cur_swir}. We use multipart here because
-// 4 PNGs base64-encoded blow past 4-5 MB of JSON.
 
 app.post("/api/chat", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
   const ct = c.req.header("content-type") ?? "";
 
-  // Multipart branch — flood detection
   if (ct.startsWith("multipart/form-data")) {
     let form: FormData;
     try { form = await c.req.formData(); }
@@ -201,16 +249,22 @@ app.post("/api/chat", async (c) => {
 
     const parsed = await readFloodFiles(form);
     if ("missing" in parsed) {
+      console.warn(`[req ${reqId}] /api/chat (flood) missing: ${parsed.missing.join(",")}`);
       return c.json({
         kind: "error",
         error: `flood detection needs 4 images (pre_rgb, pre_swir, cur_rgb, cur_swir); missing: ${parsed.missing.join(", ")}`,
       }, 400);
     }
+    console.log(`[req ${reqId}] /api/chat → flood branch`);
     const result = await predictFlood(parsed);
+    if (result.ok) {
+      console.log(`[req ${reqId}] /api/chat (flood) → flood=${result.labels.flood_present} severity=${result.labels.flood_severity} ${result.latency_ms}ms`);
+    } else {
+      console.error(`[req ${reqId}] /api/chat (flood) error: ${result.error}`);
+    }
     return c.json({ kind: "flood", ...result }, result.ok ? 200 : 500);
   }
 
-  // JSON branch — KB retrieval
   let body: { message?: string; role?: string; phase?: string; region?: string };
   try { body = await c.req.json(); }
   catch { return c.json({ kind: "error", error: "JSON body required" }, 400); }
@@ -218,13 +272,21 @@ app.post("/api/chat", async (c) => {
   const text = (body.message ?? "").trim();
   if (!text) return c.json({ kind: "error", error: "message is required" }, 400);
 
+  const filters = [body.role, body.phase, body.region].filter(Boolean).join("/");
+  console.log(`[req ${reqId}] /api/chat → kb branch q=${JSON.stringify(text.slice(0, 60))} ${filters ? `[${filters}]` : ""}`);
+
+  const t0 = performance.now();
   try {
     const matches = await qaSearch(text, {
       limit: 3,
       role: body.role, phase: body.phase, region: body.region,
     });
+    const ms = Math.round(performance.now() - t0);
+    const top = matches[0];
+    console.log(`[req ${reqId}] /api/chat (kb) → ${matches.length} matches in ${ms}ms top=${top?.id ?? "—"} sim=${top?.similarity.toFixed(3) ?? "—"}`);
     return c.json({ kind: "qa", query: text, matches });
   } catch (err) {
+    console.error(`[req ${reqId}] /api/chat (kb) error: ${err}`);
     return c.json({ kind: "error", error: String(err) }, 500);
   }
 });

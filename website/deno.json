@@ -6,12 +6,10 @@
   "tasks": {
     "fetch-binaries": "deno run --allow-net --allow-read --allow-write --allow-run --allow-env scripts/fetch_binaries.ts",
     "build:kb": "deno run -A scripts/build_kb.ts",
-    "build:css": "deno run -A npm:@tailwindcss/cli@^4.2.2 -i client/styles.css -o static/styles.css --minify",
-    "watch:css": "deno run -A npm:@tailwindcss/cli@^4.2.2 -i client/styles.css -o static/styles.css --watch",
     "build:client": "deno bundle --config deno-client.json --platform browser --minify --code-splitting --sourcemap=linked --outdir static client/chat.tsx",
     "watch:client": "deno bundle --config deno-client.json --platform browser --code-splitting --sourcemap=linked --outdir static --watch client/chat.tsx",
-    "build": "deno install && deno task build:kb && deno task fetch-binaries && deno task build:css && deno task build:client",
-    "dev": "deno task build:css && deno task build:client && deno serve --port 8000 --allow-net --allow-read --allow-write --allow-env --allow-run --allow-sys --allow-ffi --watch main.tsx",
+    "build": "deno install && deno task build:kb && deno task fetch-binaries && deno task build:client",
+    "dev": "deno task build:client && deno serve --port 8000 --allow-net --allow-read --allow-write --allow-env --allow-run --allow-sys --allow-ffi --watch main.tsx",
     "start": "deno serve --allow-net --allow-read --allow-write --allow-env --allow-run --allow-sys --allow-ffi main.tsx"
   },
   "compilerOptions": {
@@ -25,8 +23,6 @@
     "react": "npm:react@^19.0.0",
     "react-dom": "npm:react-dom@^19.0.0",
     "react-dom/client": "npm:react-dom@^19.0.0/client",
-    "tailwindcss": "npm:tailwindcss@^4.2.2",
-    "@tailwindcss/cli": "npm:@tailwindcss/cli@^4.2.2",
     "@std/csv": "jsr:@std/csv@^1.0.5",
     "@std/path": "jsr:@std/path@^1.0.8",
     "@std/encoding": "jsr:@std/encoding@^1.0.5",
