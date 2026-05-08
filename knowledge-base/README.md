@@ -15,11 +15,17 @@ knowledge-base/
 │   ├── national-authorities.csv
 │   └── ngos.csv
 ├── merge.ts                Validates + concatenates chunks into qa-pairs.csv
-├── qa-pairs.csv            Final merged dataset — 471 rows
+├── qa-pairs.csv            Humanitarian Q&A — 471 rows
 ├── qa-stats.json           Counts by role, phase, region, topic
+├── project-qa/             Project-meta Q&A about humaid itself (118 rows)
+│   ├── source.ts           Structured TS source-of-truth
+│   ├── generate.ts         Builds project-pairs.csv
+│   ├── project-pairs.csv   Generated, committed
+│   └── README.md
 ├── rag/                    Local semantic search (Nomic via Ollama → DuckDB)
 ├── kb.duckdb               Pre-built embedding index (committed; ~2.3 MB)
-├── deno.json               Tasks: merge, build, ask
+│                           — merged: 471 humanitarian + 118 project-meta = 589
+├── deno.json               Tasks: merge, project-qa, build, ask
 └── README.md               This file
 ```
 
@@ -27,11 +33,20 @@ knowledge-base/
 
 A simple Q&A retriever lives under `rag/`. It embeds each pair once into
 `kb.duckdb` (committed so nothing needs to be rebuilt) and runs cosine
-similarity in DuckDB. See `rag/README.md` for details.
+similarity in DuckDB. The same index covers humanitarian operational Q&A
+*and* project-meta Q&A. See `rag/README.md` for details.
 
 ```bash
+# Humanitarian operational query (matches qa-pairs.csv rows; phase=pre|event|post)
 deno task ask "How do I evacuate when the river rises overnight?" --text --k 3
+
+# Project-meta query (matches project-qa/project-pairs.csv rows; phase=meta)
+deno task ask "What is humaid?" --text --k 3
 ```
+
+Clients can filter by `phase = 'meta'` to surface project-meta only (e.g.
+an "About" tab) or by `phase IN ('pre', 'event', 'post')` to surface
+humanitarian only.
 
 ## Schema
 

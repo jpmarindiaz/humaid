@@ -1,6 +1,7 @@
 {
   "tasks": {
     "merge": "deno run -A merge.ts",
+    "project-qa": "deno run -A project-qa/generate.ts",
     "build": "deno run -A rag/build.ts",
     "ask": "deno run -A rag/ask.ts"
   },

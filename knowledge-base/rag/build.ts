@@ -1,12 +1,21 @@
-// Build kb.duckdb from qa-pairs.csv.
+// Build kb.duckdb from qa-pairs.csv (humanitarian) + project-qa/project-pairs.csv
+// (project-meta).
 //
 // Embeds each Q&A pair (concatenating EN + ES question so a query in either
 // language hits the same row) and writes the index to a local DuckDB file.
-// Re-running drops and recreates the qa table — the CSV is the source of truth.
+// Re-running drops and recreates the qa table — the CSVs are the source of truth.
 
 import { parse } from 'jsr:@std/csv@^1.0.5'
+import { dirname, fromFileUrl, join } from 'jsr:@std/path@^1.0.8'
 import { embed } from './embed.ts'
 import { floatArrayLiteral, KB_DUCKDB_PATH, openDb, QA_CSV_PATH, QA_DDL, sqlString } from './db.ts'
+
+const PROJECT_QA_CSV_PATH = join(
+  dirname(fromFileUrl(import.meta.url)),
+  '..',
+  'project-qa',
+  'project-pairs.csv',
+)
 
 const HEADER = [
   'id',
@@ -26,16 +35,34 @@ type Row = Record<typeof HEADER[number], string>
 
 const t0 = performance.now()
 
-const csv = await Deno.readTextFile(QA_CSV_PATH)
-const records = parse(csv) as string[][]
-const [header, ...body] = records
-if (header.length !== HEADER.length || !HEADER.every((h, i) => header[i] === h)) {
-  throw new Error(`qa-pairs.csv header mismatch: got ${header.join(',')}`)
+async function readQaCsv(path: string): Promise<Row[]> {
+  const text = await Deno.readTextFile(path)
+  const records = parse(text) as string[][]
+  if (records.length === 0) return []
+  const [header, ...body] = records
+  if (header.length !== HEADER.length || !HEADER.every((h, i) => header[i] === h)) {
+    throw new Error(`${path}: header mismatch — got ${header.join(',')}`)
+  }
+  return body.map((r) => Object.fromEntries(HEADER.map((k, i) => [k, r[i] ?? ''])) as Row)
 }
-const rows: Row[] = body.map((r) =>
-  Object.fromEntries(HEADER.map((k, i) => [k, r[i] ?? ''])) as Row
-)
-console.log(`Read ${rows.length} Q&A pairs from ${QA_CSV_PATH}`)
+
+const humanitarianRows = await readQaCsv(QA_CSV_PATH)
+console.log(`Read ${humanitarianRows.length} humanitarian Q&A pairs from ${QA_CSV_PATH}`)
+
+let projectRows: Row[] = []
+try {
+  projectRows = await readQaCsv(PROJECT_QA_CSV_PATH)
+  console.log(`Read ${projectRows.length} project-meta Q&A pairs from ${PROJECT_QA_CSV_PATH}`)
+} catch (err) {
+  if (err instanceof Deno.errors.NotFound) {
+    console.log(`No project-meta CSV at ${PROJECT_QA_CSV_PATH} — skipping`)
+  } else {
+    throw err
+  }
+}
+
+const rows: Row[] = [...humanitarianRows, ...projectRows]
+console.log(`Total: ${rows.length} Q&A pairs`)
 
 // One embedding per row. We concat EN + ES question with a separator so a
 // query in either language matches the same row. Nomic handles multilingual
