@@ -22,9 +22,16 @@ import { ChatShell } from "./views/ChatShell.tsx";
 import { listOllamaModels, ollamaConfig, startOllamaServer } from "./lib/ollama.ts";
 import { config as llamaConfig, getModels as getLlamaModels, startLlamaServer } from "./lib/llama.ts";
 import { kbStats, qaSearch } from "./lib/qa.ts";
-import { type FloodInput, predictFlood } from "./lib/flood.ts";
+import { type FloodInput, type FloodLabels, predictFlood } from "./lib/flood.ts";
 import { SOURCES } from "./lib/sources.ts";
-import { FLOOD_SAMPLES } from "./lib/samples.ts";
+import { FLOOD_SAMPLES, SAMPLES_BY_ID } from "./lib/samples.ts";
+import {
+  type AlertRecord,
+  getAlert,
+  listAlerts,
+  publishAlert,
+  shouldPublishAlert,
+} from "./lib/alerts.ts";
 
 // Per-isolate request counter — paired with isolate ids from lib/ollama and
 // lib/llama to make logs traceable: same isolate_id across messages = warm,
@@ -216,6 +223,86 @@ app.get("/api/samples", (c) => {
   const reqId = c.get("reqId" as never) as number;
   console.log(`[req ${reqId}] /api/samples total=${FLOOD_SAMPLES.length}`);
   return c.json({ total: FLOOD_SAMPLES.length, samples: FLOOD_SAMPLES });
+});
+
+// ── Alerts: publish (web → KV), list (Tauri polls), get one ───────────
+
+interface PublishAlertRequest {
+  /** Sample id from /api/samples — server pulls coordinates + location
+   *  + thumbnail from there. The labels are passed in (they came from
+   *  the model run on the client side). */
+  sample_id: string;
+  labels: FloodLabels;
+}
+
+app.post("/api/alerts", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
+  let body: PublishAlertRequest;
+  try { body = await c.req.json(); }
+  catch { return c.json({ ok: false, error: "JSON body required" }, 400); }
+
+  const sample = SAMPLES_BY_ID[body.sample_id];
+  if (!sample) {
+    console.warn(`[req ${reqId}] /api/alerts unknown sample_id=${body.sample_id}`);
+    return c.json({ ok: false, error: `unknown sample_id: ${body.sample_id}` }, 400);
+  }
+  if (!body.labels) {
+    return c.json({ ok: false, error: "labels required" }, 400);
+  }
+  if (!shouldPublishAlert(body.labels)) {
+    console.log(
+      `[req ${reqId}] /api/alerts threshold not met for ${sample.id} ` +
+      `(flood=${body.labels.flood_present} pop=${body.labels.populated_area_affected} ` +
+      `quality_limited=${body.labels.image_quality_limited})`,
+    );
+    return c.json({
+      ok: false,
+      error: "threshold not met: requires flood_present && populated_area_affected && !image_quality_limited",
+      labels: body.labels,
+    }, 422);
+  }
+
+  console.log(
+    `[req ${reqId}] /api/alerts publishing for ${sample.id} ` +
+    `(${sample.region}/${sample.location_slug}, ${sample.lon}, ${sample.lat})`,
+  );
+  const record = await publishAlert({
+    region: sample.region,
+    location: sample.location_slug,
+    location_label: sample.location_label,
+    coordinates: { lon: sample.lon, lat: sample.lat },
+    labels: body.labels,
+    thumbnail_url: sample.thumbnail,
+    source: { kind: "simulator", scenario_id: sample.id },
+  });
+  console.log(`[req ${reqId}] /api/alerts ✅ ${record.id} severity=${record.severity} qa=${record.recommended_qa_ids.length}`);
+  return c.json({ ok: true, alert: record });
+});
+
+/** GET /api/alerts?region=la-mojana&since=<iso8601>&limit=N
+ *  Polled by the Tauri desktop app every N minutes. */
+app.get("/api/alerts", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
+  const region = c.req.query("region") as AlertRecord["region"] | undefined;
+  const since = c.req.query("since");
+  const limit = c.req.query("limit") ? parseInt(c.req.query("limit")!, 10) : undefined;
+
+  console.log(`[req ${reqId}] /api/alerts list region=${region ?? "*"} since=${since ?? "—"} limit=${limit ?? 50}`);
+  const result = await listAlerts({ region, since, limit });
+  console.log(`[req ${reqId}] /api/alerts → ${result.alerts.length} alerts cursor=${result.cursor}`);
+  return c.json(result);
+});
+
+app.get("/api/alerts/:id", async (c) => {
+  const reqId = c.get("reqId" as never) as number;
+  const id = c.req.param("id");
+  const rec = await getAlert(id);
+  if (!rec) {
+    console.warn(`[req ${reqId}] /api/alerts/${id} not found`);
+    return c.json({ ok: false, error: "alert not found" }, 404);
+  }
+  console.log(`[req ${reqId}] /api/alerts/${id} found severity=${rec.severity}`);
+  return c.json({ ok: true, alert: rec });
 });
 
 // ── /api/qa — knowledge-base retrieval (Ollama + Nomic + DuckDB) ──────

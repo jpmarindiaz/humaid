@@ -48,19 +48,40 @@ interface Source {
 
 interface FloodSample {
   id: string;
-  location: string;
+  location_slug: string;
+  location_label: string;
   region: "la-mojana" | "putumayo";
+  lon: number;
+  lat: number;
   event_date: string;
   event_label: string;
   description: string;
   expected_summary: string;
+  expected_alert: boolean;
   paths: { pre_rgb: string; pre_swir: string; cur_rgb: string; cur_swir: string };
+  thumbnail: string;
+}
+
+interface AlertRecord {
+  id: string;
+  timestamp: string;
+  region: "la-mojana" | "putumayo";
+  location: string;
+  location_label: string;
+  coordinates: { lon: number; lat: number };
+  severity: "minor" | "moderate" | "severe";
+  labels: FloodLabels;
+  recommended_qa_ids: string[];
+  thumbnail_url: string;
+  source: { kind: "simulator" | "live_simsat"; scenario_id?: string };
 }
 
 type ChatPayload =
   | { kind: "qa"; query: string; matches: QaMatch[] }
-  | { kind: "flood"; ok: true; labels: FloodLabels; latency_ms: number }
+  | { kind: "flood"; ok: true; labels: FloodLabels; latency_ms: number; sample_id?: string }
   | { kind: "flood"; ok: false; error: string }
+  | { kind: "alert-published"; alert: AlertRecord }
+  | { kind: "alert-rejected"; reason: string; labels: FloodLabels }
   | { kind: "error"; error: string };
 
 const FLOOD_SLOTS = [
@@ -210,8 +231,9 @@ function App() {
     setError(null);
     setSending(true);
 
+    const sampleIdForRun = activeSample;  // capture before we reset
     const previews = floodPreviews as Record<FloodField, string>;
-    setTurns((p) => [...p, { kind: "flood-submit", previews, sampleId: activeSample, ts: Date.now() }]);
+    setTurns((p) => [...p, { kind: "flood-submit", previews, sampleId: sampleIdForRun, ts: Date.now() }]);
 
     const form = new FormData();
     for (const slot of FLOOD_SLOTS) {
@@ -223,10 +245,45 @@ function App() {
     try {
       const resp = await fetch("/api/chat", { method: "POST", body: form });
       const payload = (await resp.json()) as ChatPayload;
+      // Tag the flood payload with sample_id so the bubble can offer
+      // "Publish alert" without us needing additional state.
+      if (payload.kind === "flood" && payload.ok && sampleIdForRun) {
+        (payload as Extract<ChatPayload, { kind: "flood"; ok: true }>).sample_id = sampleIdForRun;
+      }
       setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
       setFloodFiles({});
       setFloodPreviews({});
       setActiveSample(undefined);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function publishAlert(sampleId: string, labels: FloodLabels) {
+    setSending(true);
+    setError(null);
+    try {
+      const resp = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sample_id: sampleId, labels }),
+      });
+      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
+      if (data.ok && data.alert) {
+        setTurns((p) => [...p, {
+          kind: "assistant",
+          payload: { kind: "alert-published", alert: data.alert! },
+          ts: Date.now(),
+        }]);
+      } else {
+        setTurns((p) => [...p, {
+          kind: "assistant",
+          payload: { kind: "alert-rejected", reason: data.error ?? "rejected", labels },
+          ts: Date.now(),
+        }]);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -279,6 +336,7 @@ function App() {
           onAttach={attachFloodFile}
           onSample={loadSample}
           onSubmit={sendFlood}
+          onPublishAlert={publishAlert}
         />
       )}
     </div>
@@ -499,6 +557,7 @@ function FloodTab(props: {
   onAttach: (field: FloodField, file: File | null) => void;
   onSample: (s: FloodSample) => void;
   onSubmit: (e: FormEvent) => void;
+  onPublishAlert: (sampleId: string, labels: FloodLabels) => void;
 }) {
   const [samples, setSamples] = useState<FloodSample[] | null>(null);
 
@@ -522,7 +581,7 @@ function FloodTab(props: {
               onSample={props.onSample}
             />
           )}
-          {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
+          {props.turns.map((t, i) => <TurnBubble key={i} turn={t} onPublishAlert={props.onPublishAlert} />)}
           {props.sending && <div className="thinking">running lfm2-flood…</div>}
           {props.error && <div className="error-bubble">{props.error}</div>}
         </div>
@@ -655,10 +714,15 @@ function FloodSlot({
 
 // ── Bubbles ───────────────────────────────────────────────────────────
 
-function TurnBubble({ turn }: { turn: Turn }) {
+function TurnBubble({
+  turn, onPublishAlert,
+}: {
+  turn: Turn;
+  onPublishAlert?: (sampleId: string, labels: FloodLabels) => void;
+}) {
   if (turn.kind === "text") return <UserTextBubble t={turn} />;
   if (turn.kind === "flood-submit") return <UserFloodBubble t={turn} />;
-  return <AssistantBubble t={turn} />;
+  return <AssistantBubble t={turn} onPublishAlert={onPublishAlert} />;
 }
 
 function UserTextBubble({ t }: { t: UserText }) {
@@ -686,7 +750,12 @@ function UserFloodBubble({ t }: { t: UserFlood }) {
   );
 }
 
-function AssistantBubble({ t }: { t: AssistantTurn }) {
+function AssistantBubble({
+  t, onPublishAlert,
+}: {
+  t: AssistantTurn;
+  onPublishAlert?: (sampleId: string, labels: FloodLabels) => void;
+}) {
   const p = t.payload;
   if (p.kind === "error") {
     return <div className="assistant-bubble assistant-error">{p.error}</div>;
@@ -694,9 +763,16 @@ function AssistantBubble({ t }: { t: AssistantTurn }) {
   if (p.kind === "qa") return <QaResult matches={p.matches} />;
   if (p.kind === "flood") {
     return p.ok
-      ? <FloodResult labels={p.labels} latencyMs={p.latency_ms} />
+      ? <FloodResult
+          labels={p.labels}
+          latencyMs={p.latency_ms}
+          sampleId={p.sample_id}
+          onPublishAlert={onPublishAlert}
+        />
       : <div className="assistant-bubble assistant-error">flood detection failed: {p.error}</div>;
   }
+  if (p.kind === "alert-published") return <AlertPublishedBubble alert={p.alert} />;
+  if (p.kind === "alert-rejected") return <AlertRejectedBubble reason={p.reason} />;
   return null;
 }
 
@@ -742,8 +818,20 @@ function QaResult({ matches }: { matches: QaMatch[] }) {
   );
 }
 
-function FloodResult({ labels, latencyMs }: { labels: FloodLabels; latencyMs: number }) {
+function FloodResult({
+  labels, latencyMs, sampleId, onPublishAlert,
+}: {
+  labels: FloodLabels;
+  latencyMs: number;
+  sampleId?: string;
+  onPublishAlert?: (sampleId: string, labels: FloodLabels) => void;
+}) {
   const sevClass = `severity-${labels.flood_severity}`;
+  // Threshold rule mirror — used to enable / disable the publish button.
+  const eligible = labels.flood_present
+    && labels.populated_area_affected
+    && !labels.image_quality_limited;
+
   return (
     <div className="assistant-bubble flood-bubble">
       <div className="flood-bubble-head">
@@ -766,6 +854,77 @@ function FloodResult({ labels, latencyMs }: { labels: FloodLabels; latencyMs: nu
         <Field label="river overflow">{yn(labels.river_overflow_visible)}</Field>
         <Field label="quality limited">{yn(labels.image_quality_limited)}</Field>
       </div>
+      {sampleId && onPublishAlert && (
+        <div className="alert-cta">
+          {eligible
+            ? (
+              <>
+                <p className="alert-cta-text">
+                  Threshold met — flood present, populated area affected, visibility OK.
+                  Publish an alert so the desktop app picks it up?
+                </p>
+                <button
+                  type="button"
+                  className="primary-btn alert-publish-btn"
+                  onClick={() => onPublishAlert(sampleId, labels)}
+                >
+                  📡  Publish alert
+                </button>
+              </>
+            )
+            : (
+              <p className="alert-cta-text alert-cta-muted">
+                Threshold not met — alert won't fire.
+                {!labels.flood_present && " (flood_present=false)"}
+                {!labels.populated_area_affected && " (no populated area)"}
+                {labels.image_quality_limited && " (image quality limited)"}
+              </p>
+            )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AlertPublishedBubble({ alert }: { alert: AlertRecord }) {
+  const ts = new Date(alert.timestamp);
+  const tauriCurl = `curl 'https://humaid.app/api/alerts?region=${alert.region}&since=${encodeURIComponent(new Date(ts.getTime() - 1000).toISOString())}'`;
+  return (
+    <div className="assistant-bubble alert-bubble">
+      <div className="alert-bubble-head">
+        <span className="alert-id">📡 {alert.id}</span>
+        <span className="alert-ts">{ts.toLocaleString()}</span>
+      </div>
+      <div className="alert-thumb-wrap">
+        <img src={alert.thumbnail_url} alt={`${alert.location_label} after`} className="alert-thumb" />
+      </div>
+      <div className="alert-headline">
+        <span className={`alert-severity alert-severity-${alert.severity}`}>{alert.severity.toUpperCase()}</span>
+        <span className="alert-location">{alert.location_label}</span>
+      </div>
+      <p className="alert-coords">
+        📍 {alert.coordinates.lat.toFixed(4)}°, {alert.coordinates.lon.toFixed(4)}° · region: {alert.region}
+      </p>
+      {alert.recommended_qa_ids.length > 0 && (
+        <div className="alert-qa">
+          <p className="alert-qa-label">Recommended Q&amp;A (auto-opens on the desktop app):</p>
+          <p className="alert-qa-ids">
+            {alert.recommended_qa_ids.map((id) => <span key={id} className="pill">{id}</span>)}
+          </p>
+        </div>
+      )}
+      <details className="alert-curl">
+        <summary>desktop app polling endpoint</summary>
+        <pre>{tauriCurl}</pre>
+      </details>
+    </div>
+  );
+}
+
+function AlertRejectedBubble({ reason }: { reason: string }) {
+  return (
+    <div className="assistant-bubble assistant-error">
+      Alert not published: {reason}
     </div>
   );
 }
