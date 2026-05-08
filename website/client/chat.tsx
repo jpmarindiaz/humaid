@@ -413,6 +413,40 @@ function App() {
     }
   }
 
+  /** Run the flood model on a user-uploaded before/after pair. The
+   *  model expects 4 tiles (pre+cur × RGB+SWIR); since the upload
+   *  section only collects 2 RGB tiles we duplicate them into the SWIR
+   *  slots. Output is degraded vs the real 4-band input but the model
+   *  still runs and returns the 7-key JSON. */
+  async function runUploadedModel(before: File, after: File) {
+    if (sending) return;
+    setError(null);
+    setSending(true);
+
+    const previews: Record<FloodField, string> = {
+      pre_rgb:  URL.createObjectURL(before),
+      pre_swir: URL.createObjectURL(before),
+      cur_rgb:  URL.createObjectURL(after),
+      cur_swir: URL.createObjectURL(after),
+    };
+    setTurns((p) => [...p, { kind: "flood-submit", previews, ts: Date.now() }]);
+
+    try {
+      const form = new FormData();
+      form.append("pre_rgb",  before, "pre_rgb.png");
+      form.append("pre_swir", before, "pre_swir.png");
+      form.append("cur_rgb",  after,  "cur_rgb.png");
+      form.append("cur_swir", after,  "cur_swir.png");
+      const resp = await fetch("/api/chat", { method: "POST", body: form });
+      const payload = (await resp.json()) as ChatPayload;
+      setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSending(false);
+    }
+  }
+
   /** Custom manual alert from the upload section. Server uses the
    *  generic upload thumbnail; coordinates default to 0,0 if user
    *  doesn't supply them. */
@@ -505,6 +539,7 @@ function App() {
           onSendSampleAlert={sendSampleAlert}
           onRunAndPublish={runAndPublish}
           onSendCustomAlert={sendCustomAlert}
+          onRunUploadedModel={runUploadedModel}
         />
       )}
     </div>
@@ -731,6 +766,7 @@ function FloodTab(props: {
     lat?: number;
     previews?: Record<FloodField, string>;
   }) => void;
+  onRunUploadedModel: (before: File, after: File) => void;
 }) {
   const [samples, setSamples] = useState<FloodSample[] | null>(null);
 
@@ -752,6 +788,7 @@ function FloodTab(props: {
               onSendSampleAlert={props.onSendSampleAlert}
               onRunAndPublish={props.onRunAndPublish}
               onSendCustomAlert={props.onSendCustomAlert}
+              onRunUploadedModel={props.onRunUploadedModel}
             />
           )}
           {props.turns.length > 0 && samples && !props.sending && (
@@ -767,7 +804,7 @@ function FloodTab(props: {
 }
 
 function FloodWelcome({
-  samples, sending, onSendSampleAlert, onRunAndPublish, onSendCustomAlert,
+  samples, sending, onSendSampleAlert, onRunAndPublish, onSendCustomAlert, onRunUploadedModel,
 }: {
   samples: FloodSample[] | null;
   sending: boolean;
@@ -782,6 +819,7 @@ function FloodWelcome({
     lat?: number;
     previews?: Record<FloodField, string>;
   }) => void;
+  onRunUploadedModel: (before: File, after: File) => void;
 }) {
   return (
     <div className="welcome welcome-wide">
@@ -806,7 +844,11 @@ function FloodWelcome({
           ))}
         </div>
       )}
-      <UploadSection sending={sending} onPublish={onSendCustomAlert} />
+      <UploadSection
+        sending={sending}
+        onPublish={onSendCustomAlert}
+        onRunModel={onRunUploadedModel}
+      />
     </div>
   );
 }
@@ -877,7 +919,7 @@ function SampleStrip({
 // ── Upload section ────────────────────────────────────────────────────
 
 function UploadSection({
-  sending, onPublish,
+  sending, onPublish, onRunModel,
 }: {
   sending: boolean;
   onPublish: (p: {
@@ -889,6 +931,7 @@ function UploadSection({
     lat?: number;
     previews?: Record<FloodField, string>;
   }) => void;
+  onRunModel: (before: File, after: File) => void;
 }) {
   const [before, setBefore] = useState<File | null>(null);
   const [after, setAfter] = useState<File | null>(null);
@@ -901,6 +944,7 @@ function UploadSection({
 
   const beforePreview = before ? URL.createObjectURL(before) : undefined;
   const afterPreview  = after  ? URL.createObjectURL(after)  : undefined;
+  const havePair = before && after;
 
   function publish() {
     if (!locationLabel.trim()) return;
@@ -924,8 +968,10 @@ function UploadSection({
   return (
     <section className="upload-section">
       <div className="upload-head">
-        <h3>Or send a manual alert</h3>
-        <p>Upload a before / after pair (optional), describe the situation, and publish. Useful for cases the satellite hasn't caught yet.</p>
+        <h3>Or upload your own pair</h3>
+        <p>Drop a before / after image. Run the flood model to see what it
+        outputs, or send a manual alert directly with the severity you set
+        below — useful for cases the satellite hasn't caught yet.</p>
       </div>
       <div className="upload-grid">
         <UploadSlot label="Before" file={before} preview={beforePreview} onChange={setBefore} />
@@ -974,14 +1020,30 @@ function UploadSection({
           placeholder="Water rising past the bridge near the school. Need evacuation transport at the polideportivo."
         />
       </label>
-      <button
-        type="button"
-        onClick={publish}
-        disabled={sending || !locationLabel.trim()}
-        className="primary-btn upload-publish-btn"
-      >
-        {sending ? "publishing…" : "📡  Send manual alert"}
-      </button>
+      <div className="upload-actions">
+        <button
+          type="button"
+          onClick={() => havePair && onRunModel(before!, after!)}
+          disabled={sending || !havePair}
+          className="ghost-btn upload-run-btn"
+          title={havePair ? "Run lfm2-flood on the uploaded pair" : "Upload a before + after image first"}
+        >
+          {sending ? "running…" : "🛰  Run flood model"}
+        </button>
+        <button
+          type="button"
+          onClick={publish}
+          disabled={sending || !locationLabel.trim()}
+          className="primary-btn upload-publish-btn"
+        >
+          {sending ? "publishing…" : "📡  Send manual alert"}
+        </button>
+      </div>
+      <p className="upload-note">
+        The flood model trained on 4 Sentinel-2 bands (RGB + SWIR, pre + current).
+        Uploads with just 2 RGB tiles still run — the SWIR slots are duplicated
+        from the RGB pair, so output quality is lower than the pre-loaded scenarios.
+      </p>
     </section>
   );
 }
