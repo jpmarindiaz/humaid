@@ -31,3 +31,4 @@ We built the full pipeline, labeled 115 pair samples across 9 events, ran a base
 - [`03-labeling.md`](03-labeling.md) — pair structure, schema, why we use Claude Code agents
 - [`04-evaluation.md`](04-evaluation.md) — eval methodology, the schema-injection bug we fixed, scoring
 - [`05-findings.md`](05-findings.md) — the journey, the noise floor, the cloud problem, why we stopped
+- [`06-deploy-website.md`](06-deploy-website.md) — **read this first** if you're wiring the model into the public site. Covers which HF model URL to use, why qwen / ollama are wrong, and a copy-paste `/flood` route handler for `deno-deploy-llamacpp`
