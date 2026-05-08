@@ -117,7 +117,15 @@ p { margin: 0 0 1rem; }
   margin-bottom: 1rem;
 }
 .lede.strong { color: var(--ink); font-weight: 500; }
-.hero-ctas { display: flex; gap: 12px; margin: 36px 0 56px; flex-wrap: wrap; }
+.hero-ctas { display: flex; gap: 12px; margin: 36px 0 16px; flex-wrap: wrap; }
+.hero-demos {
+  font-size: 0.95rem; color: var(--ink-2); max-width: 64ch; margin: 0 0 56px;
+}
+.hero-demos a {
+  color: var(--terra-2); text-decoration: underline;
+  text-decoration-color: rgba(139, 58, 26, 0.35);
+  text-underline-offset: 2px;
+}
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 13px 22px; border-radius: 999px; font-weight: 600; font-size: 0.95rem;
@@ -202,11 +210,15 @@ p { margin: 0 0 1rem; }
 }
 .solution-cta {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 24px; margin-top: 56px; padding: 24px 28px;
+  gap: 32px; margin-top: 56px; padding: 28px 32px;
   background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
   flex-wrap: wrap;
 }
-.solution-cta p { margin: 0; color: var(--ink); font-weight: 500; }
+.solution-cta-text { flex: 1 1 60ch; min-width: 0; }
+.solution-cta-text p { margin: 0 0 8px; color: var(--ink-2); font-size: 0.96rem; }
+.solution-cta-text p:first-child { color: var(--ink); font-weight: 500; font-size: 1.02rem; }
+.solution-cta-text p:last-child { margin-bottom: 0; }
+.solution-cta strong { color: var(--ink); }
 
 /* ───── Zenú ───── */
 

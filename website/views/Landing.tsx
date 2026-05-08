@@ -29,7 +29,7 @@ export const Landing: FC = () => (
           <a href="#zenu">Zenú</a>
           <a href="#why-now">Why now</a>
           <a href="#built">Built</a>
-          <a href="/app" class="nav-cta">Try the demo</a>
+          <a href="/app" class="nav-cta">Live demo</a>
         </nav>
       </header>
 
@@ -53,9 +53,15 @@ export const Landing: FC = () => (
               on a local device that works without internet.
             </p>
             <div class="hero-ctas">
-              <a class="btn primary" href="/app">Try the live demo →</a>
+              <a class="btn primary" href="/app">Try both demos →</a>
               <a class="btn ghost" href="#solution">How it works</a>
             </div>
+            <p class="hero-demos">
+              Two live model systems on this page:{" "}
+              <a href="/app">ask the knowledge base</a> (471 bilingual Q&amp;A pairs ·
+              Nomic + DuckDB) or <a href="/app">run flood detection</a> on a
+              before/after Sentinel-2 pair (fine-tuned LFM2-VL-450M).
+            </p>
             <ul class="hero-stats">
               <li><strong>471</strong><span>bilingual Q&amp;A pairs</span></li>
               <li><strong>17</strong><span>source PDFs indexed</span></li>
@@ -166,8 +172,20 @@ export const Landing: FC = () => (
           </div>
 
           <div class="solution-cta">
-            <p>The retrieval and the satellite model are both live, right here.</p>
-            <a class="btn primary" href="/app">Try the demo →</a>
+            <div class="solution-cta-text">
+              <p><strong>Both systems are running on this page.</strong></p>
+              <p>
+                The knowledge base side uses Ollama + Nomic embeddings + DuckDB
+                cosine search — the same stack that runs on a Raspberry Pi at
+                a community station.
+              </p>
+              <p>
+                The flood-detection side runs the fine-tuned LFM2-VL-450M
+                directly via llama.cpp — the same compact build we want to
+                run on a CubeSat.
+              </p>
+            </div>
+            <a class="btn primary" href="/app">Open the demos →</a>
           </div>
         </section>
 
