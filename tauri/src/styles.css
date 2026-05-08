@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@source "./**/*.{ts,tsx}";
+
+/* Brand tokens from website/static/landing.css — warm editorial palette.
+   Cream paper background, terracotta accent, muted blue for water, ink-black
+   text. Serifs for headings; sans for everything else. System stack only. */
+@theme {
+  --color-paper: #ffffff;
+  --color-cream: #fdfaf3;
+  --color-soft: #fbf4e3;
+  --color-deep: #f3ede0;
+  --color-line: #e3dccd;
+  --color-muted: #7a6f5e;
+  --color-ink-soft: #4a3f33;
+  --color-ink: #1a1612;
+  --color-terracotta: #a3431c;
+  --color-terracotta-deep: #8b3a1a;
+  --color-water: #2d5a7c;
+  --color-water-deep: #1f4360;
+  --color-leaf: #4a6b3a;
+
+  --font-serif: "Iowan Old Style", "Charter", "Georgia", ui-serif, serif;
+}
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+  }
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Honour safe-area insets on Android (notch / nav bar). */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .font-serif { font-family: var(--font-serif); }
+  /* Disable double-tap zoom on Android — we're a desktop-style app, not a webpage. */
+  * { touch-action: manipulation; }
+}
+
+/* Mapbox marker. Defined outside @layer so Mapbox's positioning math
+   (left/top via inline style) keeps working. */
+.alert-pin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d97706;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 6px rgba(217, 119, 6, 0.25);
+  cursor: default;
+}
+.alert-pin-severe {
+  background: #a3431c;
+  box-shadow: 0 0 0 6px rgba(163, 67, 28, 0.32);
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+  }
+
+  /* Lightweight typographic styles for rendered markdown. */
+  .prose-md {
+    color: var(--color-ink-soft);
+    line-height: 1.7;
+    font-size: 14px;
+  }
+  .prose-md h1, .prose-md h2, .prose-md h3, .prose-md h4 {
+    font-family: var(--font-serif);
+    color: var(--color-ink);
+    letter-spacing: -0.005em;
+    font-weight: 600;
+  }
+  .prose-md h1 { font-size: 1.6rem; margin: 1.4em 0 0.6em; }
+  .prose-md h2 { font-size: 1.25rem; margin: 1.3em 0 0.5em; }
+  .prose-md h3 { font-size: 1.05rem; margin: 1.1em 0 0.4em; }
+  .prose-md h4 { font-size: 0.95rem; margin: 1em 0 0.4em; }
+  .prose-md p  { margin: 0.6em 0; }
+  .prose-md ul, .prose-md ol { margin: 0.5em 0 0.5em 1.4em; }
+  .prose-md ul { list-style: disc; }
+  .prose-md ol { list-style: decimal; }
+  .prose-md li { margin: 0.2em 0; }
+  .prose-md a  { color: var(--color-terracotta-deep); text-decoration: underline; text-underline-offset: 2px; }
+  .prose-md a:hover { color: var(--color-terracotta); }
+  .prose-md code {
+    background: var(--color-soft);
+    color: var(--color-ink);
+    padding: 0 4px;
+    border-radius: 3px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.88em;
+  }
+  .prose-md pre {
+    background: var(--color-soft);
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    padding: 0.75em 1em;
+    overflow-x: auto;
+    margin: 0.8em 0;
+    font-size: 12px;
+  }
+  .prose-md pre code { background: none; color: var(--color-ink-soft); padding: 0; }
+  .prose-md blockquote {
+    border-left: 3px solid var(--color-line);
+    color: var(--color-muted);
+    margin: 0.8em 0;
+    padding: 0.2em 0 0.2em 0.9em;
+  }
+  .prose-md table { border-collapse: collapse; margin: 0.8em 0; font-size: 12px; }
+  .prose-md th, .prose-md td { border: 1px solid var(--color-line); padding: 4px 8px; }
+  .prose-md th { background: var(--color-deep); }
+  .prose-md hr { border: none; border-top: 1px solid var(--color-line); margin: 1.4em 0; }
+  .prose-md strong { color: var(--color-ink); }
+}

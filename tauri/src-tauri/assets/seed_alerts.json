@@ -1,0 +1,162 @@
+[
+  {
+    "id": "alert-historical-cara-de-gato-2024",
+    "timestamp": "2024-05-06T15:30:00.000Z",
+    "region": "la-mojana",
+    "location": "san_jacinto_del_cauca",
+    "location_label": "San Jacinto del Cauca, Bolívar",
+    "coordinates": {
+      "lon": -74.7167,
+      "lat": 8.25
+    },
+    "severity": "moderate",
+    "labels": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "recommended_qa_ids": [
+      "qa-0023",
+      "qa-0415",
+      "qa-0104",
+      "qa-0102",
+      "qa-0026"
+    ],
+    "thumbnail_url": "https://humaid.app/assets/samples/cara-de-gato-2024-thumb.png",
+    "source": {
+      "kind": "live_simsat"
+    }
+  },
+  {
+    "id": "alert-historical-la-mojana-peak-2022",
+    "timestamp": "2022-12-15T11:20:00.000Z",
+    "region": "la-mojana",
+    "location": "ayapel",
+    "location_label": "Ayapel, Córdoba",
+    "coordinates": {
+      "lon": -75.1389,
+      "lat": 8.3128
+    },
+    "severity": "moderate",
+    "labels": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": false
+    },
+    "recommended_qa_ids": [
+      "qa-0410",
+      "qa-0180",
+      "qa-0023",
+      "qa-0104",
+      "qa-0342"
+    ],
+    "thumbnail_url": "https://humaid.app/assets/samples/ayapel-peak-2022-thumb.png",
+    "source": {
+      "kind": "live_simsat"
+    }
+  },
+  {
+    "id": "alert-historical-san-benito-abad-2021",
+    "timestamp": "2021-09-15T14:00:00.000Z",
+    "region": "la-mojana",
+    "location": "san_benito_abad",
+    "location_label": "San Benito Abad, Sucre",
+    "coordinates": {
+      "lon": -75.0319,
+      "lat": 8.9275
+    },
+    "severity": "severe",
+    "labels": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "recommended_qa_ids": [
+      "qa-0023",
+      "qa-0104",
+      "qa-0415",
+      "qa-0026",
+      "qa-0102"
+    ],
+    "thumbnail_url": "https://humaid.app/assets/samples/san-benito-abad-2021-thumb.png",
+    "source": {
+      "kind": "live_simsat"
+    }
+  },
+  {
+    "id": "alert-historical-cara-de-gato-2021",
+    "timestamp": "2021-08-27T18:42:00.000Z",
+    "region": "la-mojana",
+    "location": "san_jacinto_del_cauca",
+    "location_label": "San Jacinto del Cauca, Bolívar",
+    "coordinates": {
+      "lon": -74.7167,
+      "lat": 8.25
+    },
+    "severity": "severe",
+    "labels": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "recommended_qa_ids": [
+      "qa-0023",
+      "qa-0104",
+      "qa-0415",
+      "qa-0102",
+      "qa-0024"
+    ],
+    "thumbnail_url": "https://humaid.app/assets/samples/san-benito-abad-2021-thumb.png",
+    "source": {
+      "kind": "live_simsat"
+    }
+  },
+  {
+    "id": "alert-historical-mocoa-2017",
+    "timestamp": "2017-04-01T08:30:00.000Z",
+    "region": "putumayo",
+    "location": "mocoa",
+    "location_label": "Mocoa, Putumayo",
+    "coordinates": {
+      "lon": -76.6534,
+      "lat": 1.1463
+    },
+    "severity": "severe",
+    "labels": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "recommended_qa_ids": [
+      "qa-0266",
+      "qa-0424",
+      "qa-0106",
+      "qa-0033",
+      "qa-0105"
+    ],
+    "thumbnail_url": "https://humaid.app/assets/samples/mocoa-2017-thumb.png",
+    "source": {
+      "kind": "live_simsat"
+    }
+  }
+]

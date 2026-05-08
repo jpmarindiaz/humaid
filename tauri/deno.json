@@ -1,0 +1,37 @@
+{
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "dev": "deno run -A npm:vite@^7",
+    "build": "deno run -A npm:typescript@~5.8/bin/tsc --noEmit && deno run -A npm:vite@^7 build",
+    "preview": "deno run -A npm:vite@^7 preview",
+    "typecheck": "deno run -A npm:typescript@~5.8/bin/tsc --noEmit",
+    "tauri": "deno run -A npm:@tauri-apps/cli@^2"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "lib": ["dom", "dom.iterable", "esnext"]
+  },
+  "imports": {
+    "react": "npm:react@^19",
+    "react/jsx-runtime": "npm:react@^19/jsx-runtime",
+    "react-dom": "npm:react-dom@^19",
+    "react-dom/client": "npm:react-dom@^19/client",
+    "@tauri-apps/api": "npm:@tauri-apps/api@^2",
+    "@tauri-apps/api/core": "npm:@tauri-apps/api@^2/core",
+    "@tauri-apps/api/event": "npm:@tauri-apps/api@^2/event",
+    "@tauri-apps/api/path": "npm:@tauri-apps/api@^2/path",
+    "@tauri-apps/plugin-opener": "npm:@tauri-apps/plugin-opener@^2",
+    "@tauri-apps/plugin-notification": "npm:@tauri-apps/plugin-notification@^2",
+    "@tauri-apps/cli": "npm:@tauri-apps/cli@^2",
+    "vite": "npm:vite@^7",
+    "@vitejs/plugin-react": "npm:@vitejs/plugin-react@^4",
+    "tailwindcss": "npm:tailwindcss@^4.2.2",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.2.2",
+    "@types/react": "npm:@types/react@^19",
+    "@types/react-dom": "npm:@types/react-dom@^19",
+    "typescript": "npm:typescript@~5.8",
+    "marked": "npm:marked@^14",
+    "mapbox-gl": "npm:mapbox-gl@^3"
+  }
+}
