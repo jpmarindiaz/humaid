@@ -15,9 +15,10 @@ rag/
 └── ask.ts      CLI wrapper around search.ts
 ```
 
-The DuckDB file lives at `knowledge-base/kb.duckdb` (~2.3 MB for 471 rows
-× 768-dim float embeddings). Committed so consumers don't need to rebuild;
-regenerate from `qa-pairs.csv` after editing source data.
+The DuckDB file lives at `knowledge-base/kb.duckdb` (~2.9 MB for 589 rows
+× 768-dim float embeddings — 471 humanitarian rows from `qa-pairs.csv` plus
+118 project-meta rows from `../project-qa/`). Committed so consumers don't
+need to rebuild; regenerate after editing either source.
 
 ## Prerequisites
 
@@ -89,5 +90,5 @@ const matches = await search('how do I rescue someone from a roof', {
    FROM qa [WHERE filters] ORDER BY similarity DESC LIMIT k`.
 3. Drop rows below `minSimilarity`, return the rest.
 
-No HNSW index — for 471 rows the sequential scan is ~1 ms, not worth the
+No HNSW index — for 589 rows the sequential scan is ~1 ms, not worth the
 extension dependency.

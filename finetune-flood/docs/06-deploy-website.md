@@ -2,6 +2,8 @@
 
 Read this first if you're wiring the model into the public site.
 
+> **Scope of this guide.** This is *only* about deploying the **flood-detection vision model** (the satellite-side AI system, runs on `llama-server`). humaid has a second AI system — the **knowledge-base assistant** that runs on responder laptops — and that one **does** use Ollama, by design (text-only LFM2 + `nomic-embed-text` embeddings, served through the local Ollama daemon at `localhost:11434`). When this guide says "don't use Ollama," it means *for the flood vision model*. Don't generalize that to the KB. See [`../../docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) Parts 1 and 2 for why the two systems use different runtimes.
+
 ## TL;DR — what to actually do
 
 1. **Use `deno-deploy-llamacpp`** (the llama.cpp template), not `deno-deploy-ollama`. Ollama can't bundle the LFM2-VL multimodal projector cleanly; llama.cpp can.
@@ -17,7 +19,7 @@ The fine-tuned GGUF + mmproj files are public there.
 ## What NOT to do
 
 - ❌ **Don't fall back to qwen2.5vl** as a workaround. If the local LFM2.5-VL gives `"this model is missing data required for image input"`, that's because the local Ollama tag was pulled without the multimodal projector. The fix is to use the GGUF + mmproj from `jpmarindiaz/lfm2-flood`, not switch models.
-- ❌ **Don't use Ollama** for inference. Ollama doesn't load LFM2-VL's `mmproj-*.gguf` cleanly (the second `FROM` in a Modelfile fails with `missing tensor 'output_norm'`). Use `llama-server` directly — that's what `deno-deploy-llamacpp` already does.
+- ❌ **Don't use Ollama for the *vision* model.** Ollama doesn't load LFM2-VL's `mmproj-*.gguf` cleanly (the second `FROM` in a Modelfile fails with `missing tensor 'output_norm'`). Use `llama-server` directly — that's what `deno-deploy-llamacpp` already does. (Reminder: this only applies to the flood vision model. The KB system does use Ollama — different stack, see scope note at the top.)
 - ❌ **Don't use `LiquidAI/LFM2.5-VL-450M-GGUF`** (the base model). That's the un-fine-tuned LFM2-VL — it scores 0.44 on our eval and ~0.10 on `image_quality_limited`. We've published the fine-tune at `jpmarindiaz/lfm2-flood`. Same model class, same architecture, but post-fine-tune it scores 0.55 overall and 0.90 on the abstention field.
 - ❌ **Don't omit the schema in the prompt**. Without `response_format: {type: "json_schema", ...}` and the schema text in the user prompt, the model will improvise key names like `tile_pair` instead of emitting our 7 fields. We learned this the hard way — see [`finetune-flood/PLAYBOOK.md`](../PLAYBOOK.md) gotcha #4.
 
@@ -242,7 +244,9 @@ LLAMA_CTX=8192 \
 deno task start
 ```
 
-Either way: the local Ollama install is **not used**. Don't mix `ollama run jpmarindiaz/lfm2.5-vl-450m` with this setup — the Ollama tag we published is text-only (Ollama can't load the mmproj). For vision, use the GGUF + mmproj pair via llama-server, which is what `deno-deploy-llamacpp` already does.
+Either way: the local Ollama install is **not used by the flood-detection route**. Don't mix `ollama run jpmarindiaz/lfm2.5-vl-450m` with this setup — the Ollama tag we published is text-only (Ollama can't load the mmproj). For vision, use the GGUF + mmproj pair via llama-server, which is what `deno-deploy-llamacpp` already does.
+
+(If your dev box also runs the KB assistant, that's a separate Ollama process on the same daemon serving `lfm2` + `nomic-embed-text` at `localhost:11434` — it can coexist with `llama-server` on a different port. The two systems just don't share a runtime.)
 
 ## Sample images for testing
 

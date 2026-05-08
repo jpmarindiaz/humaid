@@ -1,7 +1,8 @@
 // Q&A retrieval over the bundled DuckDB knowledge base.
 //
 // The same `kb.duckdb` we built in `knowledge-base/rag/` ships with the
-// website (`data/kb.duckdb`, ~2.3 MB, 471 rows × 768d Nomic embeddings).
+// website (`data/kb.duckdb`, ~2.9 MB, 589 rows × 768d Nomic embeddings —
+// 471 humanitarian + 118 project-meta).
 // Queries run via `@duckdb/node-api` against that file using DuckDB's
 // native `array_cosine_similarity()` — same engine, same SQL, same
 // results as the local CLI.

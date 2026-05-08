@@ -37,7 +37,7 @@ website/
 │   ├── fetch_binaries.ts pulls ollama bin + llama.cpp bin + lfm2-flood + mmproj
 │   └── build_kb.ts       copies kb.duckdb from ../knowledge-base/
 ├── data/
-│   └── kb.duckdb         471 rows × 768d Nomic embeddings (~2.3 MB, committed)
+│   └── kb.duckdb         589 rows × 768d Nomic embeddings (~2.9 MB, committed)
 ├── bin/                  populated by fetch_binaries.ts (gitignored)
 │   ├── ollama-linux-amd64
 │   ├── llama-cpp/llama-server + .so libs

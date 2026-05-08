@@ -6,7 +6,7 @@ This folder is the home for the humaid desktop app, to be built with Tauri. Code
 
 An offline-first desktop app that runs on a responder's / volunteer's laptop in (or near) a flood-risk community. Two reasons to open it:
 
-1. **"Tell me what to do."** Browse and chat with a curated knowledge base of 471 role-tagged Q&A pairs about disaster response in Colombia (La Mojana wetlands + Putumayo basin).
+1. **"Tell me what to do."** Browse and chat with a curated knowledge base of 589 role-tagged Q&A pairs (471 humanitarian + 118 project-meta) about disaster response in Colombia (La Mojana wetlands + Putumayo basin).
 2. **"Has anything happened?"** The app polls the central website. When a flood alert lands for the region this install was configured for, it pulls the relevant SOPs and surfaces a notification.
 
 It is *not* a frontier-model client. All inference is local. Internet is only used for (a) initial KB sync and (b) polling for alerts.
@@ -44,7 +44,7 @@ It is *not* a frontier-model client. All inference is local. Internet is only us
 
 ## Component 1 — Knowledge base browser
 
-**Source data:** `knowledge-base/qa-pairs.csv` and `knowledge-base/kb.duckdb` (2.3 MB, 471 rows × 768-dim Nomic embeddings). Both files are committed in the repo and ship inside the Tauri bundle.
+**Source data:** `knowledge-base/qa-pairs.csv` (471 humanitarian rows) + `knowledge-base/project-qa/` (118 project-meta rows) → merged into `knowledge-base/kb.duckdb` (2.9 MB, 589 rows × 768-dim Nomic embeddings). All committed in the repo and ship inside the Tauri bundle.
 
 **What the UI shows:** a tree / list view of Q&A pairs, filterable by:
 

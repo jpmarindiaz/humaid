@@ -2,6 +2,8 @@
 
 Q&A dataset on water-management humanitarian crises in Colombia, with focus on **La Mojana** (Caribbean wetlands) and **Putumayo** (Andean–Amazon basin). Built by spawning six parallel agents (one per role) that read the markdown research corpus under `research/download-md/` and `research/*.md` and converted it into role-tagged, phase-tagged, region-tagged Q&A.
 
+> **Published publicly on HuggingFace 🤗** at [`jpmarindiaz/humaid-kb-colombia`](https://huggingface.co/datasets/jpmarindiaz/humaid-kb-colombia) (CC-BY-4.0). The HF repo bundles the merged CSV (589 rows = 471 humanitarian + 118 project-meta), both source CSVs as separate configs, and the prebuilt `kb.duckdb` index. Push a fresh build with `deno task hf:push:dataset`.
+
 ## Files
 
 ```

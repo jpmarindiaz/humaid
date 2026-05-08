@@ -3,7 +3,8 @@
     "merge": "deno run -A merge.ts",
     "project-qa": "deno run -A project-qa/generate.ts",
     "build": "deno run -A rag/build.ts",
-    "ask": "deno run -A rag/ask.ts"
+    "ask": "deno run -A rag/ask.ts",
+    "hf:push:dataset": "deno run -A hf_push_dataset.ts"
   },
   "imports": {
     "@std/csv": "jsr:@std/csv@^1.0.5",
