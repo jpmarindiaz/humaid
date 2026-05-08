@@ -43,7 +43,8 @@
       "data/",
       "assets/",
       "bin/",
-      "deno.json"
+      "deno.json",
+      "deno-client.json"
     ],
     "exclude": ["client/", "scripts/", "node_modules/"]
   }
