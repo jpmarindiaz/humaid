@@ -15,7 +15,6 @@ import Documents from "./components/Documents";
 import Chat from "./components/Chat";
 import StatusBar from "./components/StatusBar";
 import FiltersBar from "./components/FiltersBar";
-import MobileFiltersSheet from "./components/MobileFiltersSheet";
 import ModelsInfo from "./components/ModelsInfo";
 import { useAlertPolling } from "./hooks/useAlertPolling";
 import { useIsMobile } from "./hooks/useIsMobile";
@@ -35,7 +34,6 @@ export default function App() {
   const [unseenAlerts, setUnseenAlerts] = useState(0);
   const [chatDocPath, setChatDocPath] = useState<string | null>(null);
   const [docsInitialPath, setDocsInitialPath] = useState<string | null>(null);
-  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const isMobile = useIsMobile();
 
@@ -192,19 +190,6 @@ export default function App() {
               />
             </div>
 
-            {/* Mobile filters trigger */}
-            <button
-              type="button"
-              onClick={() => setFiltersOpen(true)}
-              className="md:hidden inline-flex items-center gap-1.5 rounded-md border border-line bg-soft/60 px-2.5 py-1 text-[11px] text-ink-soft"
-              title="Open filters"
-            >
-              <span className="text-muted">filters</span>
-              <span>{regionFilter === "all" ? "all" : regionFilter}</span>
-              <span className="opacity-50">·</span>
-              <span>{phase === "all" ? "all" : phase}</span>
-            </button>
-
             <div className="ml-auto flex items-center gap-2">
               <ModelsInfo />
               <button
@@ -219,6 +204,24 @@ export default function App() {
           </>
         )}
       </header>
+
+      {/* Mobile filters bar — pinned just below the brand header so chip
+          dropdowns open downward into the content area, not into a cramped
+          bottom sheet. */}
+      {profile && (
+        <div className="md:hidden border-b border-line bg-cream/90 backdrop-blur sticky top-[42px] z-10 px-3 py-2">
+          <FiltersBar
+            role={profile.role}
+            region={regionFilter}
+            phase={phase}
+            language={language}
+            onRoleChange={onRoleChange}
+            onRegionChange={onRegionChange}
+            onPhaseChange={setPhase}
+            onLanguageChange={onLanguageChange}
+          />
+        </div>
+      )}
 
       {latestAlert && profile && tab !== "alerts" ? (
         <button
@@ -255,20 +258,6 @@ export default function App() {
         <StatusBar profile={profile} />
       </div>
 
-      {profile && (
-        <MobileFiltersSheet
-          open={filtersOpen}
-          onClose={() => setFiltersOpen(false)}
-          role={profile.role}
-          region={regionFilter}
-          phase={phase}
-          language={language}
-          onRoleChange={onRoleChange}
-          onRegionChange={onRegionChange}
-          onPhaseChange={setPhase}
-          onLanguageChange={onLanguageChange}
-        />
-      )}
     </div>
   );
 }
