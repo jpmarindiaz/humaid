@@ -1,0 +1,43 @@
+{
+  "location_id": "ayapel",
+  "location_name": "Ayapel, Córdoba",
+  "lon": -75.1389,
+  "lat": 8.3128,
+  "event_id": "cara_de_gato_2025",
+  "window_kind": "event",
+  "selected_date": "2025-08-25",
+  "selected_timestamp": "2025-08-25T12:00:00Z",
+  "capture_datetime": "2025-08-23T15:41:04Z",
+  "cloud_cover": 62.71264,
+  "source": "sentinel-2c",
+  "candidates_tried": [
+    {
+      "date": "2025-08-27",
+      "available": true,
+      "cloudCover": 94.630247,
+      "captureDatetime": "2025-08-25T15:40:59Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-08-29",
+      "available": true,
+      "cloudCover": 98.495007,
+      "captureDatetime": "2025-08-28T15:40:46Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-08-25",
+      "available": true,
+      "cloudCover": 62.71264,
+      "captureDatetime": "2025-08-23T15:41:04Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-08-31",
+      "available": true,
+      "cloudCover": 98.495007,
+      "captureDatetime": "2025-08-28T15:40:46Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

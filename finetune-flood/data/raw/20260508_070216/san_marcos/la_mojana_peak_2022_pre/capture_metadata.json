@@ -1,0 +1,43 @@
+{
+  "location_id": "san_marcos",
+  "location_name": "San Marcos, Sucre",
+  "lon": -75.1283,
+  "lat": 8.6622,
+  "event_id": "la_mojana_peak_2022",
+  "window_kind": "pre",
+  "selected_date": "2022-03-24",
+  "selected_timestamp": "2022-03-24T12:00:00Z",
+  "capture_datetime": "2022-03-22T15:40:48Z",
+  "cloud_cover": 42.060256,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2022-04-03",
+      "available": true,
+      "cloudCover": 99.862593,
+      "captureDatetime": "2022-04-01T15:40:47Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-03-29",
+      "available": true,
+      "cloudCover": 99.945021,
+      "captureDatetime": "2022-03-27T15:40:42Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-03-24",
+      "available": true,
+      "cloudCover": 42.060256,
+      "captureDatetime": "2022-03-22T15:40:48Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-03-20",
+      "available": true,
+      "cloudCover": 45.676422,
+      "captureDatetime": "2022-03-19T15:30:53Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

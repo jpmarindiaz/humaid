@@ -1,0 +1,58 @@
+{
+  "location_id": "sucre_cabecera",
+  "location_name": "Sucre (cabecera), Sucre",
+  "lon": -74.7197,
+  "lat": 8.8125,
+  "event_id": "la_mojana_peak_2024",
+  "window_kind": "event",
+  "selected_date": "2024-06-11",
+  "selected_timestamp": "2024-06-11T12:00:00Z",
+  "capture_datetime": "2024-06-06T15:30:52Z",
+  "cloud_cover": 99.810737,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2024-06-11",
+      "available": true,
+      "cloudCover": 99.810737,
+      "captureDatetime": "2024-06-06T15:30:52Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-06-13",
+      "available": true,
+      "cloudCover": 99.969304,
+      "captureDatetime": "2024-06-11T15:30:49Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-06-09",
+      "available": true,
+      "cloudCover": 99.810737,
+      "captureDatetime": "2024-06-06T15:30:52Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-06-15",
+      "available": true,
+      "cloudCover": 99.969304,
+      "captureDatetime": "2024-06-11T15:30:49Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/sucre_cabecera/la_mojana_peak_2024_pre",
+    "selected_date": "2024-05-18",
+    "capture_datetime": "2024-05-17T15:30:48Z",
+    "cloud_cover": 92.220592
+  },
+  "labels": {
+    "flood_present": false,
+    "flood_severity": "none",
+    "water_coverage_pct_estimate": "<10%",
+    "populated_area_affected": false,
+    "infrastructure_at_risk": false,
+    "river_overflow_visible": false,
+    "image_quality_limited": true
+  }
+}

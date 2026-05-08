@@ -1,8 +1,9 @@
 .env
-data/raw/
-data/flood_train.jsonl
-data/flood_eval.jsonl
+
+# Fine-tuned weights live on HF Hub (jpmarindiaz/lfm2-flood). The local
+# outputs/ contains the merged HF checkpoint (1+ GB) plus DeepSpeed optimizer
+# shards (5+ GB) — neither belongs in git. Pull from HF when you need them.
 outputs/
-evals/
+
 node_modules/
 .DS_Store

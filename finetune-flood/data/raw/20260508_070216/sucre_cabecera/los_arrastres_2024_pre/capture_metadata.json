@@ -1,0 +1,43 @@
+{
+  "location_id": "sucre_cabecera",
+  "location_name": "Sucre (cabecera), Sucre",
+  "lon": -74.7197,
+  "lat": 8.8125,
+  "event_id": "los_arrastres_2024",
+  "window_kind": "pre",
+  "selected_date": "2024-04-14",
+  "selected_timestamp": "2024-04-14T12:00:00Z",
+  "capture_datetime": "2024-04-12T15:30:47Z",
+  "cloud_cover": 14.504153,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2024-04-24",
+      "available": true,
+      "cloudCover": 99.922788,
+      "captureDatetime": "2024-04-22T15:30:46Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-04-19",
+      "available": true,
+      "cloudCover": 94.96308,
+      "captureDatetime": "2024-04-17T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-04-14",
+      "available": true,
+      "cloudCover": 14.504153,
+      "captureDatetime": "2024-04-12T15:30:47Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-04-10",
+      "available": true,
+      "cloudCover": 87.975007,
+      "captureDatetime": "2024-04-07T15:30:45Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

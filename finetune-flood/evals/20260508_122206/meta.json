@@ -1,0 +1,27 @@
+{
+  "run_id": "20260508_122206",
+  "started_at": "2026-05-08T12:22:06.218Z",
+  "backend": "local",
+  "backend_description": "llama-server at http://localhost:8765, model=lfm2.5-vl-450m-base",
+  "model": "lfm2.5-vl-450m-base",
+  "dataset": "data/raw/20260508_070216",
+  "n_samples": 20,
+  "display_name": "lfm2.5-vl-450m base (Q4_0, no fine-tune)",
+  "finished_at": "2026-05-08T12:22:17.199Z",
+  "aggregate": {
+    "n": 20,
+    "valid_json": 1,
+    "fields_present": 0,
+    "fieldAcc": {
+      "flood_present": 0,
+      "flood_severity": 0,
+      "water_coverage_pct_estimate": 0,
+      "populated_area_affected": 0,
+      "infrastructure_at_risk": 0,
+      "river_overflow_visible": 0,
+      "image_quality_limited": 0
+    },
+    "overall": 0,
+    "avg_latency_s": 0.5487010456499999
+  }
+}

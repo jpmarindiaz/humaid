@@ -1,0 +1,13 @@
+{
+  "raw_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_062206",
+  "mode": "pairs",
+  "generated_at": "2026-05-08T10:06:15.814Z",
+  "total_pairs": 0,
+  "n_slices": 1,
+  "slices": [
+    {
+      "batch_id": 0,
+      "pairs": []
+    }
+  ]
+}

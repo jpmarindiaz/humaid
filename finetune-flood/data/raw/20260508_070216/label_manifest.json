@@ -1,0 +1,54 @@
+{
+  "raw_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216",
+  "mode": "pairs",
+  "generated_at": "2026-05-08T11:57:17.135Z",
+  "total_pairs": 2,
+  "n_slices": 1,
+  "slices": [
+    {
+      "batch_id": 0,
+      "pairs": [
+        {
+          "pair_id": "mocoa/mocoa_avalancha_2017/event",
+          "location_id": "mocoa",
+          "event_id": "mocoa_avalancha_2017",
+          "current_kind": "event",
+          "pre": {
+            "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre",
+            "rgb_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/rgb.png",
+            "swir_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/swir.png",
+            "capture_metadata_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/capture_metadata.json",
+            "annotation_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/annotation.json"
+          },
+          "current": {
+            "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_event",
+            "rgb_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_event/rgb.png",
+            "swir_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_event/swir.png",
+            "capture_metadata_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_event/capture_metadata.json",
+            "annotation_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_event/annotation.json"
+          }
+        },
+        {
+          "pair_id": "mocoa/mocoa_avalancha_2017/post",
+          "location_id": "mocoa",
+          "event_id": "mocoa_avalancha_2017",
+          "current_kind": "post",
+          "pre": {
+            "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre",
+            "rgb_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/rgb.png",
+            "swir_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/swir.png",
+            "capture_metadata_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/capture_metadata.json",
+            "annotation_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre/annotation.json"
+          },
+          "current": {
+            "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_post",
+            "rgb_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_post/rgb.png",
+            "swir_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_post/swir.png",
+            "capture_metadata_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_post/capture_metadata.json",
+            "annotation_path": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_post/annotation.json"
+          }
+        }
+      ]
+    }
+  ]
+}

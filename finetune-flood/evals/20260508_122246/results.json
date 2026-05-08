@@ -1,0 +1,4532 @@
+[
+  {
+    "id": "ayapel/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.652379792,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.602736708,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4746465000000001,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4653118340000001,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "brown land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "brown land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.605111417,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4698406250000003,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.36201125,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6512468749999998,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.32742208399999984,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6087050410000001,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4670092079999995,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "ayapel/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6223897079999997,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6588050839999996,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.56768725,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "Baseline": "B4-B3-B2"
+        },
+        "Image 2": {
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "Current": "RGB-current"
+        },
+        "Image 4": {
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5783834999999999,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.45957137500000045,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6456113750000004,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6428045000000002,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5944702079999988,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.47205175000000055,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.32851929100000055,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland"
+          },
+          "swir": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland"
+          }
+        },
+        "swir": {
+          "water": "not visible",
+          "vegetation": "healthy",
+          "soil": "dry",
+          "land": "wetland"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6250098749999997,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6706246250000004,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "caimito/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_2": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_3": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_4": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7715472920000012,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "colon_putumayo/putumayo_decreto_0472_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.3750143750000007,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "colon_putumayo/putumayo_decreto_0472_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6733964160000014,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water_present": false,
+            "water_overflow_visible": true
+          },
+          "flood_present": false
+        },
+        "image_2": {
+          "basiseline": {
+            "water_present": true,
+            "water_overflow_visible": true
+          },
+          "flood_present": true
+        },
+        "image_3": {
+          "basiseline": {
+            "water_present": true,
+            "water_overflow_visible": true
+          },
+          "flood_present": true
+        },
+        "image_4": {
+          "basiseline": {
+            "water_present": true,
+            "water_overflow_visible": true
+          },
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7464274160000004,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water_present": false,
+            "water_overflow_visible": true
+          },
+          "water_affected": {
+            "area_affected": "new"
+          }
+        },
+        "swir_baseline": {
+          "water_present": false,
+          "water_overflow_visible": true
+        },
+        "swir_affected": {
+          "area_affected": "baseline"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5669490829999995,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "tile_1": {
+          "bg": "RGB-baseline",
+          "color": "SWIR-baseline"
+        },
+        "tile_2": {
+          "bg": "RGB-current",
+          "color": "SWIR-baseline"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.48697762500000136,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.45556829199999993,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6534012080000029,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.47333679100000153,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "basiseline": {
+          "image_1": "RGB-baseline",
+          "image_2": "SWIR-baseline",
+          "image_3": "RGB-current",
+          "image_4": "SWIR-current"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.4659155000000028,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6371314160000001,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6112662080000009,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4517978340000009,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "brown land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "brown land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6037623329999987,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "guaranda/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.45880975000000035,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.46696099999999935,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6492849170000009,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6383370830000021,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.46287254100000064,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4567945830000026,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4521396670000031,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland"
+          },
+          "swir": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland"
+          }
+        },
+        "swir": {
+          "water": "not visible",
+          "vegetation": "healthy",
+          "soil": "dry",
+          "land": "wetland"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6186504170000008,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.44678912499999934,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6216312499999985,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4638877079999984,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6518250830000034,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "majagual/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4642675420000014,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "mocoa/mocoa_avalancha_2017/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water_present": false,
+            "water_visible": true,
+            "flood_present": false
+          },
+          "swir_present": true,
+          "swir_baseline": {
+            "water_present": false,
+            "water_visible": true,
+            "flood_present": false
+          }
+        },
+        "swir_baseline": {
+          "water_present": false,
+          "water_visible": true,
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6032099160000034,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "mocoa/mocoa_avalancha_2017/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.360281417000002,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_asis/putumayo_decreto_0472_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.3568189170000005,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_asis/putumayo_decreto_0472_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland",
+            "flood_present": false
+          },
+          "swir": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland",
+            "flood_present": false
+          }
+        },
+        "swir": {
+          "water": "not visible",
+          "vegetation": "healthy",
+          "soil": "dry",
+          "land": "wetland",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6941451659999984,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_guzman/putumayo_decreto_0472_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": "RGB-baseline",
+        "Image 2": "SWIR-baseline",
+        "Image 3": "RGB-current",
+        "Image 4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4460321669999976,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_guzman/putumayo_decreto_0472_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.45693404100000046,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_leguizamo/puerto_leguizamo_calamidad_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.34977045799999906,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_leguizamo/puerto_leguizamo_calamidad_2025/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_2": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_3": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_4": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6878478749999994,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_leguizamo/putumayo_decreto_0472_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland"
+          },
+          "swir": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "soil": "dry",
+            "land": "wetland"
+          }
+        },
+        "swir": {
+          "water": "not visible",
+          "vegetation": "healthy",
+          "soil": "dry",
+          "land": "wetland"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6353709589999998,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "puerto_leguizamo/putumayo_decreto_0472_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "tile_1": {
+          "bg": "RGB-baseline",
+          "color": "RGB-baseline"
+        },
+        "tile_2": {
+          "bg": "SWIR-baseline",
+          "color": "SWIR-baseline"
+        },
+        "tile_3": {
+          "bg": "RGB-current",
+          "color": "RGB-current"
+        },
+        "tile_4": {
+          "bg": "SWIR-current",
+          "color": "SWIR-current"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6101988339999989,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4653076249999976,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5973970829999962,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.45685312500000147,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4629022909999985,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4590237500000003,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.643538625000001,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6092533340000009,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4731442500000048,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "none",
+          "SWIR": "none"
+        },
+        "Image 3": {
+          "RGB": "none",
+          "SWIR": "none"
+        },
+        "Image 4": {
+          "RGB": "none",
+          "SWIR": "none"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5602670839999991,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "tile_1": {
+          "bg": "RGB-baseline",
+          "color": "RGB-baseline"
+        },
+        "tile_2": {
+          "bg": "SWIR-baseline",
+          "color": "SWIR-baseline"
+        },
+        "tile_3": {
+          "bg": "RGB-current",
+          "color": "RGB-current"
+        },
+        "tile_4": {
+          "bg": "SWIR-current",
+          "color": "SWIR-current"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5939917920000007,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4627853329999998,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_benito_abad/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.36369083300000055,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6478000830000019,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.45819954100000176,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.48737679199999545,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.47237112499999784,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "Baseline": "B4-B3-B2"
+        },
+        "Image 2": {
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "Current": "B4-B3-B2"
+        },
+        "Image 4": {
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5892872500000013,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.46086891699999977,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "Baseline": "B4-B3-B2"
+        },
+        "Image 2": {
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "Current": "RGB-current"
+        },
+        "Image 4": {
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.592991833,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "Baseline": "B4-B3-B2"
+        },
+        "Image 2": {
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2"
+        },
+        "Image 4": {
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.5687497920000023,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6332145840000012,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4708409580000007,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4845255000000034,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_jacinto_del_cauca/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.49625341599999956,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water_visible": true,
+            "water_area": "large",
+            "land_area": "moderate",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_visible": true,
+          "swir_area": "large",
+          "land_area": "moderate",
+          "vegetation": "healthy",
+          "flood_present": false
+        },
+        "swir_baseline": {
+          "water_visible": false,
+          "water_area": "large",
+          "land_area": "moderate",
+          "vegetation": "healthy",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7338406249999971,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "land": "dry land",
+            "settlement": "not visible"
+          },
+          "swir": {
+            "water": "not visible",
+            "vegetation": "healthy",
+            "land": "dry land",
+            "settlement": "not visible"
+          }
+        },
+        "swir": {
+          "water": "not visible",
+          "vegetation": "healthy",
+          "land": "dry land",
+          "settlement": "not visible"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6607102500000037,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6203054170000032,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          },
+          "swir_baseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "flood_present": false
+          }
+        },
+        "swir_current": {
+          "water": "dry land",
+          "vegetation": "healthy",
+          "flood_present": true
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6262022090000028,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6790650000000024,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.496650916999999,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.3895961249999964,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "Baseline": "B4-B3-B2"
+        },
+        "Image 2": {
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "Current": "current"
+        },
+        "Image 4": {
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6129979590000003,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.3478908329999977,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.35860291599999616,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.5260635000000038,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "san_marcos/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "basiseline": {
+            "water": "dry land",
+            "vegetation": "healthy",
+            "land_area": "large",
+            "water_area": "lake",
+            "land_area_affected": "new"
+          },
+          "swir_band": {
+            "water": "brown",
+            "vegetation": "healthy",
+            "land_area": "large",
+            "land_area_affected": "new"
+          }
+        },
+        "swir_band": {
+          "water": "brown",
+          "vegetation": "healthy",
+          "land_area": "large",
+          "land_area_affected": "new"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7236798329999947,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "santiago_putumayo/putumayo_decreto_0472_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6564855840000018,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "santiago_putumayo/putumayo_decreto_0472_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window": {
+        "tile_1": {
+          "bg": "RGB-baseline",
+          "color": "RGB-baseline"
+        },
+        "tile_2": {
+          "bg": "SWIR-baseline",
+          "color": "SWIR-baseline"
+        },
+        "tile_3": {
+          "bg": "RGB-current",
+          "color": "RGB-current"
+        },
+        "tile_4": {
+          "bg": "SWIR-current",
+          "color": "SWIR-current"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6482234170000011,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity_confident"
+    },
+    "error": null,
+    "latency_s": 0.4063750409999993,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "current_window": {
+        "flood_state": "not_flooding",
+        "river_overflow_visible": true
+      }
+    },
+    "error": null,
+    "latency_s": 0.44525091700000485,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7026211249999978,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_2": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_3": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_4": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7474609999999957,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.48336291699999856,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/cara_de_gato_2025/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "",
+          "SWIR": ""
+        },
+        "Image 3": {
+          "RGB": "",
+          "SWIR": ""
+        },
+        "Image 4": {
+          "RGB": "",
+          "SWIR": ""
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.586175166999994,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/la_mojana_peak_2022/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair_1": {
+        "image_1": "RGB-baseline",
+        "image_2": "SWIR-baseline",
+        "image_3": "RGB-current",
+        "image_4": "SWIR-current"
+      }
+    },
+    "error": null,
+    "latency_s": 0.4921518749999959,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/la_mojana_peak_2022/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "severe",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.6809998750000014,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/la_mojana_peak_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.3782295410000006,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/la_mojana_peak_2024/post",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "<10%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "current_window_flood_state": "flood_severity"
+    },
+    "error": null,
+    "latency_s": 0.40585554099999716,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/los_arrastres_2024/event",
+    "ground_truth": {
+      "flood_present": false,
+      "flood_severity": "none",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": false,
+      "river_overflow_visible": false,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "tile_pair": {
+        "Image 1": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 2": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 3": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        },
+        "Image 4": {
+          "RGB": "B4-B3-B2",
+          "SWIR": "B12-B8-B4"
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7099026249999951,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  },
+  {
+    "id": "sucre_cabecera/los_arrastres_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "10-30%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "prediction": {
+      "current_window": {
+        "image_1": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_2": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_3": {
+          "binary": "B4-B3-B2",
+          "color_preservation": "high",
+          "flood_present": false
+        },
+        "image_4": {
+          "binary": "B12-B8-B4",
+          "color_preservation": "high",
+          "flood_present": false
+        }
+      }
+    },
+    "error": null,
+    "latency_s": 0.7582671249999985,
+    "matches": {
+      "valid_json": true,
+      "fields_present": false,
+      "per_field": {
+        "flood_present": "missing",
+        "flood_severity": "missing",
+        "water_coverage_pct_estimate": "missing",
+        "populated_area_affected": "missing",
+        "infrastructure_at_risk": "missing",
+        "river_overflow_visible": "missing",
+        "image_quality_limited": "missing"
+      }
+    }
+  }
+]

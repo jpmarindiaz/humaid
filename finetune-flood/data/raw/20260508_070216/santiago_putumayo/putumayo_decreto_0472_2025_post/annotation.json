@@ -1,0 +1,58 @@
+{
+  "location_id": "santiago_putumayo",
+  "location_name": "Santiago, Putumayo",
+  "lon": -77.0033,
+  "lat": 1.1467,
+  "event_id": "putumayo_decreto_0472_2025",
+  "window_kind": "post",
+  "selected_date": "2025-08-11",
+  "selected_timestamp": "2025-08-11T12:00:00Z",
+  "capture_datetime": "2025-08-08T15:42:49Z",
+  "cloud_cover": 45.449749,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2025-08-06",
+      "available": true,
+      "cloudCover": 56.082791,
+      "captureDatetime": "2025-08-05T15:43:03Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-08-11",
+      "available": true,
+      "cloudCover": 45.449749,
+      "captureDatetime": "2025-08-08T15:42:49Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-08-16",
+      "available": true,
+      "cloudCover": 78.964508,
+      "captureDatetime": "2025-08-13T15:43:06Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-08-21",
+      "available": true,
+      "cloudCover": 81.250584,
+      "captureDatetime": "2025-08-18T15:42:50Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/santiago_putumayo/putumayo_decreto_0472_2025_pre",
+    "selected_date": "2025-07-09",
+    "capture_datetime": "2025-07-06T15:43:06Z",
+    "cloud_cover": 46.560234
+  },
+  "labels": {
+    "flood_present": false,
+    "flood_severity": "none",
+    "water_coverage_pct_estimate": "<10%",
+    "populated_area_affected": false,
+    "infrastructure_at_risk": false,
+    "river_overflow_visible": false,
+    "image_quality_limited": true
+  }
+}

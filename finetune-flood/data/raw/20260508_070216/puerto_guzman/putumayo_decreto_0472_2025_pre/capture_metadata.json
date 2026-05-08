@@ -1,0 +1,43 @@
+{
+  "location_id": "puerto_guzman",
+  "location_name": "Puerto Guzmán, Putumayo",
+  "lon": -76.4072,
+  "lat": 0.9636,
+  "event_id": "putumayo_decreto_0472_2025",
+  "window_kind": "pre",
+  "selected_date": "2025-06-25",
+  "selected_timestamp": "2025-06-25T12:00:00Z",
+  "capture_datetime": "2025-06-23T15:33:04Z",
+  "cloud_cover": 69.841295,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2025-07-09",
+      "available": true,
+      "cloudCover": 99.941415,
+      "captureDatetime": "2025-07-03T15:33:07Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-07-04",
+      "available": true,
+      "cloudCover": 99.941415,
+      "captureDatetime": "2025-07-03T15:33:07Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-06-29",
+      "available": true,
+      "cloudCover": 92.226541,
+      "captureDatetime": "2025-06-26T15:32:51Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-06-25",
+      "available": true,
+      "cloudCover": 69.841295,
+      "captureDatetime": "2025-06-23T15:33:04Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

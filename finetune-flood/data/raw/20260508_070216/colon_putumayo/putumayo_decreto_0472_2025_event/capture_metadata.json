@@ -1,0 +1,43 @@
+{
+  "location_id": "colon_putumayo",
+  "location_name": "Colón, Putumayo",
+  "lon": -76.9667,
+  "lat": 1.1875,
+  "event_id": "putumayo_decreto_0472_2025",
+  "window_kind": "event",
+  "selected_date": "2025-07-25",
+  "selected_timestamp": "2025-07-25T12:00:00Z",
+  "capture_datetime": "2025-07-24T15:43:10Z",
+  "cloud_cover": 60.608464,
+  "source": "sentinel-2c",
+  "candidates_tried": [
+    {
+      "date": "2025-07-23",
+      "available": true,
+      "cloudCover": 85.178655,
+      "captureDatetime": "2025-07-19T15:42:50Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-07-25",
+      "available": true,
+      "cloudCover": 60.608464,
+      "captureDatetime": "2025-07-24T15:43:10Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-07-21",
+      "available": true,
+      "cloudCover": 85.178655,
+      "captureDatetime": "2025-07-19T15:42:50Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-07-27",
+      "available": true,
+      "cloudCover": 67.723733,
+      "captureDatetime": "2025-07-26T15:43:06Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

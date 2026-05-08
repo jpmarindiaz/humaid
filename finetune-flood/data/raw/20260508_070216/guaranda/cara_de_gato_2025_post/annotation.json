@@ -1,0 +1,58 @@
+{
+  "location_id": "guaranda",
+  "location_name": "Guaranda, Sucre",
+  "lon": -74.5392,
+  "lat": 8.4694,
+  "event_id": "cara_de_gato_2025",
+  "window_kind": "post",
+  "selected_date": "2025-09-10",
+  "selected_timestamp": "2025-09-10T12:00:00Z",
+  "capture_datetime": "2025-09-09T15:31:01Z",
+  "cloud_cover": 41.006419,
+  "source": "sentinel-2c",
+  "candidates_tried": [
+    {
+      "date": "2025-09-10",
+      "available": true,
+      "cloudCover": 41.006419,
+      "captureDatetime": "2025-09-09T15:31:01Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-09-15",
+      "available": true,
+      "cloudCover": 98.265833,
+      "captureDatetime": "2025-09-11T15:30:58Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-09-20",
+      "available": true,
+      "cloudCover": 63.565648,
+      "captureDatetime": "2025-09-19T15:30:59Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-09-25",
+      "available": true,
+      "cloudCover": 99.884337,
+      "captureDatetime": "2025-09-24T15:30:46Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/guaranda/cara_de_gato_2025_pre",
+    "selected_date": "2025-08-08",
+    "capture_datetime": "2025-08-05T15:30:47Z",
+    "cloud_cover": 34.744343
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "minor",
+    "water_coverage_pct_estimate": "10-30%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": true
+  }
+}

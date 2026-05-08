@@ -1,0 +1,27 @@
+{
+  "run_id": "20260508_132232",
+  "started_at": "2026-05-08T13:22:32.758Z",
+  "backend": "anthropic",
+  "backend_description": "anthropic API, model=claude-sonnet-4-6",
+  "model": "claude-sonnet-4-6",
+  "dataset": "data/raw/20260508_070216",
+  "n_samples": 5,
+  "display_name": "image-paths fix smoke test",
+  "finished_at": "2026-05-08T13:22:43.267Z",
+  "aggregate": {
+    "n": 5,
+    "valid_json": 1,
+    "fields_present": 1,
+    "fieldAcc": {
+      "flood_present": 1,
+      "flood_severity": 0.6,
+      "water_coverage_pct_estimate": 1,
+      "populated_area_affected": 0.8,
+      "infrastructure_at_risk": 1,
+      "river_overflow_visible": 1,
+      "image_quality_limited": 0.6
+    },
+    "overall": 0.8571428571428571,
+    "avg_latency_s": 3.6256087666
+  }
+}

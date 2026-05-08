@@ -1,0 +1,56 @@
+{
+  "location_id": "san_jacinto_del_cauca",
+  "location_name": "San Jacinto del Cauca, Bolívar",
+  "lon": -74.7167,
+  "lat": 8.25,
+  "event_id": "la_mojana_peak_2022",
+  "window_kind": "post",
+  "selected_date": "2022-05-11",
+  "selected_timestamp": "2022-05-11T12:00:00Z",
+  "capture_datetime": "2022-05-08T15:30:50Z",
+  "cloud_cover": 26.302177,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2022-05-01",
+      "available": true,
+      "cloudCover": 97.343159,
+      "captureDatetime": "2022-04-28T15:30:51Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-05-06",
+      "available": false,
+      "cloudCover": null
+    },
+    {
+      "date": "2022-05-11",
+      "available": true,
+      "cloudCover": 26.302177,
+      "captureDatetime": "2022-05-08T15:30:50Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-05-16",
+      "available": true,
+      "cloudCover": 97.331768,
+      "captureDatetime": "2022-05-13T15:30:45Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/san_jacinto_del_cauca/la_mojana_peak_2022_pre",
+    "selected_date": "2022-03-29",
+    "capture_datetime": "2022-03-24T15:30:44Z",
+    "cloud_cover": 43.385395
+  },
+  "labels": {
+    "flood_present": false,
+    "flood_severity": "none",
+    "water_coverage_pct_estimate": "30-60%",
+    "populated_area_affected": false,
+    "infrastructure_at_risk": false,
+    "river_overflow_visible": false,
+    "image_quality_limited": true
+  }
+}

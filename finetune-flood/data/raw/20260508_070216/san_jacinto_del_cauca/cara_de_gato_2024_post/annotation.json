@@ -1,0 +1,56 @@
+{
+  "location_id": "san_jacinto_del_cauca",
+  "location_name": "San Jacinto del Cauca, Bolívar",
+  "lon": -74.7167,
+  "lat": 8.25,
+  "event_id": "cara_de_gato_2024",
+  "window_kind": "post",
+  "selected_date": "2024-06-04",
+  "selected_timestamp": "2024-06-04T12:00:00Z",
+  "capture_datetime": "2024-06-01T15:30:47Z",
+  "cloud_cover": 16.466983,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2024-05-20",
+      "available": true,
+      "cloudCover": 92.220592,
+      "captureDatetime": "2024-05-17T15:30:48Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-25",
+      "available": false,
+      "cloudCover": null
+    },
+    {
+      "date": "2024-05-30",
+      "available": true,
+      "cloudCover": 98.140472,
+      "captureDatetime": "2024-05-27T15:30:47Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-06-04",
+      "available": true,
+      "cloudCover": 16.466983,
+      "captureDatetime": "2024-06-01T15:30:47Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/san_jacinto_del_cauca/cara_de_gato_2024_pre",
+    "selected_date": "2024-04-17",
+    "capture_datetime": "2024-04-12T15:30:47Z",
+    "cloud_cover": 14.504153
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "moderate",
+    "water_coverage_pct_estimate": "30-60%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": false
+  }
+}

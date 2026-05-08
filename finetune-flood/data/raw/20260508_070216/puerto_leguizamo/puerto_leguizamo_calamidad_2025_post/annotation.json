@@ -1,0 +1,58 @@
+{
+  "location_id": "puerto_leguizamo",
+  "location_name": "Puerto Leguízamo, Putumayo",
+  "lon": -74.7822,
+  "lat": -0.1933,
+  "event_id": "puerto_leguizamo_calamidad_2025",
+  "window_kind": "post",
+  "selected_date": "2025-05-09",
+  "selected_timestamp": "2025-05-09T12:00:00Z",
+  "capture_datetime": "2025-05-07T15:33:13Z",
+  "cloud_cover": 27.291983,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2025-04-24",
+      "available": true,
+      "cloudCover": 45.373991,
+      "captureDatetime": "2025-04-22T15:33:34Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-04-29",
+      "available": true,
+      "cloudCover": 79.591143,
+      "captureDatetime": "2025-04-27T15:33:13Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-05-04",
+      "available": true,
+      "cloudCover": 98.091704,
+      "captureDatetime": "2025-05-02T15:33:33Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-05-09",
+      "available": true,
+      "cloudCover": 27.291983,
+      "captureDatetime": "2025-05-07T15:33:13Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/puerto_leguizamo/puerto_leguizamo_calamidad_2025_pre",
+    "selected_date": "2025-03-13",
+    "capture_datetime": "2025-03-08T15:33:14Z",
+    "cloud_cover": 25.674152
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "moderate",
+    "water_coverage_pct_estimate": "10-30%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": false
+  }
+}

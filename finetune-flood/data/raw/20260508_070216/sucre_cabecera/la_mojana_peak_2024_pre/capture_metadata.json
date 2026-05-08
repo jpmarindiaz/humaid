@@ -1,0 +1,43 @@
+{
+  "location_id": "sucre_cabecera",
+  "location_name": "Sucre (cabecera), Sucre",
+  "lon": -74.7197,
+  "lat": 8.8125,
+  "event_id": "la_mojana_peak_2024",
+  "window_kind": "pre",
+  "selected_date": "2024-05-18",
+  "selected_timestamp": "2024-05-18T12:00:00Z",
+  "capture_datetime": "2024-05-17T15:30:48Z",
+  "cloud_cover": 92.220592,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2024-05-28",
+      "available": true,
+      "cloudCover": 98.140472,
+      "captureDatetime": "2024-05-27T15:30:47Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-23",
+      "available": true,
+      "cloudCover": 96.66962,
+      "captureDatetime": "2024-05-22T15:30:46Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-05-18",
+      "available": true,
+      "cloudCover": 92.220592,
+      "captureDatetime": "2024-05-17T15:30:48Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-14",
+      "available": true,
+      "cloudCover": 99.338025,
+      "captureDatetime": "2024-05-12T15:30:46Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "location_id": "san_marcos",
+  "location_name": "San Marcos, Sucre",
+  "lon": -75.1283,
+  "lat": 8.6622,
+  "event_id": "la_mojana_peak_2022",
+  "window_kind": "post",
+  "selected_date": "2022-05-11",
+  "selected_timestamp": "2022-05-11T12:00:00Z",
+  "capture_datetime": "2022-05-08T15:30:54Z",
+  "cloud_cover": 36.449581,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2022-05-01",
+      "available": true,
+      "cloudCover": 82.965541,
+      "captureDatetime": "2022-04-28T15:30:55Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-05-06",
+      "available": true,
+      "cloudCover": 37.029523,
+      "captureDatetime": "2022-05-03T15:30:44Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-05-11",
+      "available": true,
+      "cloudCover": 36.449581,
+      "captureDatetime": "2022-05-08T15:30:54Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-05-16",
+      "available": true,
+      "cloudCover": 99.947172,
+      "captureDatetime": "2022-05-13T15:30:48Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/san_marcos/la_mojana_peak_2022_pre",
+    "selected_date": "2022-03-24",
+    "capture_datetime": "2022-03-22T15:40:48Z",
+    "cloud_cover": 42.060256
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "moderate",
+    "water_coverage_pct_estimate": "10-30%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": true
+  }
+}

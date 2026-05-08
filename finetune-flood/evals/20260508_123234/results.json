@@ -1,0 +1,182 @@
+[
+  {
+    "id": "ayapel/cara_de_gato_2021/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "error": null,
+    "latency_s": 0.542709667,
+    "matches": {
+      "valid_json": true,
+      "fields_present": true,
+      "per_field": {
+        "flood_present": "match",
+        "flood_severity": "match",
+        "water_coverage_pct_estimate": "match",
+        "populated_area_affected": "match",
+        "infrastructure_at_risk": "match",
+        "river_overflow_visible": "match",
+        "image_quality_limited": "mismatch"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2021/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "error": null,
+    "latency_s": 0.506258292,
+    "matches": {
+      "valid_json": true,
+      "fields_present": true,
+      "per_field": {
+        "flood_present": "match",
+        "flood_severity": "match",
+        "water_coverage_pct_estimate": "match",
+        "populated_area_affected": "match",
+        "infrastructure_at_risk": "match",
+        "river_overflow_visible": "match",
+        "image_quality_limited": "mismatch"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2024/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "error": null,
+    "latency_s": 0.5137783750000001,
+    "matches": {
+      "valid_json": true,
+      "fields_present": true,
+      "per_field": {
+        "flood_present": "match",
+        "flood_severity": "match",
+        "water_coverage_pct_estimate": "match",
+        "populated_area_affected": "match",
+        "infrastructure_at_risk": "match",
+        "river_overflow_visible": "match",
+        "image_quality_limited": "mismatch"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2024/post",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "error": null,
+    "latency_s": 0.511515292,
+    "matches": {
+      "valid_json": true,
+      "fields_present": true,
+      "per_field": {
+        "flood_present": "match",
+        "flood_severity": "mismatch",
+        "water_coverage_pct_estimate": "match",
+        "populated_area_affected": "match",
+        "infrastructure_at_risk": "match",
+        "river_overflow_visible": "match",
+        "image_quality_limited": "mismatch"
+      }
+    }
+  },
+  {
+    "id": "ayapel/cara_de_gato_2025/event",
+    "ground_truth": {
+      "flood_present": true,
+      "flood_severity": "minor",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": false,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": true
+    },
+    "prediction": {
+      "flood_present": true,
+      "flood_severity": "moderate",
+      "water_coverage_pct_estimate": "30-60%",
+      "populated_area_affected": true,
+      "infrastructure_at_risk": true,
+      "river_overflow_visible": true,
+      "image_quality_limited": false
+    },
+    "error": null,
+    "latency_s": 0.5147680410000003,
+    "matches": {
+      "valid_json": true,
+      "fields_present": true,
+      "per_field": {
+        "flood_present": "match",
+        "flood_severity": "mismatch",
+        "water_coverage_pct_estimate": "match",
+        "populated_area_affected": "mismatch",
+        "infrastructure_at_risk": "match",
+        "river_overflow_visible": "match",
+        "image_quality_limited": "mismatch"
+      }
+    }
+  }
+]

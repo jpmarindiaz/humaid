@@ -1,0 +1,58 @@
+{
+  "location_id": "guaranda",
+  "location_name": "Guaranda, Sucre",
+  "lon": -74.5392,
+  "lat": 8.4694,
+  "event_id": "la_mojana_peak_2022",
+  "window_kind": "post",
+  "selected_date": "2022-05-06",
+  "selected_timestamp": "2022-05-06T12:00:00Z",
+  "capture_datetime": "2022-05-03T15:30:41Z",
+  "cloud_cover": 20.526585,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2022-05-01",
+      "available": true,
+      "cloudCover": 97.343159,
+      "captureDatetime": "2022-04-28T15:30:51Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-05-06",
+      "available": true,
+      "cloudCover": 20.526585,
+      "captureDatetime": "2022-05-03T15:30:41Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-05-11",
+      "available": true,
+      "cloudCover": 26.302177,
+      "captureDatetime": "2022-05-08T15:30:50Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-05-16",
+      "available": true,
+      "cloudCover": 97.331768,
+      "captureDatetime": "2022-05-13T15:30:45Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/guaranda/la_mojana_peak_2022_pre",
+    "selected_date": "2022-03-29",
+    "capture_datetime": "2022-03-24T15:30:44Z",
+    "cloud_cover": 43.385395
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "severe",
+    "water_coverage_pct_estimate": "30-60%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": true
+  }
+}

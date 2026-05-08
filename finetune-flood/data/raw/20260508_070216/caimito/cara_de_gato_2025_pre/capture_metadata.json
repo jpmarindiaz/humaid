@@ -1,0 +1,43 @@
+{
+  "location_id": "caimito",
+  "location_name": "Caimito, Sucre",
+  "lon": -75.1147,
+  "lat": 8.7906,
+  "event_id": "cara_de_gato_2025",
+  "window_kind": "pre",
+  "selected_date": "2025-08-13",
+  "selected_timestamp": "2025-08-13T12:00:00Z",
+  "capture_datetime": "2025-08-12T15:31:02Z",
+  "cloud_cover": 45.002386,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2025-08-13",
+      "available": true,
+      "cloudCover": 45.002386,
+      "captureDatetime": "2025-08-12T15:31:02Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-08-08",
+      "available": true,
+      "cloudCover": 61.355549,
+      "captureDatetime": "2025-08-05T15:41:00Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-08-03",
+      "available": true,
+      "cloudCover": 81.802452,
+      "captureDatetime": "2025-07-31T15:31:10Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-07-30",
+      "available": true,
+      "cloudCover": 92.069221,
+      "captureDatetime": "2025-07-29T15:40:45Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

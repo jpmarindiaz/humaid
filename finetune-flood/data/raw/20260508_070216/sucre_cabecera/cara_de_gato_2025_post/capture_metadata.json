@@ -1,0 +1,43 @@
+{
+  "location_id": "sucre_cabecera",
+  "location_name": "Sucre (cabecera), Sucre",
+  "lon": -74.7197,
+  "lat": 8.8125,
+  "event_id": "cara_de_gato_2025",
+  "window_kind": "post",
+  "selected_date": "2025-09-10",
+  "selected_timestamp": "2025-09-10T12:00:00Z",
+  "capture_datetime": "2025-09-09T15:31:01Z",
+  "cloud_cover": 41.006419,
+  "source": "sentinel-2c",
+  "candidates_tried": [
+    {
+      "date": "2025-09-10",
+      "available": true,
+      "cloudCover": 41.006419,
+      "captureDatetime": "2025-09-09T15:31:01Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-09-15",
+      "available": true,
+      "cloudCover": 98.265833,
+      "captureDatetime": "2025-09-11T15:30:58Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-09-20",
+      "available": true,
+      "cloudCover": 63.565648,
+      "captureDatetime": "2025-09-19T15:30:59Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-09-25",
+      "available": true,
+      "cloudCover": 99.884337,
+      "captureDatetime": "2025-09-24T15:30:46Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

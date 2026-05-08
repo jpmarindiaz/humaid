@@ -1,0 +1,58 @@
+{
+  "location_id": "san_benito_abad",
+  "location_name": "San Benito Abad, Sucre",
+  "lon": -75.0319,
+  "lat": 8.9275,
+  "event_id": "cara_de_gato_2021",
+  "window_kind": "event",
+  "selected_date": "2021-08-31",
+  "selected_timestamp": "2021-08-31T12:00:00Z",
+  "capture_datetime": "2021-08-29T15:40:42Z",
+  "cloud_cover": 41.982582,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2021-08-27",
+      "available": true,
+      "cloudCover": 99.999857,
+      "captureDatetime": "2021-08-26T15:30:48Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2021-08-29",
+      "available": true,
+      "cloudCover": 99.999857,
+      "captureDatetime": "2021-08-26T15:30:48Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2021-08-25",
+      "available": true,
+      "cloudCover": 66.818917,
+      "captureDatetime": "2021-08-24T15:40:46Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2021-08-31",
+      "available": true,
+      "cloudCover": 41.982582,
+      "captureDatetime": "2021-08-29T15:40:42Z",
+      "source": "sentinel-2b"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_063638/san_benito_abad/cara_de_gato_2021_pre",
+    "selected_date": "2021-07-30",
+    "capture_datetime": "2021-07-22T15:30:53Z",
+    "cloud_cover": 36.385852
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "minor",
+    "water_coverage_pct_estimate": "10-30%",
+    "populated_area_affected": false,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": true
+  }
+}

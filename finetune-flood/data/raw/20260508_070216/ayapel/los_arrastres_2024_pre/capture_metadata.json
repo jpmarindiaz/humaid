@@ -1,0 +1,43 @@
+{
+  "location_id": "ayapel",
+  "location_name": "Ayapel, Córdoba",
+  "lon": -75.1389,
+  "lat": 8.3128,
+  "event_id": "los_arrastres_2024",
+  "window_kind": "pre",
+  "selected_date": "2024-04-14",
+  "selected_timestamp": "2024-04-14T12:00:00Z",
+  "capture_datetime": "2024-04-12T15:30:50Z",
+  "cloud_cover": 5.023395,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2024-04-24",
+      "available": true,
+      "cloudCover": 99.267513,
+      "captureDatetime": "2024-04-22T15:30:49Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-04-19",
+      "available": true,
+      "cloudCover": 95.962977,
+      "captureDatetime": "2024-04-17T15:30:52Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-04-14",
+      "available": true,
+      "cloudCover": 5.023395,
+      "captureDatetime": "2024-04-12T15:30:50Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-04-10",
+      "available": true,
+      "cloudCover": 86.841983,
+      "captureDatetime": "2024-04-07T15:30:48Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

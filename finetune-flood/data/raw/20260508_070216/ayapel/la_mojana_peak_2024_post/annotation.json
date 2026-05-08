@@ -1,0 +1,58 @@
+{
+  "location_id": "ayapel",
+  "location_name": "Ayapel, Córdoba",
+  "lon": -75.1389,
+  "lat": 8.3128,
+  "event_id": "la_mojana_peak_2024",
+  "window_kind": "post",
+  "selected_date": "2024-06-30",
+  "selected_timestamp": "2024-06-30T12:00:00Z",
+  "capture_datetime": "2024-06-29T15:40:48Z",
+  "cloud_cover": 67.510396,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2024-06-25",
+      "available": true,
+      "cloudCover": 99.678636,
+      "captureDatetime": "2024-06-24T15:40:48Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-06-30",
+      "available": true,
+      "cloudCover": 67.510396,
+      "captureDatetime": "2024-06-29T15:40:48Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-07-05",
+      "available": true,
+      "cloudCover": 80.413741,
+      "captureDatetime": "2024-07-01T15:30:53Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-07-10",
+      "available": true,
+      "cloudCover": 99.999106,
+      "captureDatetime": "2024-07-09T15:40:48Z",
+      "source": "sentinel-2a"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/ayapel/la_mojana_peak_2024_pre",
+    "selected_date": "2024-05-23",
+    "capture_datetime": "2024-05-22T15:30:49Z",
+    "cloud_cover": 92.739868
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "minor",
+    "water_coverage_pct_estimate": "<10%",
+    "populated_area_affected": false,
+    "infrastructure_at_risk": false,
+    "river_overflow_visible": false,
+    "image_quality_limited": true
+  }
+}

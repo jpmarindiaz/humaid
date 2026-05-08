@@ -1,0 +1,58 @@
+{
+  "location_id": "sucre_cabecera",
+  "location_name": "Sucre (cabecera), Sucre",
+  "lon": -74.7197,
+  "lat": 8.8125,
+  "event_id": "los_arrastres_2024",
+  "window_kind": "event",
+  "selected_date": "2024-05-06",
+  "selected_timestamp": "2024-05-06T12:00:00Z",
+  "capture_datetime": "2024-04-27T15:30:49Z",
+  "cloud_cover": 41.668645,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2024-05-08",
+      "available": true,
+      "cloudCover": 99.999726,
+      "captureDatetime": "2024-05-07T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-10",
+      "available": true,
+      "cloudCover": 99.999726,
+      "captureDatetime": "2024-05-07T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-06",
+      "available": true,
+      "cloudCover": 41.668645,
+      "captureDatetime": "2024-04-27T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-12",
+      "available": true,
+      "cloudCover": 99.999726,
+      "captureDatetime": "2024-05-07T15:30:49Z",
+      "source": "sentinel-2a"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/sucre_cabecera/los_arrastres_2024_pre",
+    "selected_date": "2024-04-14",
+    "capture_datetime": "2024-04-12T15:30:47Z",
+    "cloud_cover": 14.504153
+  },
+  "labels": {
+    "flood_present": false,
+    "flood_severity": "none",
+    "water_coverage_pct_estimate": "10-30%",
+    "populated_area_affected": false,
+    "infrastructure_at_risk": false,
+    "river_overflow_visible": false,
+    "image_quality_limited": true
+  }
+}

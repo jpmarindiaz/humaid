@@ -1,0 +1,43 @@
+{
+  "location_id": "majagual",
+  "location_name": "Majagual, Sucre",
+  "lon": -74.6356,
+  "lat": 8.5417,
+  "event_id": "la_mojana_peak_2022",
+  "window_kind": "event",
+  "selected_date": "2022-04-17",
+  "selected_timestamp": "2022-04-17T12:00:00Z",
+  "capture_datetime": "2022-04-13T15:30:43Z",
+  "cloud_cover": 57.257831,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2022-04-17",
+      "available": true,
+      "cloudCover": 57.257831,
+      "captureDatetime": "2022-04-13T15:30:43Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-04-19",
+      "available": true,
+      "cloudCover": 97.999299,
+      "captureDatetime": "2022-04-18T15:30:50Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-04-15",
+      "available": true,
+      "cloudCover": 57.257831,
+      "captureDatetime": "2022-04-13T15:30:43Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-04-21",
+      "available": true,
+      "cloudCover": 97.999299,
+      "captureDatetime": "2022-04-18T15:30:50Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

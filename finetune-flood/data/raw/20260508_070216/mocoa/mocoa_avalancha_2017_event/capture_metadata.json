@@ -1,0 +1,43 @@
+{
+  "location_id": "mocoa",
+  "location_name": "Mocoa, Putumayo",
+  "lon": -76.6534,
+  "lat": 1.1463,
+  "event_id": "mocoa_avalancha_2017",
+  "window_kind": "event",
+  "selected_date": "2017-04-05",
+  "selected_timestamp": "2017-04-05T12:00:00Z",
+  "capture_datetime": "2017-04-04T15:31:09Z",
+  "cloud_cover": 19.715768,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2017-04-01",
+      "available": true,
+      "cloudCover": 45.589601,
+      "captureDatetime": "2017-03-28T15:42:36Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2017-04-03",
+      "available": true,
+      "cloudCover": 45.589601,
+      "captureDatetime": "2017-03-28T15:42:36Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2017-03-30",
+      "available": true,
+      "cloudCover": 45.589601,
+      "captureDatetime": "2017-03-28T15:42:36Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2017-04-05",
+      "available": true,
+      "cloudCover": 19.715768,
+      "captureDatetime": "2017-04-04T15:31:09Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

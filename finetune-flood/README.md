@@ -11,6 +11,27 @@ The published model is intended to run on a satellite (or any low-resource node)
 
 Both are reproducible with `deno task hf:push:model` and `deno task hf:push:dataset` once you've run the full pipeline through `package`.
 
+### Where the model files live (and why not in git)
+
+The repo bundles **everything except the model weights**:
+
+- ✅ Tracked in git: [`data/raw/`](data/raw/) (raw labeled tiles, ~120 MB), [`data/images/`](data/images/) (deduped pair tree referenced by the JSONL, ~140 MB), [`data/flood_train.jsonl`](data/flood_train.jsonl) + [`data/flood_eval.jsonl`](data/flood_eval.jsonl), [`evals/`](evals/) (per-run reports + per-sample results)
+- ❌ **Not** in git, lives on HF Hub: `outputs/lfm2-flood-Q4_0.gguf` (245 MB), `outputs/mmproj-lfm2-flood-F16.gguf` (189 MB), the merged `model.safetensors` (~860 MB), and the DeepSpeed optimizer shards (~5 GB)
+
+Each individual model file is over GitHub's 100 MB hard limit, and they're already on HF Hub at [`jpmarindiaz/lfm2-flood`](https://huggingface.co/jpmarindiaz/lfm2-flood). To get them locally:
+
+```bash
+# Pulls model.safetensors + GGUFs + tokenizer/config files into outputs/
+hf download jpmarindiaz/lfm2-flood --local-dir outputs/lfm2-flood
+
+# Then `deno task serve` will auto-detect them, OR run llama-server directly:
+llama-server -m outputs/lfm2-flood/lfm2-flood-Q4_0.gguf \
+             --mmproj outputs/lfm2-flood/mmproj-lfm2-flood-F16.gguf \
+             --port 8765
+```
+
+The dataset side is fully self-contained — `data/raw/` + `data/images/` are tracked here, so you can run `deno task build`, `deno task eval --backend anthropic`, and rebuild the JSONLs without ever touching the HF Hub or SimSat.
+
 > ## ⚠ Status: pipeline built, fine-tune paused
 >
 > We built the full pipeline and labeled 115 pair samples across 9 La Mojana / Putumayo events. We **decided not to run the actual fine-tune yet.** Three reasons:

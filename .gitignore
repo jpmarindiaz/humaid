@@ -15,13 +15,14 @@
 # Node / Deno
 node_modules/
 
-# Per-project derived data (each subproject also has its own .gitignore)
-finetune-flood/data/raw/
-finetune-flood/data/images/
-finetune-flood/data/flood_train.jsonl
-finetune-flood/data/flood_eval.jsonl
+# Per-project derived data (each subproject also has its own .gitignore).
+# We DO commit the labeled satellite tiles (data/raw, data/images), the
+# leap-finetune JSONLs (~100KB), and the eval reports (evals/) so the repo
+# is self-contained for browsing and for reproducing eval runs without
+# re-fetching from SimSat. The fine-tuned weights and GGUFs live only on
+# HuggingFace Hub (jpmarindiaz/lfm2-flood) — they're too big for GitHub
+# (model.safetensors is 860MB, GGUFs 180-245MB, DeepSpeed shards 5GB+).
 finetune-flood/outputs/
-finetune-flood/evals/
 
 # Cloned third-party simulator — users clone upstream themselves; see simsat/README.md.
 # Everything inside simsat/ except its README.md is ignored.

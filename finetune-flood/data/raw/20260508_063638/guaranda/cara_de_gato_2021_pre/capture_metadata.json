@@ -1,0 +1,43 @@
+{
+  "location_id": "guaranda",
+  "location_name": "Guaranda, Sucre",
+  "lon": -74.5392,
+  "lat": 8.4694,
+  "event_id": "cara_de_gato_2021",
+  "window_kind": "pre",
+  "selected_date": "2021-08-03",
+  "selected_timestamp": "2021-08-03T12:00:00Z",
+  "capture_datetime": "2021-08-01T15:30:49Z",
+  "cloud_cover": 38.080364,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2021-08-13",
+      "available": true,
+      "cloudCover": 99.509424,
+      "captureDatetime": "2021-08-11T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2021-08-08",
+      "available": true,
+      "cloudCover": 40.568486,
+      "captureDatetime": "2021-08-06T15:30:47Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2021-08-03",
+      "available": true,
+      "cloudCover": 38.080364,
+      "captureDatetime": "2021-08-01T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2021-07-30",
+      "available": true,
+      "cloudCover": 99.714947,
+      "captureDatetime": "2021-07-27T15:30:48Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

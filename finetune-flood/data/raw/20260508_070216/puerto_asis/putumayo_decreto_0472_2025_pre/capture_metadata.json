@@ -1,0 +1,43 @@
+{
+  "location_id": "puerto_asis",
+  "location_name": "Puerto Asís, Putumayo",
+  "lon": -76.4972,
+  "lat": 0.5036,
+  "event_id": "putumayo_decreto_0472_2025",
+  "window_kind": "pre",
+  "selected_date": "2025-06-25",
+  "selected_timestamp": "2025-06-25T12:00:00Z",
+  "capture_datetime": "2025-06-23T15:33:18Z",
+  "cloud_cover": 57.599717,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2025-07-09",
+      "available": true,
+      "cloudCover": 99.973136,
+      "captureDatetime": "2025-07-03T15:33:21Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-07-04",
+      "available": true,
+      "cloudCover": 99.973136,
+      "captureDatetime": "2025-07-03T15:33:21Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-06-29",
+      "available": true,
+      "cloudCover": 92.941934,
+      "captureDatetime": "2025-06-26T15:33:06Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-06-25",
+      "available": true,
+      "cloudCover": 57.599717,
+      "captureDatetime": "2025-06-23T15:33:18Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

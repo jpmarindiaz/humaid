@@ -1,0 +1,58 @@
+{
+  "location_id": "ayapel",
+  "location_name": "Ayapel, Córdoba",
+  "lon": -75.1389,
+  "lat": 8.3128,
+  "event_id": "cara_de_gato_2021",
+  "window_kind": "post",
+  "selected_date": "2021-09-25",
+  "selected_timestamp": "2021-09-25T12:00:00Z",
+  "capture_datetime": "2021-09-23T15:40:48Z",
+  "cloud_cover": 84.790947,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2021-09-10",
+      "available": true,
+      "cloudCover": 94.456982,
+      "captureDatetime": "2021-09-08T15:40:41Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2021-09-15",
+      "available": true,
+      "cloudCover": 93.774712,
+      "captureDatetime": "2021-09-13T15:40:45Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2021-09-20",
+      "available": true,
+      "cloudCover": 99.999332,
+      "captureDatetime": "2021-09-18T15:40:41Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2021-09-25",
+      "available": true,
+      "cloudCover": 84.790947,
+      "captureDatetime": "2021-09-23T15:40:48Z",
+      "source": "sentinel-2a"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/ayapel/cara_de_gato_2021_pre",
+    "selected_date": "2021-07-30",
+    "capture_datetime": "2021-07-22T15:30:53Z",
+    "cloud_cover": 36.385852
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "moderate",
+    "water_coverage_pct_estimate": "30-60%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": true
+  }
+}

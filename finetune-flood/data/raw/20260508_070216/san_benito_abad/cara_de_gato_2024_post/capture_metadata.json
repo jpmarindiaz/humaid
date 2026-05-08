@@ -1,0 +1,43 @@
+{
+  "location_id": "san_benito_abad",
+  "location_name": "San Benito Abad, Sucre",
+  "lon": -75.0319,
+  "lat": 8.9275,
+  "event_id": "cara_de_gato_2024",
+  "window_kind": "post",
+  "selected_date": "2024-06-04",
+  "selected_timestamp": "2024-06-04T12:00:00Z",
+  "capture_datetime": "2024-06-01T15:30:50Z",
+  "cloud_cover": 30.343562,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2024-05-20",
+      "available": true,
+      "cloudCover": 96.734285,
+      "captureDatetime": "2024-05-17T15:30:52Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-05-25",
+      "available": true,
+      "cloudCover": 92.739868,
+      "captureDatetime": "2024-05-22T15:30:49Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-05-30",
+      "available": true,
+      "cloudCover": 99.998176,
+      "captureDatetime": "2024-05-27T15:30:51Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-06-04",
+      "available": true,
+      "cloudCover": 30.343562,
+      "captureDatetime": "2024-06-01T15:30:50Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "location_id": "mocoa",
+  "location_name": "Mocoa, Putumayo",
+  "lon": -76.6534,
+  "lat": 1.1463,
+  "event_id": "mocoa_avalancha_2017",
+  "window_kind": "post",
+  "selected_date": "2017-04-25",
+  "selected_timestamp": "2017-04-25T12:00:00Z",
+  "capture_datetime": "2017-04-24T15:31:14Z",
+  "cloud_cover": 72.194164,
+  "source": "sentinel-2a",
+  "candidates_tried": [
+    {
+      "date": "2017-04-15",
+      "available": false,
+      "cloudCover": null,
+      "captureDatetime": null,
+      "source": null
+    },
+    {
+      "date": "2017-04-20",
+      "available": false,
+      "cloudCover": null,
+      "captureDatetime": null,
+      "source": null
+    },
+    {
+      "date": "2017-04-25",
+      "available": true,
+      "cloudCover": 72.194164,
+      "captureDatetime": "2017-04-24T15:31:14Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2017-04-30",
+      "available": true,
+      "cloudCover": 72.194164,
+      "captureDatetime": "2017-04-24T15:31:14Z",
+      "source": "sentinel-2a"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/mocoa/mocoa_avalancha_2017_pre",
+    "selected_date": "2017-08-15",
+    "capture_datetime": null,
+    "cloud_cover": 19.21
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "minor",
+    "water_coverage_pct_estimate": "<10%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": false,
+    "image_quality_limited": true
+  }
+}

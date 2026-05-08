@@ -1,0 +1,43 @@
+{
+  "location_id": "puerto_leguizamo",
+  "location_name": "Puerto Leguízamo, Putumayo",
+  "lon": -74.7822,
+  "lat": -0.1933,
+  "event_id": "puerto_leguizamo_calamidad_2025",
+  "window_kind": "pre",
+  "selected_date": "2025-03-13",
+  "selected_timestamp": "2025-03-13T12:00:00Z",
+  "capture_datetime": "2025-03-08T15:33:14Z",
+  "cloud_cover": 25.674152,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2025-03-27",
+      "available": true,
+      "cloudCover": 87.632191,
+      "captureDatetime": "2025-03-23T15:33:34Z",
+      "source": "sentinel-2c"
+    },
+    {
+      "date": "2025-03-22",
+      "available": true,
+      "cloudCover": 99.999911,
+      "captureDatetime": "2025-03-18T15:33:14Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-03-17",
+      "available": true,
+      "cloudCover": 99.886799,
+      "captureDatetime": "2025-03-15T15:33:24Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2025-03-13",
+      "available": true,
+      "cloudCover": 25.674152,
+      "captureDatetime": "2025-03-08T15:33:14Z",
+      "source": "sentinel-2b"
+    }
+  ]
+}

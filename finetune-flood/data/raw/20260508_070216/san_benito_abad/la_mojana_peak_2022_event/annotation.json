@@ -1,0 +1,58 @@
+{
+  "location_id": "san_benito_abad",
+  "location_name": "San Benito Abad, Sucre",
+  "lon": -75.0319,
+  "lat": 8.9275,
+  "event_id": "la_mojana_peak_2022",
+  "window_kind": "event",
+  "selected_date": "2022-04-15",
+  "selected_timestamp": "2022-04-15T12:00:00Z",
+  "capture_datetime": "2022-04-13T15:30:46Z",
+  "cloud_cover": 82.705736,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2022-04-17",
+      "available": true,
+      "cloudCover": 99.95544,
+      "captureDatetime": "2022-04-16T15:40:40Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-04-19",
+      "available": true,
+      "cloudCover": 99.314988,
+      "captureDatetime": "2022-04-18T15:30:53Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2022-04-15",
+      "available": true,
+      "cloudCover": 82.705736,
+      "captureDatetime": "2022-04-13T15:30:46Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2022-04-21",
+      "available": true,
+      "cloudCover": 99.314988,
+      "captureDatetime": "2022-04-18T15:30:53Z",
+      "source": "sentinel-2a"
+    }
+  ],
+  "baseline": {
+    "tile_dir": "/Users/jpmarindiaz/jprepo/humaid/finetune-flood/data/raw/20260508_070216/san_benito_abad/la_mojana_peak_2022_pre",
+    "selected_date": "2022-03-24",
+    "capture_datetime": "2022-03-22T15:40:48Z",
+    "cloud_cover": 42.060256
+  },
+  "labels": {
+    "flood_present": true,
+    "flood_severity": "severe",
+    "water_coverage_pct_estimate": "30-60%",
+    "populated_area_affected": true,
+    "infrastructure_at_risk": true,
+    "river_overflow_visible": true,
+    "image_quality_limited": true
+  }
+}

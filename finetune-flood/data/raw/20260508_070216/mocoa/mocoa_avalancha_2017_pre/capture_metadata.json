@@ -1,0 +1,13 @@
+{
+  "location_id": "mocoa",
+  "location_name": "Mocoa, Putumayo",
+  "lon": -76.6534,
+  "lat": 1.1463,
+  "event_id": "mocoa_avalancha_2017",
+  "window_kind": "pre",
+  "selected_date": "2017-08-15",
+  "selected_timestamp": "2017-08-15T12:00:00Z",
+  "cloud_cover": 19.21,
+  "source": "sentinel-2a",
+  "note": "Sentinel-2 archive had no usable acquisitions over Mocoa in March 2017 (pre-avalancha). This baseline is from 2017-08-15 (4 months post-event but Mocoa terrain is stable; sediment fan from the avalancha may still be visible in this image). Use as 'reference Mocoa' rather than true pre."
+}

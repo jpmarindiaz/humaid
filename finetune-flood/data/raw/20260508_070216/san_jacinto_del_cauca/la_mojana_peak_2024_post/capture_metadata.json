@@ -1,0 +1,43 @@
+{
+  "location_id": "san_jacinto_del_cauca",
+  "location_name": "San Jacinto del Cauca, Bolívar",
+  "lon": -74.7167,
+  "lat": 8.25,
+  "event_id": "la_mojana_peak_2024",
+  "window_kind": "post",
+  "selected_date": "2024-07-05",
+  "selected_timestamp": "2024-07-05T12:00:00Z",
+  "capture_datetime": "2024-07-01T15:30:50Z",
+  "cloud_cover": 47.414884,
+  "source": "sentinel-2b",
+  "candidates_tried": [
+    {
+      "date": "2024-06-25",
+      "available": true,
+      "cloudCover": 99.150878,
+      "captureDatetime": "2024-06-21T15:30:49Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-06-30",
+      "available": true,
+      "cloudCover": 92.463654,
+      "captureDatetime": "2024-06-26T15:30:49Z",
+      "source": "sentinel-2a"
+    },
+    {
+      "date": "2024-07-05",
+      "available": true,
+      "cloudCover": 47.414884,
+      "captureDatetime": "2024-07-01T15:30:50Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2024-07-10",
+      "available": true,
+      "cloudCover": 87.283415,
+      "captureDatetime": "2024-07-06T15:30:50Z",
+      "source": "sentinel-2a"
+    }
+  ]
+}

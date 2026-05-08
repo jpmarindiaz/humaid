@@ -1,0 +1,43 @@
+{
+  "location_id": "puerto_leguizamo",
+  "location_name": "Puerto Leguízamo, Putumayo",
+  "lon": -74.7822,
+  "lat": -0.1933,
+  "event_id": "putumayo_decreto_0472_2025",
+  "window_kind": "post",
+  "selected_date": "2025-08-21",
+  "selected_timestamp": "2025-08-21T12:00:00Z",
+  "capture_datetime": "2025-08-20T15:33:31Z",
+  "cloud_cover": 23.901188,
+  "source": "sentinel-2c",
+  "candidates_tried": [
+    {
+      "date": "2025-08-06",
+      "available": true,
+      "cloudCover": 35.869214,
+      "captureDatetime": "2025-08-05T15:33:13Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-08-11",
+      "available": true,
+      "cloudCover": 35.869214,
+      "captureDatetime": "2025-08-05T15:33:13Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-08-16",
+      "available": true,
+      "cloudCover": 99.998862,
+      "captureDatetime": "2025-08-15T15:33:14Z",
+      "source": "sentinel-2b"
+    },
+    {
+      "date": "2025-08-21",
+      "available": true,
+      "cloudCover": 23.901188,
+      "captureDatetime": "2025-08-20T15:33:31Z",
+      "source": "sentinel-2c"
+    }
+  ]
+}

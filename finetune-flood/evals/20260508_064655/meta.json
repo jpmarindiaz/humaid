@@ -1,0 +1,27 @@
+{
+  "run_id": "20260508_064655",
+  "started_at": "2026-05-08T06:46:55.298Z",
+  "backend": "anthropic",
+  "backend_description": "anthropic API, model=claude-sonnet-4-6",
+  "model": "claude-sonnet-4-6",
+  "dataset": "data/raw/20260508_062206",
+  "n_samples": 8,
+  "display_name": "sonnet-4-6 with wetland-baseline context",
+  "finished_at": "2026-05-08T06:47:05.644Z",
+  "aggregate": {
+    "n": 8,
+    "valid_json": 1,
+    "fields_present": 1,
+    "fieldAcc": {
+      "flood_present": 0.625,
+      "flood_severity": 0.625,
+      "water_coverage_pct_estimate": 0.875,
+      "populated_area_affected": 0.625,
+      "infrastructure_at_risk": 0.625,
+      "river_overflow_visible": 0.625,
+      "image_quality_limited": 0.75
+    },
+    "overall": 0.6785714285714286,
+    "avg_latency_s": 3.368778114625
+  }
+}
