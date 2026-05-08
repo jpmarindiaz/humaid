@@ -2,9 +2,28 @@
 
 **Offline-first humanitarian-response toolkit for flood crises.**
 
+> **humaid: AI in orbit spots the flood, offline app on the ground tells each person what to do.** No internet, locally relevant, context-aware.
+
 When a flood hits a remote community, two things break at once: the people on the ground need fast, specific information about *what to do* — and the internet that would normally deliver that information goes down with the power and the cell towers. humaid pre-syncs the response knowledge before the crisis, generates the alert from space, and runs the whole thing without a network once it's in your hands.
 
 > **TL;DR.** Onboard inference ships answers, not images. Local retrieval grounds those answers in real PDFs. Two runtimes — llama.cpp in orbit, Ollama on the ground — because the physics is different, but the premise is the same: small, local, grounded. The cloud is never in the data path.
+
+## Quick links
+
+| | |
+|---|---|
+| 🌐 **Live app** | <https://humaid.app/app> |
+| 🎬 **Demo video** | <https://youtu.be/1LNs5D-6AbY> |
+| 🧵 **24-hour build thread** | <https://x.com/jpmarindiaz/status/2052408206756905108> |
+| 📖 **Why this matters** | [`WHY.md`](WHY.md) — problem, solution, motivation, pitch |
+| 🏛 **System architecture** | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| 🤖 **Fine-tuned flood model** | [`jpmarindiaz/lfm2-flood`](https://huggingface.co/jpmarindiaz/lfm2-flood) |
+| 💾 **Flood training data** | [`jpmarindiaz/flood-detection-pair-colombia`](https://huggingface.co/datasets/jpmarindiaz/flood-detection-pair-colombia) |
+| 💾 **Knowledge-base Q&A** | [`jpmarindiaz/humaid-kb-colombia`](https://huggingface.co/datasets/jpmarindiaz/humaid-kb-colombia) |
+| 🦙 **Base model on Ollama** | [`jpmarindiaz/lfm2.5-vl-450m`](https://ollama.com/jpmarindiaz/lfm2.5-vl-450m) |
+| 📦 **Source repo** | <https://github.com/jpmarindiaz/humaid> |
+
+![humaid system architecture — satellite to community station to local app](docs/images/HumAid%20demo%20-%20architecture.jpg)
 
 ## Published on HuggingFace 🤗
 
@@ -306,6 +325,12 @@ Three reasons (full discussion in `finetune-flood/REPORT.md`):
 
 The code is reusable. For a Sentinel-1 SAR re-attempt, only `simsat.ts` (data source) and the band selection change. Everything else — orchestration, pair labeling, evals — transfers.
 
+## A surprise moment
+
+![Model fine-tuned only on Colombia flagging the historical Valencia (Spain) flood](docs/images/prediction-spain.jpeg)
+
+A model fine-tuned **only on Colombia floods** correctly flagged the historical **Valencia (Spain) flood** as a flood. No alert was generated (different threshold logic) but the detection was right. Small models, well-grounded data, modest fine-tunes — they generalise more than you'd expect. Try the live demo: <https://humaid.app/app>.
+
 ## What's next
 
 In rough priority order:
@@ -315,6 +340,31 @@ In rough priority order:
 - **Tauri client polish.** Role / region picker on first launch, KB-version sync against the website, OS-native notifications fully wired.
 - **Community-station daemon.** Receives JSON alert payloads (over satcom or any low-bandwidth link), serves them + the synced knowledge base over a local network. Raspberry Pi class.
 - **Better satellite data.** Sentinel-1 SAR pipeline (Copernicus Open Access Hub or Microsoft Planetary Computer) so the cloud problem stops blocking model training.
+
+## Forkability — humaid for *your* basin
+
+The architecture is **deliberately portable**:
+
+- **Hazard-agnostic** — same satellite-VLM-onboard + JSON-alert + offline-Q&A pattern works for wildfires (proven by Liquid AI's wildfire-prevention cookbook), volcanic eruptions, landslides, severe weather.
+- **Region-agnostic** — the role × phase × region matrix scales by adding region buckets. Atrato (Chocó), Andean Community of Nations, Mekong delta, Sundarbans — all natural extensions.
+- **Language-agnostic** — same multi-agent Q&A pipeline operates over any source corpus in any language.
+- **Institution-agnostic** — works with national civil-protection agencies *or* NGO consortia *or* indigenous *cabildos* *or* multilateral programmes.
+
+Build path for a new basin is documented in [`knowledge-base/README.md`](knowledge-base/README.md#build-it-from-scratch--for-developers). Reach out — we want to hear who's trying it.
+
+## What I'd build differently — lessons learned
+
+If you're picking this up to apply to your own region or hazard, three things to copy and three things *not* to copy:
+
+**Do copy:**
+- The pair-input design (baseline + current) — single-tile labelling fails on chronic wetlands. Region context is everything.
+- Multi-agent Q&A generation — six parallel role-agents over a curated PDF corpus produced 471 cited pairs in ~16 minutes.
+- DuckDB with embeddings inline — no vector DB, no server, ~3 MB on disk, sub-100 ms cosine search. Ships in the website *and* the Tauri client.
+
+**Don't copy (or copy carefully):**
+- **Sentinel-2 alone for tropical wetlands.** ~50 % of wet-season acquisitions are >50 % cloud. Go SAR (Sentinel-1) from day one — see [`finetune-flood/REPORT.md`](finetune-flood/REPORT.md).
+- **Trusting Opus self-consistency as your accuracy ceiling.** Inter-labeler agreement on subjective enums (severity, percentage bands) caps you at ~0.66. Either tighten the schema (booleans only) or budget for human review.
+- **Treating "model accuracy" as the product.** The product is the *delivery rail* — most of the user value is in the offline-first KB + the role/phase/region matrix, not in the satellite VLM. Don't over-invest in the latter at the expense of the former.
 
 ## Pointers
 
