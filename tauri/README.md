@@ -211,6 +211,34 @@ deno task tauri android dev
 
 First build cross-compiles DuckDB + ~400 crates and takes 5–10 min. Subsequent runs are fast. The app stages assets to `/data/data/co.datasketch.humaid/files/` on first launch (you'll see `staged kb.duckdb (2895872 bytes)` in `adb logcat`).
 
+### Running desktop + Android at the same time
+
+Both `tauri dev` invocations would normally fight over Vite's port 1420. The
+`beforeDevCommand` is wired through `scripts/dev-or-skip.ts` which starts Vite
+only if it isn't already up — so the second session reuses the first session's
+Vite. Two patterns work:
+
+```bash
+# Pattern A: just launch them in two terminals.
+#   Terminal 1: spawns Vite.
+deno task tauri dev
+#   Terminal 2: dev-or-skip detects Vite is up and skips.
+deno task tauri android dev
+```
+
+Caveat with pattern A: if you Ctrl+C terminal 1, Vite goes down and terminal 2
+loses its dev server. To decouple, run Vite explicitly:
+
+```bash
+# Pattern B: Vite as a third terminal — both Tauris just attach.
+#   Terminal 1
+deno task dev
+#   Terminal 2
+deno task tauri dev
+#   Terminal 3
+deno task tauri android dev
+```
+
 ### Release APK / AAB
 
 ```bash
