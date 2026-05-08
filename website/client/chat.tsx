@@ -1054,12 +1054,32 @@ function UploadSlot({ label, file, preview, onChange }: {
   preview: string | undefined;
   onChange: (f: File | null) => void;
 }) {
+  const [dragOver, setDragOver] = useState(false);
+
+  function handleDrop(e: React.DragEvent<HTMLLabelElement>) {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith("image/")) return;
+    onChange(f);
+  }
+
   return (
-    <label className="upload-slot">
+    <label
+      className={`upload-slot${dragOver ? " upload-slot-dragover" : ""}`}
+      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; }}
+      onDragEnter={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={(e) => { e.preventDefault(); setDragOver(false); }}
+      onDrop={handleDrop}
+    >
       <div className="upload-slot-tile">
         {preview
           ? <img src={preview} alt={label} />
-          : <span className="upload-slot-placeholder">{label}<br/>+</span>}
+          : <span className="upload-slot-placeholder">
+              {label}<br/>
+              <span className="upload-slot-hint">drop image or click</span>
+            </span>}
       </div>
       <span className="upload-slot-label">{label}{file ? ` · ${file.name.slice(0, 18)}` : ""}</span>
       <input

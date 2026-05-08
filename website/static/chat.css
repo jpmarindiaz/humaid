@@ -646,11 +646,24 @@ a:hover { text-decoration: underline; }
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   color: var(--muted); font-size: 0.85rem; text-align: center;
-  transition: border-color 140ms ease;
+  transition: all 140ms ease;
 }
 .upload-slot:hover .upload-slot-tile { border-color: var(--terracotta); }
-.upload-slot-tile img { width: 100%; height: 100%; object-fit: cover; }
+.upload-slot-dragover .upload-slot-tile {
+  border: 2px solid var(--terracotta);
+  background: #fff7e6;
+  color: var(--terracotta);
+  transform: scale(1.02);
+  box-shadow: 0 0 0 4px rgba(163, 67, 28, 0.12);
+}
+.upload-slot-tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.upload-slot-tile * { pointer-events: none; }
 .upload-slot-label { font-size: 0.78rem; color: var(--muted); text-align: center; }
+.upload-slot-hint {
+  display: block; margin-top: 6px;
+  font-size: 0.7rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
 
 .upload-fields {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
