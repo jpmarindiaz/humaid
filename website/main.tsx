@@ -32,9 +32,27 @@ let requestCount = 0;
 
 // Eager-init both subsystems on isolate boot so the first user request
 // doesn't pay the full cold-start tax serially.
-console.log(`[boot] humaid main.tsx loaded at ${new Date().toISOString()} pid=${Deno.pid}`);
-startOllamaServer().catch((err) => console.error("[boot] eager ollama init failed:", err));
-startLlamaServer().catch((err) => console.error("[boot] eager llama-server init failed:", err));
+const BOOT_AT = new Date().toISOString();
+const BOOT_ID = Math.random().toString(36).slice(2, 8);
+const COMMIT = (Deno.env.get("DENO_DEPLOYMENT_ID") ?? Deno.env.get("COMMIT_SHA") ?? "local").slice(0, 12);
+console.log(`[boot ${BOOT_ID}] ╔═══════════════════════════════════════════════════════════════════`);
+console.log(`[boot ${BOOT_ID}] ║ humaid · isolate boot`);
+console.log(`[boot ${BOOT_ID}] ║   at:        ${BOOT_AT}`);
+console.log(`[boot ${BOOT_ID}] ║   pid:       ${Deno.pid}`);
+console.log(`[boot ${BOOT_ID}] ║   deploy id: ${COMMIT}`);
+console.log(`[boot ${BOOT_ID}] ║   region:    ${Deno.env.get("DENO_REGION") ?? "—"}`);
+console.log(`[boot ${BOOT_ID}] ║   model:     ${llamaConfig.MODEL_FILENAME}`);
+console.log(`[boot ${BOOT_ID}] ║   mmproj:    ${llamaConfig.MMPROJ_FILENAME}`);
+console.log(`[boot ${BOOT_ID}] ║   ctx_size:  ${llamaConfig.CTX_SIZE}`);
+console.log(`[boot ${BOOT_ID}] ╚═══════════════════════════════════════════════════════════════════`);
+
+startOllamaServer()
+  .then(() => console.log(`[boot ${BOOT_ID}] ✅ ollama daemon ready`))
+  .catch((err) => console.error(`[boot ${BOOT_ID}] ❌ eager ollama init failed:`, err));
+
+startLlamaServer()
+  .then(() => console.log(`[boot ${BOOT_ID}] ✅ llama-server ready`))
+  .catch((err) => console.error(`[boot ${BOOT_ID}] ❌ eager llama-server init failed:`, err));
 
 const app = new Hono();
 
@@ -43,18 +61,45 @@ const app = new Hono();
 app.use("*", async (c, next) => {
   const reqId = ++requestCount;
   const t0 = performance.now();
-  const path = new URL(c.req.url).pathname;
+  const url = new URL(c.req.url);
+  const ua = c.req.header("user-agent") ?? "—";
+  const ip = c.req.header("x-forwarded-for")?.split(",")[0].trim() ??
+             c.req.header("cf-connecting-ip") ?? "—";
+  const ref = c.req.header("referer") ?? "—";
   c.set("reqId" as never, reqId);
-  console.log(`[req ${reqId}] ← ${c.req.method} ${path}`);
+  console.log(
+    `[req ${reqId}] ← ${c.req.method} ${url.pathname}${url.search} ` +
+    `· iso=${BOOT_ID} · ip=${ip} · ua=${ua.slice(0, 60)}${ua.length > 60 ? "…" : ""}` +
+    (ref !== "—" ? ` · ref=${ref}` : ""),
+  );
   await next();
   const ms = Math.round(performance.now() - t0);
-  console.log(`[req ${reqId}] → ${c.res.status} (${ms}ms)`);
+  const status = c.res.status;
+  const bytes = c.res.headers.get("content-length") ?? "?";
+  const tag = status >= 500 ? "🔥" : status >= 400 ? "⚠" : "✓";
+  console.log(`[req ${reqId}] → ${tag} ${status} (${ms}ms · ${bytes}B)`);
 });
 
 // ── Pages ─────────────────────────────────────────────────────────────
 
-app.get("/", (c) => c.html(<Landing />));
-app.get("/app", (c) => c.html(<ChatShell />));
+// HTML shells are tagged with the deploy id so a redeploy bumps the
+// effective ETag. We also emit Cache-Control: no-cache so browsers
+// revalidate every load — kills the "I see the old UI" class of bug.
+const NO_CACHE_HEADERS = {
+  "cache-control": "no-cache, must-revalidate",
+  "x-deploy-id": COMMIT,
+};
+
+app.get("/", (c) => {
+  const html = (
+    <Landing />
+  );
+  return c.html(html, 200, NO_CACHE_HEADERS);
+});
+
+app.get("/app", (c) => {
+  return c.html(<ChatShell deployId={COMMIT} />, 200, NO_CACHE_HEADERS);
+});
 
 // ── Static + assets ───────────────────────────────────────────────────
 
