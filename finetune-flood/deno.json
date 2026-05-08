@@ -11,7 +11,9 @@
     "serve": "deno run -A src/serve.ts",
     "eval": "deno run -A --env-file=.env src/evaluate.ts",
     "eval:compare": "deno run -A src/eval_compare.ts",
-    "app": "deno run -A --env-file=.env app/server.ts"
+    "app": "deno run -A --env-file=.env app/server.ts",
+    "hf:push:model": "deno run -A src/hf_push_model.ts",
+    "hf:push:dataset": "deno run -A src/hf_push_dataset.ts"
   },
   "imports": {
     "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@^0.40.1",

@@ -4,6 +4,13 @@ Fine-tune `LiquidAI/LFM2.5-VL-450M` to output a structured flood-risk JSON profi
 
 The published model is intended to run on a satellite (or any low-resource node) and downlink only a small JSON payload, not raw imagery.
 
+## Published artifacts (May 2026 run)
+
+- **Model** — [`jpmarindiaz/lfm2-flood`](https://huggingface.co/jpmarindiaz/lfm2-flood) (public). Merged HF checkpoint + Q4_0 backbone GGUF (~245 MB) + F16 mmproj GGUF (~189 MB). Model card has the full eval scoreboard.
+- **Dataset** — [`jpmarindiaz/flood-detection-pair-colombia`](https://huggingface.co/datasets/jpmarindiaz/flood-detection-pair-colombia) (public). 88 train + 22 eval 4-image pair samples across 9 La Mojana / Putumayo flood events. Built from Sentinel-2 imagery via SimSat, labeled by Claude Code agents using the schema in [`src/prompts.ts`](src/prompts.ts).
+
+Both are reproducible with `deno task hf:push:model` and `deno task hf:push:dataset` once you've run the full pipeline through `package`.
+
 > ## ⚠ Status: pipeline built, fine-tune paused
 >
 > We built the full pipeline and labeled 115 pair samples across 9 La Mojana / Putumayo events. We **decided not to run the actual fine-tune yet.** Three reasons:

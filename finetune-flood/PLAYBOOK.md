@@ -114,7 +114,23 @@ deno task eval --raw data/raw/<run> --backend local --url http://localhost:8765 
 deno task eval:compare
 # Terminal table + evals/_compare_<ts>/report.md with sample-level disagreements
 # and embedded images of the worst tiles.
+
+# 12. (Optional) Publish to HuggingFace Hub
+deno task hf:push:model        # creates jpmarindiaz/lfm2-flood (public)
+deno task hf:push:dataset      # creates jpmarindiaz/flood-detection-pair-colombia (public)
+# Both scripts are idempotent (--exist-ok) and re-runnable; --skip-card preserves
+# any manual edits to README.md. Needs `hf auth login` first.
 ```
+
+## Live demo app
+
+After steps 8 (package) + 9 (serve), open the demo UI:
+
+```bash
+deno task app          # http://localhost:8081
+```
+
+Two modes: upload 4 PNGs OR pick a location + dates and the app fetches the imagery from SimSat. See [`app/README.md`](app/README.md).
 
 ## What lives where
 
