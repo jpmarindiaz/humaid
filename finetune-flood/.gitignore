@@ -1,0 +1,8 @@
+.env
+data/raw/
+data/flood_train.jsonl
+data/flood_eval.jsonl
+outputs/
+evals/
+node_modules/
+.DS_Store

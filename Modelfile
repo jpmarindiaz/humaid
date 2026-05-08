@@ -1,0 +1,12 @@
+FROM /Users/jpmarindiaz/.cache/huggingface/hub/models--LiquidAI--LFM2.5-VL-450M-GGUF/snapshots/a4159447772846ffa1b381688c3d3ca0e4db60ed/LFM2.5-VL-450M-Q4_0.gguf
+
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+{{ .Response }}<|im_end|>
+"""
+
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "<|im_start|>"
