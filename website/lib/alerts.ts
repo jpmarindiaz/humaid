@@ -53,11 +53,129 @@ export function shouldPublishAlert(labels: FloodLabels): boolean {
     && !labels.image_quality_limited;
 }
 
+// ── Historical seed data ──────────────────────────────────────────────
+//
+// Pre-loaded "past alerts" so the Tauri app's first poll returns useful
+// content even before anyone publishes from the simulator. These look
+// like alerts the real onboard pipeline would have emitted at major past
+// events. Source kind = "live_simsat" — these are not from the website
+// simulator, they're back-fill from the historical record.
+
+interface HistoricalSeed {
+  id: string;
+  timestamp: string;            // back-dated to event date
+  region: AlertRecord["region"];
+  location: string;
+  location_label: string;
+  lon: number;
+  lat: number;
+  labels: FloodLabels;
+  thumbnail_url: string;
+}
+
+const HISTORICAL_SEEDS: HistoricalSeed[] = [
+  {
+    id: "alert-historical-mocoa-2017",
+    timestamp: "2017-04-01T08:30:00.000Z",
+    region: "putumayo",
+    location: "mocoa",
+    location_label: "Mocoa, Putumayo",
+    lon: -76.6534, lat: 1.1463,
+    labels: {
+      flood_present: true,
+      flood_severity: "severe",
+      water_coverage_pct_estimate: "10-30%",
+      populated_area_affected: true,
+      infrastructure_at_risk: true,
+      river_overflow_visible: true,
+      image_quality_limited: false,
+    },
+    thumbnail_url: "/assets/samples/mocoa-2017-thumb.png",
+  },
+  {
+    id: "alert-historical-cara-de-gato-2021",
+    timestamp: "2021-08-27T18:42:00.000Z",
+    region: "la-mojana",
+    location: "san_jacinto_del_cauca",
+    location_label: "San Jacinto del Cauca, Bolívar",
+    lon: -74.7167, lat: 8.25,
+    labels: {
+      flood_present: true,
+      flood_severity: "severe",
+      water_coverage_pct_estimate: "30-60%",
+      populated_area_affected: true,
+      infrastructure_at_risk: true,
+      river_overflow_visible: true,
+      image_quality_limited: false,
+    },
+    thumbnail_url: "/assets/samples/san-benito-abad-2021-thumb.png",
+  },
+  {
+    id: "alert-historical-san-benito-abad-2021",
+    timestamp: "2021-09-15T14:00:00.000Z",
+    region: "la-mojana",
+    location: "san_benito_abad",
+    location_label: "San Benito Abad, Sucre",
+    lon: -75.0319, lat: 8.9275,
+    labels: {
+      flood_present: true,
+      flood_severity: "severe",
+      water_coverage_pct_estimate: "30-60%",
+      populated_area_affected: true,
+      infrastructure_at_risk: true,
+      river_overflow_visible: true,
+      image_quality_limited: false,
+    },
+    thumbnail_url: "/assets/samples/san-benito-abad-2021-thumb.png",
+  },
+  {
+    id: "alert-historical-la-mojana-peak-2022",
+    timestamp: "2022-12-15T11:20:00.000Z",
+    region: "la-mojana",
+    location: "ayapel",
+    location_label: "Ayapel, Córdoba",
+    lon: -75.1389, lat: 8.3128,
+    labels: {
+      flood_present: true,
+      flood_severity: "moderate",
+      water_coverage_pct_estimate: "30-60%",
+      populated_area_affected: true,
+      infrastructure_at_risk: false,
+      river_overflow_visible: false,
+      image_quality_limited: false,
+    },
+    thumbnail_url: "/assets/samples/ayapel-peak-2022-thumb.png",
+  },
+  {
+    id: "alert-historical-cara-de-gato-2024",
+    timestamp: "2024-05-06T15:30:00.000Z",
+    region: "la-mojana",
+    location: "san_jacinto_del_cauca",
+    location_label: "San Jacinto del Cauca, Bolívar",
+    lon: -74.7167, lat: 8.25,
+    labels: {
+      flood_present: true,
+      flood_severity: "moderate",
+      water_coverage_pct_estimate: "30-60%",
+      populated_area_affected: true,
+      infrastructure_at_risk: true,
+      river_overflow_visible: true,
+      image_quality_limited: false,
+    },
+    thumbnail_url: "/assets/samples/cara-de-gato-2024-thumb.png",
+  },
+];
+
+// Bump this when you change HISTORICAL_SEEDS so the next isolate boot
+// re-seeds (the marker key includes the version).
+const SEED_VERSION = "v1";
+
 // ── Storage backend ───────────────────────────────────────────────────
 
 let kv: Deno.Kv | null = null;
 let kvProbed = false;
 const memoryFallback: AlertRecord[] = [];
+let seedPromise: Promise<void> | null = null;
 
 async function getKv(): Promise<Deno.Kv | null> {
   if (kvProbed) return kv;
@@ -70,6 +188,77 @@ async function getKv(): Promise<Deno.Kv | null> {
     console.warn(`[alerts] Deno KV unavailable, using in-memory fallback: ${(err as Error).message}`);
     return null;
   }
+}
+
+/** Idempotent seed of historical alerts. Runs at most once per isolate
+ *  (and at most once globally per SEED_VERSION when KV is available).
+ *  Computes recommended_qa_ids by running qaSearch for each seed — the
+ *  first list-poll on a fresh isolate pays a few hundred ms for this.
+ *  Subsequent polls and isolates skip the work. */
+async function ensureSeeded(): Promise<void> {
+  if (seedPromise) return seedPromise;
+  seedPromise = (async () => {
+    const kvHandle = await getKv();
+    const markerKey = ["alerts_seeded", SEED_VERSION];
+
+    // KV-backed: skip if a previous isolate already seeded this version.
+    if (kvHandle) {
+      const marker = await kvHandle.get<boolean>(markerKey);
+      if (marker.value) {
+        console.log(`[alerts] seed ${SEED_VERSION} already applied — skipping`);
+        return;
+      }
+    } else if (memoryFallback.some((a) => a.id.startsWith("alert-historical-"))) {
+      // Memory-backed: skip if this isolate already seeded.
+      return;
+    }
+
+    console.log(`[alerts] seeding ${HISTORICAL_SEEDS.length} historical alerts (${SEED_VERSION})`);
+    for (const seed of HISTORICAL_SEEDS) {
+      const synth = `Flood ${seed.labels.flood_severity} severity in ${seed.location_label}, ${seed.region}. ` +
+        (seed.labels.populated_area_affected ? "Populated area affected. " : "") +
+        (seed.labels.infrastructure_at_risk  ? "Infrastructure at risk. "  : "") +
+        (seed.labels.river_overflow_visible  ? "River overflow visible."   : "");
+
+      let recommended: string[] = [];
+      try {
+        const matches = await qaSearch(synth, { region: seed.region, phase: "event", limit: 5 });
+        recommended = matches.map((m) => m.id);
+      } catch (err) {
+        console.warn(`[alerts] seed ${seed.id} qaSearch failed: ${(err as Error).message}`);
+      }
+
+      const record: AlertRecord = {
+        id: seed.id,
+        timestamp: seed.timestamp,
+        region: seed.region,
+        location: seed.location,
+        location_label: seed.location_label,
+        coordinates: { lon: seed.lon, lat: seed.lat },
+        severity: seed.labels.flood_severity === "none" ? "minor" : seed.labels.flood_severity as AlertRecord["severity"],
+        labels: seed.labels,
+        recommended_qa_ids: recommended,
+        thumbnail_url: seed.thumbnail_url,
+        source: { kind: "live_simsat" },
+      };
+
+      if (kvHandle) {
+        await kvHandle.atomic()
+          .set(["alert", record.id], record)
+          .set(["alert_by_region", record.region, record.timestamp, record.id], record.id)
+          .commit();
+      } else {
+        memoryFallback.push(record);
+      }
+      console.log(`[alerts] seeded ${record.id} (${record.region}/${record.location}) qa=${recommended.length}`);
+    }
+
+    if (kvHandle) {
+      await kvHandle.set(markerKey, true);
+    }
+    console.log(`[alerts] seed ${SEED_VERSION} complete`);
+  })();
+  return seedPromise;
 }
 
 // ── Public API ────────────────────────────────────────────────────────
@@ -146,6 +335,7 @@ export async function listAlerts(opts: {
   since?: string;
   limit?: number;
 }): Promise<{ alerts: AlertRecord[]; cursor: string }> {
+  await ensureSeeded();
   const limit = Math.min(opts.limit ?? 50, 200);
   const since = opts.since ?? "1970-01-01T00:00:00.000Z";
 
@@ -186,6 +376,7 @@ export async function listAlerts(opts: {
 }
 
 export async function getAlert(id: string): Promise<AlertRecord | null> {
+  await ensureSeeded();
   const kvHandle = await getKv();
   if (kvHandle) {
     const rec = await kvHandle.get<AlertRecord>(["alert", id]);
