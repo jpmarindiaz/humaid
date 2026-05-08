@@ -27,3 +27,6 @@ finetune-flood/evals/
 # Everything inside simsat/ except its README.md is ignored.
 simsat/*
 !simsat/README.md
+
+# Regenerable PDF-extraction cache from ds_to_markdown / Kreuzberg.
+.kreuzberg/
