@@ -76,46 +76,11 @@ export const FLOOD_SAMPLES: FloodSample[] = [
     },
     thumbnail: "/assets/samples/mocoa-2017-thumb.png",
   },
-  {
-    id: "cara-de-gato-2024",
-    location_slug: "san_jacinto_del_cauca",
-    location_label: "San Jacinto del Cauca, Bolívar",
-    region: "la-mojana",
-    lon: -74.7167,
-    lat: 8.25,
-    event_date: "2024-05-06",
-    event_label: "Cara de Gato dike breach · May 2024",
-    description: "The 2024 re-breach at the same dike. Heavy cloud cover in the current tile makes this a stress test — the model should flag image_quality_limited if it can't see clearly.",
-    expected_summary: "severe flood likely · cloud-bound, may suppress alert",
-    expected_alert: false,
-    paths: {
-      pre_rgb:  "/assets/samples/cara-de-gato-2024-pre-rgb.png",
-      pre_swir: "/assets/samples/cara-de-gato-2024-pre-swir.png",
-      cur_rgb:  "/assets/samples/cara-de-gato-2024-cur-rgb.png",
-      cur_swir: "/assets/samples/cara-de-gato-2024-cur-swir.png",
-    },
-    thumbnail: "/assets/samples/cara-de-gato-2024-thumb.png",
-  },
-  {
-    id: "ayapel-peak-2022",
-    location_slug: "ayapel",
-    location_label: "Ayapel, Córdoba",
-    region: "la-mojana",
-    lon: -75.1389,
-    lat: 8.3128,
-    event_date: "2022-12-15",
-    event_label: "La Mojana peak inundation · Dec 2022",
-    description: "Wetland-margin tile at peak inundation, third year of the triple-dip La Niña. Tests the model's ability to distinguish chronic ciénaga from new flooding.",
-    expected_summary: "moderate flood, wetland baseline preserved",
-    expected_alert: false,
-    paths: {
-      pre_rgb:  "/assets/samples/ayapel-peak-2022-pre-rgb.png",
-      pre_swir: "/assets/samples/ayapel-peak-2022-pre-swir.png",
-      cur_rgb:  "/assets/samples/ayapel-peak-2022-cur-rgb.png",
-      cur_swir: "/assets/samples/ayapel-peak-2022-cur-swir.png",
-    },
-    thumbnail: "/assets/samples/ayapel-peak-2022-thumb.png",
-  },
+  // Note: cara-de-gato-2024 and ayapel-peak-2022 sample PNGs remain in
+  // assets/samples/ but are intentionally not surfaced here. Their ground
+  // truth has image_quality_limited=true (cloud cover / wetland confound),
+  // which the threshold rule blocks from publishing alerts. We keep this
+  // demo to the two scenarios that reliably fire.
 ];
 
 export const SAMPLES_BY_ID = Object.fromEntries(FLOOD_SAMPLES.map((s) => [s.id, s]));

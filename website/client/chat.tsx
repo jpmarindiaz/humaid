@@ -185,6 +185,84 @@ function App() {
     }
   }
 
+  /** One-shot: load images, run inference, auto-publish if eligible.
+   *  Each phase pushes a turn into the thread so the user sees progress. */
+  async function runAndPublish(s: FloodSample) {
+    if (sending) return;
+    setError(null);
+    setSending(true);
+
+    const previews: Record<FloodField, string> = {
+      pre_rgb:  s.paths.pre_rgb,
+      pre_swir: s.paths.pre_swir,
+      cur_rgb:  s.paths.cur_rgb,
+      cur_swir: s.paths.cur_swir,
+    };
+    setTurns((p) => [...p, { kind: "flood-submit", previews, sampleId: s.id, ts: Date.now() }]);
+
+    try {
+      const fields: FloodField[] = ["pre_rgb", "pre_swir", "cur_rgb", "cur_swir"];
+      const blobs: Record<FloodField, Blob> = {} as never;
+      for (const f of fields) {
+        const r = await fetch(s.paths[f]);
+        if (!r.ok) throw new Error(`failed to load ${f}: ${r.status}`);
+        blobs[f] = await r.blob();
+      }
+
+      const form = new FormData();
+      for (const f of fields) form.append(f, blobs[f], `${f}.png`);
+      const resp = await fetch("/api/chat", { method: "POST", body: form });
+      const payload = (await resp.json()) as ChatPayload;
+
+      if (payload.kind !== "flood" || !payload.ok) {
+        const err = payload.kind === "flood" ? payload.error
+                  : payload.kind === "error" ? payload.error
+                  : "unknown error";
+        setTurns((p) => [...p, { kind: "assistant", payload: { kind: "error", error: err }, ts: Date.now() }]);
+        return;
+      }
+      payload.sample_id = s.id;
+      setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
+
+      const labels = payload.labels;
+      const eligible = labels.flood_present && labels.populated_area_affected && !labels.image_quality_limited;
+      if (!eligible) {
+        const reason = !labels.flood_present              ? "model didn't detect a flood"
+                     : !labels.populated_area_affected    ? "no populated area visible"
+                     :                                       "image quality limited";
+        setTurns((p) => [...p, {
+          kind: "assistant",
+          payload: { kind: "alert-rejected", reason, labels },
+          ts: Date.now(),
+        }]);
+        return;
+      }
+
+      const pubResp = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sample_id: s.id, labels }),
+      });
+      const data = await pubResp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
+      if (data.ok && data.alert) {
+        setTurns((p) => [...p, { kind: "assistant", payload: { kind: "alert-published", alert: data.alert! }, ts: Date.now() }]);
+      } else {
+        setTurns((p) => [...p, {
+          kind: "assistant",
+          payload: { kind: "alert-rejected", reason: data.error ?? "rejected", labels },
+          ts: Date.now(),
+        }]);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSending(false);
+      setFloodFiles({});
+      setFloodPreviews({});
+      setActiveSample(undefined);
+    }
+  }
+
   async function sendKb(e: FormEvent) {
     e.preventDefault();
     const text = input.trim();
@@ -335,6 +413,7 @@ function App() {
           activeSample={activeSample}
           onAttach={attachFloodFile}
           onSample={loadSample}
+          onRunAndPublish={runAndPublish}
           onSubmit={sendFlood}
           onPublishAlert={publishAlert}
         />
@@ -556,6 +635,7 @@ function FloodTab(props: {
   activeSample: string | undefined;
   onAttach: (field: FloodField, file: File | null) => void;
   onSample: (s: FloodSample) => void;
+  onRunAndPublish: (s: FloodSample) => void;
   onSubmit: (e: FormEvent) => void;
   onPublishAlert: (sampleId: string, labels: FloodLabels) => void;
 }) {
@@ -577,80 +657,57 @@ function FloodTab(props: {
           {props.turns.length === 0 && (
             <FloodWelcome
               samples={samples}
-              activeSample={props.activeSample}
-              onSample={props.onSample}
+              sending={props.sending}
+              onRunAndPublish={props.onRunAndPublish}
             />
+          )}
+          {props.turns.length > 0 && samples && !props.sending && (
+            <SampleStrip samples={samples} onRunAndPublish={props.onRunAndPublish} />
           )}
           {props.turns.map((t, i) => <TurnBubble key={i} turn={t} onPublishAlert={props.onPublishAlert} />)}
           {props.sending && <div className="thinking">running lfm2-flood…</div>}
           {props.error && <div className="error-bubble">{props.error}</div>}
         </div>
       </div>
-      <form onSubmit={props.onSubmit} className="composer">
-        <div className="composer-inner composer-flood">
-          {samples && (
-            <SamplePicker
-              samples={samples}
-              activeSample={props.activeSample}
-              onPick={props.onSample}
-            />
-          )}
-          <div className="flood-grid">
-            {FLOOD_SLOTS.map((s) => (
-              <FloodSlot key={s.field} slot={s} preview={props.previews[s.field]} onAttach={props.onAttach} />
-            ))}
-          </div>
-          <div className="flood-actions">
-            <p className="flood-hint">PNG only · same 5 km Sentinel-2 tile · order matters</p>
-            <button type="submit" disabled={!ready || props.sending} className="primary-btn">
-              {props.sending ? "analysing…" : "analyse pair"}
-            </button>
-          </div>
-        </div>
-      </form>
     </div>
   );
 }
 
 function FloodWelcome({
-  samples, activeSample, onSample,
+  samples, sending, onRunAndPublish,
 }: {
   samples: FloodSample[] | null;
-  activeSample: string | undefined;
-  onSample: (s: FloodSample) => void;
+  sending: boolean;
+  onRunAndPublish: (s: FloodSample) => void;
 }) {
   return (
     <div className="welcome welcome-wide">
-      <p className="welcome-title">Satellite flood detection</p>
+      <p className="welcome-title">Satellite flood detection · alert simulator</p>
       <p className="welcome-sub">
-        The fine-tuned LFM2-VL-450M ingests 4 Sentinel-2 tiles for the same 5 km
-        square — a pre-event RGB + SWIR pair and a current RGB + SWIR pair —
-        and returns a 7-field structured assessment. Pick a sample to try, or
-        upload your own PNGs in the slots below.
+        Click a scenario below. The fine-tuned LFM2-VL-450M runs onboard
+        inference on 4 Sentinel-2 tiles, the threshold check fires, and an
+        alert is published to the desktop app. One click, end to end.
       </p>
       {samples && (
         <div className="sample-grid">
           {samples.map((s) => (
-            <SampleCard key={s.id} sample={s} active={activeSample === s.id} onPick={onSample} />
+            <SampleCard key={s.id} sample={s} sending={sending} onRun={onRunAndPublish} />
           ))}
         </div>
       )}
       <p className="welcome-note">
         Cold start on a fresh isolate takes ~60 s while the GGUF + mmproj load.
+        After that, each run is a few seconds.
       </p>
     </div>
   );
 }
 
-function SampleCard({ sample, active, onPick }: {
-  sample: FloodSample; active: boolean; onPick: (s: FloodSample) => void;
+function SampleCard({ sample, sending, onRun }: {
+  sample: FloodSample; sending: boolean; onRun: (s: FloodSample) => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={() => onPick(sample)}
-      className={`sample-card${active ? " sample-card-active" : ""}`}
-    >
+    <article className="sample-card sample-card-cta">
       <div className="sample-thumbs">
         <img src={sample.paths.pre_rgb} alt="pre RGB" />
         <img src={sample.paths.cur_rgb} alt="current RGB" />
@@ -658,11 +715,41 @@ function SampleCard({ sample, active, onPick }: {
       <div className="sample-text">
         <span className={`region-pill region-${sample.region}`}>{sample.region}</span>
         <h4>{sample.event_label}</h4>
-        <p className="sample-loc">{sample.location}</p>
+        <p className="sample-loc">{sample.location_label}</p>
         <p className="sample-desc">{sample.description}</p>
-        <p className="sample-expected">Expected · {sample.expected_summary}</p>
+        <button
+          type="button"
+          onClick={() => onRun(sample)}
+          disabled={sending}
+          className="primary-btn sample-run-btn"
+        >
+          {sending ? "running…" : "📡  Run analysis & publish alert"}
+        </button>
       </div>
-    </button>
+    </article>
+  );
+}
+
+function SampleStrip({
+  samples, onRunAndPublish,
+}: {
+  samples: FloodSample[];
+  onRunAndPublish: (s: FloodSample) => void;
+}) {
+  return (
+    <div className="sample-strip">
+      <span className="sample-strip-label">Run another:</span>
+      {samples.map((s) => (
+        <button
+          key={s.id} type="button"
+          onClick={() => onRunAndPublish(s)}
+          className="sample-strip-btn"
+          title={s.description}
+        >
+          {s.event_label}
+        </button>
+      ))}
+    </div>
   );
 }
 

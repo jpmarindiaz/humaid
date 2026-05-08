@@ -566,6 +566,41 @@ a:hover { text-decoration: underline; }
   background: #fff7e6;
   box-shadow: 0 0 0 1px rgba(163, 67, 28, 0.25);
 }
+.sample-card-cta {
+  cursor: default;
+  flex-direction: row;
+  padding: 16px;
+}
+.sample-card-cta:hover { transform: none; border-color: var(--line); }
+.sample-run-btn {
+  align-self: flex-start;
+  margin-top: 8px;
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+}
+.sample-run-btn:hover:not(:disabled) {
+  background: var(--terra-2); border-color: var(--terra-2);
+}
+
+.sample-strip {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  margin: 0 auto;
+  max-width: 760px;
+}
+.sample-strip-label { color: var(--muted); font-size: 0.82rem; margin-right: 4px; }
+.sample-strip-btn {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 0.82rem;
+}
+.sample-strip-btn:hover { border-color: var(--terracotta); color: var(--ink); }
 .sample-thumbs {
   display: flex; flex-direction: column; gap: 4px;
   flex-shrink: 0;
