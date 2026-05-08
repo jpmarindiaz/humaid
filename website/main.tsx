@@ -227,12 +227,33 @@ app.get("/api/samples", (c) => {
 
 // ── Alerts: publish (web → KV), list (Tauri polls), get one ───────────
 
+/** Three publish shapes:
+ *
+ *   A. Sample + model labels        { sample_id, labels }
+ *      Threshold-checked. Used when the model says "yes alert".
+ *
+ *   B. Sample + manual override     { sample_id, manual: true, message? }
+ *      Uses the sample's ground-truth labels. Threshold check skipped
+ *      because the dataset annotation already verified eligibility.
+ *
+ *   C. Custom manual                { manual: true, region, location,
+ *                                     location_label, lon, lat, severity,
+ *                                     message? }
+ *      No sample. Used by the upload-then-publish path. Generic
+ *      "USER UPLOAD" thumbnail, threshold check skipped.
+ */
 interface PublishAlertRequest {
-  /** Sample id from /api/samples — server pulls coordinates + location
-   *  + thumbnail from there. The labels are passed in (they came from
-   *  the model run on the client side). */
-  sample_id: string;
-  labels: FloodLabels;
+  sample_id?: string;
+  labels?: FloodLabels;
+  manual?: boolean;
+  message?: string;
+  // Custom-manual fields (only required when no sample_id):
+  region?: "la-mojana" | "putumayo";
+  location?: string;
+  location_label?: string;
+  lon?: number;
+  lat?: number;
+  severity?: "minor" | "moderate" | "severe";
 }
 
 app.post("/api/alerts", async (c) => {
@@ -241,13 +262,74 @@ app.post("/api/alerts", async (c) => {
   try { body = await c.req.json(); }
   catch { return c.json({ ok: false, error: "JSON body required" }, 400); }
 
+  // Route C — custom manual (no sample_id).
+  if (!body.sample_id) {
+    if (!body.manual) {
+      return c.json({ ok: false, error: "either sample_id or manual:true is required" }, 400);
+    }
+    const region = body.region;
+    const locLabel = body.location_label;
+    if (!region || !locLabel) {
+      return c.json({ ok: false, error: "manual alerts need region and location_label" }, 400);
+    }
+    const severity = body.severity ?? "moderate";
+    const labels: FloodLabels = body.labels ?? {
+      flood_present: true,
+      flood_severity: severity,
+      water_coverage_pct_estimate: severity === "severe" ? "30-60%" : severity === "moderate" ? "10-30%" : "<10%",
+      populated_area_affected: true,
+      infrastructure_at_risk: severity !== "minor",
+      river_overflow_visible: severity !== "minor",
+      image_quality_limited: false,
+    };
+    console.log(
+      `[req ${reqId}] /api/alerts custom-manual region=${region} loc="${locLabel}" sev=${severity} msg=${JSON.stringify((body.message ?? "").slice(0, 60))}`,
+    );
+    const record = await publishAlert({
+      region,
+      location: body.location ?? locLabel.toLowerCase().replace(/[^a-z0-9]+/g, "_"),
+      location_label: locLabel,
+      coordinates: { lon: body.lon ?? 0, lat: body.lat ?? 0 },
+      labels,
+      thumbnail_url: "/assets/samples/upload-thumb.png",
+      message: body.message,
+      source: { kind: "manual" },
+    });
+    console.log(`[req ${reqId}] /api/alerts ✅ (custom-manual) ${record.id} severity=${record.severity}`);
+    return c.json({ ok: true, alert: record });
+  }
+
+  // Routes A + B — sample-based.
   const sample = SAMPLES_BY_ID[body.sample_id];
   if (!sample) {
     console.warn(`[req ${reqId}] /api/alerts unknown sample_id=${body.sample_id}`);
     return c.json({ ok: false, error: `unknown sample_id: ${body.sample_id}` }, 400);
   }
+
+  // Route B — manual override using ground truth.
+  if (body.manual) {
+    const labels = sample.ground_truth_labels;
+    console.log(
+      `[req ${reqId}] /api/alerts manual ${sample.id} (${sample.region}/${sample.location_slug}, ${sample.lon}, ${sample.lat}) ` +
+      `using ground-truth labels`,
+    );
+    const record = await publishAlert({
+      region: sample.region,
+      location: sample.location_slug,
+      location_label: sample.location_label,
+      coordinates: { lon: sample.lon, lat: sample.lat },
+      labels,
+      thumbnail_url: sample.thumbnail,
+      message: body.message,
+      source: { kind: "simulator", scenario_id: sample.id },
+    });
+    console.log(`[req ${reqId}] /api/alerts ✅ (manual) ${record.id} severity=${record.severity} qa=${record.recommended_qa_ids.length}`);
+    return c.json({ ok: true, alert: record });
+  }
+
+  // Route A — sample + model labels (threshold-checked).
   if (!body.labels) {
-    return c.json({ ok: false, error: "labels required" }, 400);
+    return c.json({ ok: false, error: "labels required when not manual" }, 400);
   }
   if (!shouldPublishAlert(body.labels)) {
     console.log(
@@ -261,7 +343,6 @@ app.post("/api/alerts", async (c) => {
       labels: body.labels,
     }, 422);
   }
-
   console.log(
     `[req ${reqId}] /api/alerts publishing for ${sample.id} ` +
     `(${sample.region}/${sample.location_slug}, ${sample.lon}, ${sample.lat})`,
@@ -273,6 +354,7 @@ app.post("/api/alerts", async (c) => {
     coordinates: { lon: sample.lon, lat: sample.lat },
     labels: body.labels,
     thumbnail_url: sample.thumbnail,
+    message: body.message,
     source: { kind: "simulator", scenario_id: sample.id },
   });
   console.log(`[req ${reqId}] /api/alerts ✅ ${record.id} severity=${record.severity} qa=${record.recommended_qa_ids.length}`);

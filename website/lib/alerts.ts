@@ -30,8 +30,11 @@ export interface AlertRecord {
    *  alert UI and the Tauri desktop app render this. Stable URL — the
    *  asset ships in the deploy artifact. */
   thumbnail_url: string;
+  /** Optional human-written note attached at publish time. Useful for the
+   *  manual-publish path ("water rising past the bridge near the school"). */
+  message?: string;
   source: {
-    kind: "simulator" | "live_simsat";
+    kind: "simulator" | "live_simsat" | "manual";
     scenario_id?: string;
   };
 }
@@ -43,6 +46,7 @@ export interface PublishInput {
   coordinates: Coordinates;
   labels: FloodLabels;
   thumbnail_url: string;
+  message?: string;
   source: AlertRecord["source"];
 }
 
@@ -299,6 +303,7 @@ export async function publishAlert(input: PublishInput): Promise<AlertRecord> {
     labels: input.labels,
     recommended_qa_ids: [],
     thumbnail_url: input.thumbnail_url,
+    message: input.message,
     source: input.source,
   };
 

@@ -60,6 +60,7 @@ interface FloodSample {
   expected_alert: boolean;
   paths: { pre_rgb: string; pre_swir: string; cur_rgb: string; cur_swir: string };
   thumbnail: string;
+  ground_truth_labels: FloodLabels;
 }
 
 interface AlertRecord {
@@ -73,7 +74,8 @@ interface AlertRecord {
   labels: FloodLabels;
   recommended_qa_ids: string[];
   thumbnail_url: string;
-  source: { kind: "simulator" | "live_simsat"; scenario_id?: string };
+  message?: string;
+  source: { kind: "simulator" | "live_simsat" | "manual"; scenario_id?: string };
 }
 
 type ChatPayload =
@@ -369,6 +371,97 @@ function App() {
     }
   }
 
+  /** Send the alert directly using the sample's ground-truth labels —
+   *  no model run, no threshold check. Used for the "📡 Send alert"
+   *  primary CTA on each sample card. Visible in /api/alerts within
+   *  ~half a second; the desktop app picks it up on next poll. */
+  async function sendSampleAlert(sample: FloodSample, message?: string) {
+    if (sending) return;
+    setError(null);
+    setSending(true);
+    setTurns((p) => [...p, {
+      kind: "flood-submit",
+      previews: {
+        pre_rgb:  sample.paths.pre_rgb,
+        pre_swir: sample.paths.pre_swir,
+        cur_rgb:  sample.paths.cur_rgb,
+        cur_swir: sample.paths.cur_swir,
+      },
+      sampleId: sample.id,
+      ts: Date.now(),
+    }]);
+    try {
+      const resp = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sample_id: sample.id, manual: true, message }),
+      });
+      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
+      if (data.ok && data.alert) {
+        setTurns((p) => [...p, {
+          kind: "assistant",
+          payload: { kind: "alert-published", alert: data.alert! },
+          ts: Date.now(),
+        }]);
+      } else {
+        setError(data.error ?? "publish failed");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSending(false);
+    }
+  }
+
+  /** Custom manual alert from the upload section. Server uses the
+   *  generic upload thumbnail; coordinates default to 0,0 if user
+   *  doesn't supply them. */
+  async function sendCustomAlert(payload: {
+    region: "la-mojana" | "putumayo";
+    location_label: string;
+    severity: "minor" | "moderate" | "severe";
+    message?: string;
+    lon?: number;
+    lat?: number;
+    previews?: Record<FloodField, string>;
+  }) {
+    if (sending) return;
+    setError(null);
+    setSending(true);
+    if (payload.previews) {
+      setTurns((p) => [...p, { kind: "flood-submit", previews: payload.previews!, ts: Date.now() }]);
+    }
+    try {
+      const resp = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          manual: true,
+          region: payload.region,
+          location_label: payload.location_label,
+          severity: payload.severity,
+          message: payload.message,
+          lon: payload.lon,
+          lat: payload.lat,
+        }),
+      });
+      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
+      if (data.ok && data.alert) {
+        setTurns((p) => [...p, {
+          kind: "assistant",
+          payload: { kind: "alert-published", alert: data.alert! },
+          ts: Date.now(),
+        }]);
+      } else {
+        setError(data.error ?? "publish failed");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSending(false);
+    }
+  }
+
   function reset() {
     setTurns([]);
     setError(null);
@@ -409,13 +502,9 @@ function App() {
       {tab === "flood" && (
         <FloodTab
           turns={turns} sending={sending} error={error} scrollRef={scrollRef}
-          previews={floodPreviews}
-          activeSample={activeSample}
-          onAttach={attachFloodFile}
-          onSample={loadSample}
+          onSendSampleAlert={sendSampleAlert}
           onRunAndPublish={runAndPublish}
-          onSubmit={sendFlood}
-          onPublishAlert={publishAlert}
+          onSendCustomAlert={sendCustomAlert}
         />
       )}
     </div>
@@ -631,13 +720,17 @@ function SourceCard({ source, cited }: { source: Source; cited: boolean }) {
 function FloodTab(props: {
   turns: Turn[]; sending: boolean; error: string | null;
   scrollRef: React.RefObject<HTMLDivElement | null>;
-  previews: Partial<Record<FloodField, string>>;
-  activeSample: string | undefined;
-  onAttach: (field: FloodField, file: File | null) => void;
-  onSample: (s: FloodSample) => void;
+  onSendSampleAlert: (s: FloodSample, message?: string) => void;
   onRunAndPublish: (s: FloodSample) => void;
-  onSubmit: (e: FormEvent) => void;
-  onPublishAlert: (sampleId: string, labels: FloodLabels) => void;
+  onSendCustomAlert: (p: {
+    region: "la-mojana" | "putumayo";
+    location_label: string;
+    severity: "minor" | "moderate" | "severe";
+    message?: string;
+    lon?: number;
+    lat?: number;
+    previews?: Record<FloodField, string>;
+  }) => void;
 }) {
   const [samples, setSamples] = useState<FloodSample[] | null>(null);
 
@@ -648,8 +741,6 @@ function FloodTab(props: {
       .catch(() => {});
   }, []);
 
-  const ready = FLOOD_SLOTS.every((s) => props.previews[s.field]);
-
   return (
     <div className="flood-tab">
       <div ref={props.scrollRef} className="scroll">
@@ -658,14 +749,16 @@ function FloodTab(props: {
             <FloodWelcome
               samples={samples}
               sending={props.sending}
+              onSendSampleAlert={props.onSendSampleAlert}
               onRunAndPublish={props.onRunAndPublish}
+              onSendCustomAlert={props.onSendCustomAlert}
             />
           )}
           {props.turns.length > 0 && samples && !props.sending && (
-            <SampleStrip samples={samples} onRunAndPublish={props.onRunAndPublish} />
+            <SampleStrip samples={samples} onSendSampleAlert={props.onSendSampleAlert} />
           )}
-          {props.turns.map((t, i) => <TurnBubble key={i} turn={t} onPublishAlert={props.onPublishAlert} />)}
-          {props.sending && <div className="thinking">running lfm2-flood…</div>}
+          {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
+          {props.sending && <div className="thinking">publishing alert…</div>}
           {props.error && <div className="error-bubble">{props.error}</div>}
         </div>
       </div>
@@ -674,37 +767,55 @@ function FloodTab(props: {
 }
 
 function FloodWelcome({
-  samples, sending, onRunAndPublish,
+  samples, sending, onSendSampleAlert, onRunAndPublish, onSendCustomAlert,
 }: {
   samples: FloodSample[] | null;
   sending: boolean;
+  onSendSampleAlert: (s: FloodSample, message?: string) => void;
   onRunAndPublish: (s: FloodSample) => void;
+  onSendCustomAlert: (p: {
+    region: "la-mojana" | "putumayo";
+    location_label: string;
+    severity: "minor" | "moderate" | "severe";
+    message?: string;
+    lon?: number;
+    lat?: number;
+    previews?: Record<FloodField, string>;
+  }) => void;
 }) {
   return (
     <div className="welcome welcome-wide">
       <p className="welcome-title">Satellite flood detection · alert simulator</p>
       <p className="welcome-sub">
-        Click a scenario below. The fine-tuned LFM2-VL-450M runs onboard
-        inference on 4 Sentinel-2 tiles, the threshold check fires, and an
-        alert is published to the desktop app. One click, end to end.
+        Click <strong>📡 Send alert</strong> on either scenario below to publish a flood
+        alert with the dataset's verified labels — desktop app picks it up
+        on the next poll. The "Run model" link runs the bundled LFM2-VL
+        first; if its labels pass the threshold, the alert publishes
+        automatically.
       </p>
       {samples && (
         <div className="sample-grid">
           {samples.map((s) => (
-            <SampleCard key={s.id} sample={s} sending={sending} onRun={onRunAndPublish} />
+            <SampleCard
+              key={s.id}
+              sample={s}
+              sending={sending}
+              onSendAlert={onSendSampleAlert}
+              onRunModel={onRunAndPublish}
+            />
           ))}
         </div>
       )}
-      <p className="welcome-note">
-        Cold start on a fresh isolate takes ~60 s while the GGUF + mmproj load.
-        After that, each run is a few seconds.
-      </p>
+      <UploadSection sending={sending} onPublish={onSendCustomAlert} />
     </div>
   );
 }
 
-function SampleCard({ sample, sending, onRun }: {
-  sample: FloodSample; sending: boolean; onRun: (s: FloodSample) => void;
+function SampleCard({ sample, sending, onSendAlert, onRunModel }: {
+  sample: FloodSample;
+  sending: boolean;
+  onSendAlert: (s: FloodSample, message?: string) => void;
+  onRunModel: (s: FloodSample) => void;
 }) {
   return (
     <article className="sample-card sample-card-cta">
@@ -715,41 +826,186 @@ function SampleCard({ sample, sending, onRun }: {
       <div className="sample-text">
         <span className={`region-pill region-${sample.region}`}>{sample.region}</span>
         <h4>{sample.event_label}</h4>
-        <p className="sample-loc">{sample.location_label}</p>
+        <p className="sample-loc">{sample.location_label} · {sample.lat.toFixed(3)}, {sample.lon.toFixed(3)}</p>
         <p className="sample-desc">{sample.description}</p>
-        <button
-          type="button"
-          onClick={() => onRun(sample)}
-          disabled={sending}
-          className="primary-btn sample-run-btn"
-        >
-          {sending ? "running…" : "📡  Run analysis & publish alert"}
-        </button>
+        <div className="sample-actions">
+          <button
+            type="button"
+            onClick={() => onSendAlert(sample)}
+            disabled={sending}
+            className="primary-btn sample-run-btn"
+          >
+            {sending ? "publishing…" : "📡  Send alert"}
+          </button>
+          <button
+            type="button"
+            onClick={() => onRunModel(sample)}
+            disabled={sending}
+            className="ghost-link"
+          >
+            or run the model first
+          </button>
+        </div>
       </div>
     </article>
   );
 }
 
 function SampleStrip({
-  samples, onRunAndPublish,
+  samples, onSendSampleAlert,
 }: {
   samples: FloodSample[];
-  onRunAndPublish: (s: FloodSample) => void;
+  onSendSampleAlert: (s: FloodSample, message?: string) => void;
 }) {
   return (
     <div className="sample-strip">
-      <span className="sample-strip-label">Run another:</span>
+      <span className="sample-strip-label">Send another:</span>
       {samples.map((s) => (
         <button
           key={s.id} type="button"
-          onClick={() => onRunAndPublish(s)}
+          onClick={() => onSendSampleAlert(s)}
           className="sample-strip-btn"
           title={s.description}
         >
-          {s.event_label}
+          📡 {s.event_label}
         </button>
       ))}
     </div>
+  );
+}
+
+// ── Upload section ────────────────────────────────────────────────────
+
+function UploadSection({
+  sending, onPublish,
+}: {
+  sending: boolean;
+  onPublish: (p: {
+    region: "la-mojana" | "putumayo";
+    location_label: string;
+    severity: "minor" | "moderate" | "severe";
+    message?: string;
+    lon?: number;
+    lat?: number;
+    previews?: Record<FloodField, string>;
+  }) => void;
+}) {
+  const [before, setBefore] = useState<File | null>(null);
+  const [after, setAfter] = useState<File | null>(null);
+  const [region, setRegion] = useState<"la-mojana" | "putumayo">("la-mojana");
+  const [locationLabel, setLocationLabel] = useState("Custom location");
+  const [severity, setSeverity] = useState<"minor" | "moderate" | "severe">("moderate");
+  const [message, setMessage] = useState("");
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
+
+  const beforePreview = before ? URL.createObjectURL(before) : undefined;
+  const afterPreview  = after  ? URL.createObjectURL(after)  : undefined;
+
+  function publish() {
+    if (!locationLabel.trim()) return;
+    const previews = before && after && beforePreview && afterPreview ? {
+      pre_rgb:  beforePreview,
+      pre_swir: beforePreview,
+      cur_rgb:  afterPreview,
+      cur_swir: afterPreview,
+    } as Record<FloodField, string> : undefined;
+    onPublish({
+      region,
+      location_label: locationLabel.trim(),
+      severity,
+      message: message.trim() || undefined,
+      lat: lat ? parseFloat(lat) : undefined,
+      lon: lon ? parseFloat(lon) : undefined,
+      previews,
+    });
+  }
+
+  return (
+    <section className="upload-section">
+      <div className="upload-head">
+        <h3>Or send a manual alert</h3>
+        <p>Upload a before / after pair (optional), describe the situation, and publish. Useful for cases the satellite hasn't caught yet.</p>
+      </div>
+      <div className="upload-grid">
+        <UploadSlot label="Before" file={before} preview={beforePreview} onChange={setBefore} />
+        <UploadSlot label="After"  file={after}  preview={afterPreview}  onChange={setAfter} />
+      </div>
+      <div className="upload-fields">
+        <label>
+          <span>Location</span>
+          <input
+            type="text"
+            value={locationLabel}
+            onChange={(e) => setLocationLabel(e.target.value)}
+            placeholder="e.g. Vereda Sincelejito, San Marcos"
+          />
+        </label>
+        <label>
+          <span>Region</span>
+          <select value={region} onChange={(e) => setRegion(e.target.value as never)}>
+            <option value="la-mojana">La Mojana</option>
+            <option value="putumayo">Putumayo</option>
+          </select>
+        </label>
+        <label>
+          <span>Severity</span>
+          <select value={severity} onChange={(e) => setSeverity(e.target.value as never)}>
+            <option value="minor">minor</option>
+            <option value="moderate">moderate</option>
+            <option value="severe">severe</option>
+          </select>
+        </label>
+        <label>
+          <span>Lat (optional)</span>
+          <input type="text" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="8.25" />
+        </label>
+        <label>
+          <span>Lon (optional)</span>
+          <input type="text" value={lon} onChange={(e) => setLon(e.target.value)} placeholder="-74.71" />
+        </label>
+      </div>
+      <label className="upload-message">
+        <span>Message (optional)</span>
+        <textarea
+          rows={2}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Water rising past the bridge near the school. Need evacuation transport at the polideportivo."
+        />
+      </label>
+      <button
+        type="button"
+        onClick={publish}
+        disabled={sending || !locationLabel.trim()}
+        className="primary-btn upload-publish-btn"
+      >
+        {sending ? "publishing…" : "📡  Send manual alert"}
+      </button>
+    </section>
+  );
+}
+
+function UploadSlot({ label, file, preview, onChange }: {
+  label: string;
+  file: File | null;
+  preview: string | undefined;
+  onChange: (f: File | null) => void;
+}) {
+  return (
+    <label className="upload-slot">
+      <div className="upload-slot-tile">
+        {preview
+          ? <img src={preview} alt={label} />
+          : <span className="upload-slot-placeholder">{label}<br/>+</span>}
+      </div>
+      <span className="upload-slot-label">{label}{file ? ` · ${file.name.slice(0, 18)}` : ""}</span>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+      />
+    </label>
   );
 }
 
@@ -801,15 +1057,10 @@ function FloodSlot({
 
 // ── Bubbles ───────────────────────────────────────────────────────────
 
-function TurnBubble({
-  turn, onPublishAlert,
-}: {
-  turn: Turn;
-  onPublishAlert?: (sampleId: string, labels: FloodLabels) => void;
-}) {
+function TurnBubble({ turn }: { turn: Turn }) {
   if (turn.kind === "text") return <UserTextBubble t={turn} />;
   if (turn.kind === "flood-submit") return <UserFloodBubble t={turn} />;
-  return <AssistantBubble t={turn} onPublishAlert={onPublishAlert} />;
+  return <AssistantBubble t={turn} />;
 }
 
 function UserTextBubble({ t }: { t: UserText }) {
@@ -837,12 +1088,7 @@ function UserFloodBubble({ t }: { t: UserFlood }) {
   );
 }
 
-function AssistantBubble({
-  t, onPublishAlert,
-}: {
-  t: AssistantTurn;
-  onPublishAlert?: (sampleId: string, labels: FloodLabels) => void;
-}) {
+function AssistantBubble({ t }: { t: AssistantTurn }) {
   const p = t.payload;
   if (p.kind === "error") {
     return <div className="assistant-bubble assistant-error">{p.error}</div>;
@@ -850,12 +1096,7 @@ function AssistantBubble({
   if (p.kind === "qa") return <QaResult matches={p.matches} />;
   if (p.kind === "flood") {
     return p.ok
-      ? <FloodResult
-          labels={p.labels}
-          latencyMs={p.latency_ms}
-          sampleId={p.sample_id}
-          onPublishAlert={onPublishAlert}
-        />
+      ? <FloodResult labels={p.labels} latencyMs={p.latency_ms} />
       : <div className="assistant-bubble assistant-error">flood detection failed: {p.error}</div>;
   }
   if (p.kind === "alert-published") return <AlertPublishedBubble alert={p.alert} />;
@@ -905,20 +1146,8 @@ function QaResult({ matches }: { matches: QaMatch[] }) {
   );
 }
 
-function FloodResult({
-  labels, latencyMs, sampleId, onPublishAlert,
-}: {
-  labels: FloodLabels;
-  latencyMs: number;
-  sampleId?: string;
-  onPublishAlert?: (sampleId: string, labels: FloodLabels) => void;
-}) {
+function FloodResult({ labels, latencyMs }: { labels: FloodLabels; latencyMs: number }) {
   const sevClass = `severity-${labels.flood_severity}`;
-  // Threshold rule mirror — used to enable / disable the publish button.
-  const eligible = labels.flood_present
-    && labels.populated_area_affected
-    && !labels.image_quality_limited;
-
   return (
     <div className="assistant-bubble flood-bubble">
       <div className="flood-bubble-head">
@@ -941,34 +1170,6 @@ function FloodResult({
         <Field label="river overflow">{yn(labels.river_overflow_visible)}</Field>
         <Field label="quality limited">{yn(labels.image_quality_limited)}</Field>
       </div>
-      {sampleId && onPublishAlert && (
-        <div className="alert-cta">
-          {eligible
-            ? (
-              <>
-                <p className="alert-cta-text">
-                  Threshold met — flood present, populated area affected, visibility OK.
-                  Publish an alert so the desktop app picks it up?
-                </p>
-                <button
-                  type="button"
-                  className="primary-btn alert-publish-btn"
-                  onClick={() => onPublishAlert(sampleId, labels)}
-                >
-                  📡  Publish alert
-                </button>
-              </>
-            )
-            : (
-              <p className="alert-cta-text alert-cta-muted">
-                Threshold not met — alert won't fire.
-                {!labels.flood_present && " (flood_present=false)"}
-                {!labels.populated_area_affected && " (no populated area)"}
-                {labels.image_quality_limited && " (image quality limited)"}
-              </p>
-            )}
-        </div>
-      )}
     </div>
   );
 }
@@ -990,8 +1191,9 @@ function AlertPublishedBubble({ alert }: { alert: AlertRecord }) {
         <span className="alert-location">{alert.location_label}</span>
       </div>
       <p className="alert-coords">
-        📍 {alert.coordinates.lat.toFixed(4)}°, {alert.coordinates.lon.toFixed(4)}° · region: {alert.region}
+        📍 {alert.coordinates.lat.toFixed(4)}°, {alert.coordinates.lon.toFixed(4)}° · region: {alert.region} · source: {alert.source.kind}
       </p>
+      {alert.message && <p className="alert-message">"{alert.message}"</p>}
       {alert.recommended_qa_ids.length > 0 && (
         <div className="alert-qa">
           <p className="alert-qa-label">Recommended Q&amp;A (auto-opens on the desktop app):</p>
