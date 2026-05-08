@@ -115,7 +115,7 @@ A linear log of the project journey:
 ### 1. Got the base model running locally
 
 - Pulled `LiquidAI/LFM2.5-VL-450M-GGUF` (Q4_0) via `llama-mtmd-cli`
-- Stood it up under Ollama with a working ChatML chat template (the default `{{ .Prompt }}` passthrough emits an EOS token on the chat API — needed an explicit template; details in [`docs/ollama-publishing.md`](docs/ollama-publishing.md))
+- Stood it up under Ollama with a working ChatML chat template (the default `{{ .Prompt }}` passthrough emits an EOS token on the chat API — needed an explicit template; details in [`docs/dev_notes/ollama-publishing.md`](docs/dev_notes/ollama-publishing.md))
 - Published the base model to Ollama Hub as [`jpmarindiaz/lfm2.5-vl-450m`](https://ollama.com/jpmarindiaz/lfm2.5-vl-450m). Text-only (Ollama can't bundle the mmproj cleanly for LFM2 yet); for vision use `llama-server` directly
 
 ### 2. Cloned the DPhi Space simulator
@@ -169,7 +169,7 @@ In rough priority order:
 
 - **Flood model report** — [`finetune-flood/REPORT.md`](finetune-flood/REPORT.md)
 - **Flood model process docs** — [`finetune-flood/docs/`](finetune-flood/docs/) (overview, pipeline, data collection, labeling, evaluation, findings)
-- **Ollama publishing walkthrough** — [`docs/ollama-publishing.md`](docs/ollama-publishing.md)
+- **Ollama publishing walkthrough** — [`docs/dev_notes/ollama-publishing.md`](docs/dev_notes/ollama-publishing.md)
 - **Domain research** — [`research/`](research/), especially `flood-sentinel-2.md` and `flood-tagging-and-reference-points.md`
 - **Liquid AI cookbook clone (wildfire reference)** — [`research/liquidai/cookbook/examples/wildfire-prevention/`](research/liquidai/cookbook/examples/wildfire-prevention/)
 - **Simulator** — [`simsat/`](simsat/)

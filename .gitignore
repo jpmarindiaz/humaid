@@ -1,0 +1,29 @@
+# Sensitive
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/
+.firecrawl/
+
+# Node / Deno
+node_modules/
+
+# Per-project derived data (each subproject also has its own .gitignore)
+finetune-flood/data/raw/
+finetune-flood/data/images/
+finetune-flood/data/flood_train.jsonl
+finetune-flood/data/flood_eval.jsonl
+finetune-flood/outputs/
+finetune-flood/evals/
+
+# Cloned third-party simulator — users clone upstream themselves; see simsat/README.md.
+# Everything inside simsat/ except its README.md is ignored.
+simsat/*
+!simsat/README.md
