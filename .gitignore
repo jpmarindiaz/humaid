@@ -29,5 +29,10 @@ finetune-flood/outputs/
 simsat/*
 !simsat/README.md
 
+# Cloned Liquid AI fine-tune library — users clone upstream themselves.
+# Mostly venv (~1.2 GB) and vendor source. Same pattern as simsat/.
+# humaid's own fine-tune config lives in finetune-flood/configs/flood_modal.yaml.
+leap-finetune/
+
 # Regenerable PDF-extraction cache from ds_to_markdown / Kreuzberg.
 .kreuzberg/
