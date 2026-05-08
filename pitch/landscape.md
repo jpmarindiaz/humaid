@@ -76,5 +76,6 @@ Most assume the user is an enterprise risk officer with a stable internet connec
 - **Two years ago** local retrieval cost a vector DB licence and a server.
 - **Eighteen months ago** Sentinel-1 SAR over Colombia wasn't operational at the cadence needed.
 - **Six months ago** the Cara de Gato corruption case + Procuraduría intervention made the political will visible.
+- **And** — the **partnership stack** humaid sits inside (NASA Lifelines + UN Colombia + indigenous water-rights organisations + NGO field partners) is a configuration that did not exist before. That stack is what turns a technically-feasible system into a deployable one. See [partners.md](./partners.md).
 
 The window is open *now*.

@@ -14,15 +14,20 @@ Source material for the humaid pitch. Each file is a slide-equivalent, ordered r
 4. **[why-now.md](./why-now.md)** — small VLMs, CubeSats, La Niña 2026, climate displacement curve.
 5. **[product.md](./product.md)** — the three components and how they talk to each other.
 6. **[users.md](./users.md)** — six roles × three phases × two regions. The matrix the system serves.
-7. **[traction.md](./traction.md)** — what's already built and proven.
-8. **[landscape.md](./landscape.md)** — what exists today and why it doesn't close the gap.
-9. **[impact-model.md](./impact-model.md)** — how this sustains and scales.
-10. **[vision.md](./vision.md)** — five-year arc.
-11. **[ask.md](./ask.md)** — what we need to keep going.
+7. **[partners.md](./partners.md)** — **NASA Lifelines, UN Colombia, indigenous water-rights organisations, NGO implementers — already in place.** This is the page that reframes the rest.
+8. **[traction.md](./traction.md)** — what's already built and proven.
+9. **[landscape.md](./landscape.md)** — what exists today and why it doesn't close the gap.
+10. **[impact-model.md](./impact-model.md)** — how this sustains and scales.
+11. **[vision.md](./vision.md)** — five-year arc.
+12. **[ask.md](./ask.md)** — what we need to keep going.
 
 ## One-line pitch
 
 > Humanitarian aid for floods is information-bound, not resource-bound. The knowledge to save lives already exists in hundreds of PDFs that nobody can read in an emergency. **humaid puts a small AI on a satellite to spot the flood, sends a tiny alert to ground, and unlocks a pre-synced, role-specific Q&A on a local device that works without internet.**
+
+## Why this is not a research bet
+
+humaid is a **NASA Lifelines program project**, partnered with the **United Nations in Colombia** on their data and AI governance strategy and with **indigenous water-rights organisations in Putumayo** on field co-design. The implementing partners are at the table; what we are pitching is the funded deployment of a system whose technical pieces are already built. See [partners.md](./partners.md).
 
 ## See also
 

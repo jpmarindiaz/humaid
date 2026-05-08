@@ -2,7 +2,9 @@
 
 ## What we need
 
-We are looking for a combination of **funding**, **partnerships**, and **first-pilot access** to take humaid from the working-prototype state it's in today to a deployed system serving 14 anchor municipalities in La Mojana and Putumayo.
+We are looking primarily for **funding**, with focused **satellite-segment** and **climate-finance** partnerships. The implementing field partners — at the indigenous-grass-roots, NGO, and UN level — are **already in place** (see [partners.md](./partners.md)).
+
+humaid is part of the **NASA Lifelines program** and partnered with the **United Nations in Colombia** on their data and AI governance strategy. The remaining gap to a deployed system serving 14 anchor municipalities is funding and a satellite-payload slot — not credibility, not a field channel.
 
 ### Funding (Year 1, ~USD 250-350K)
 
@@ -16,13 +18,20 @@ We are looking for a combination of **funding**, **partnerships**, and **first-p
 
 ### Partnerships
 
+**Already in place** (see [partners.md](./partners.md)):
+
+- ✅ NASA Lifelines program affiliation
+- ✅ UN Colombia — data and AI governance strategy partnership
+- ✅ Indigenous water-rights organisations in Putumayo — co-design partners
+- ✅ NGO implementing partners with active La Mojana / Putumayo operations
+
+**What we're still looking for:**
+
 | Type | Who we're looking for |
 |---|---|
 | **Hosted-payload satellite** | A CubeSat operator or commercial smallsat that can host a 450 MB model + run inference. Liquid AI ecosystem, Sidus Space, Loft Orbital, Open Cosmos, and similar |
-| **Field implementer** | Cruz Roja Colombiana, ACH, World Vision, NRC, or similar with operational presence in La Mojana / Putumayo |
-| **Government counterpart** | UNGRD, Fondo Adaptación, OCHA Colombia EHP, ELC Córdoba/Putumayo |
 | **Climate-finance vehicle** | Adaptation Fund, GCF, IADB FONERWA-style window — for inclusion in the next La Mojana / Putumayo basin programme |
-| **Indigenous co-design** | Cabildos and *autoridades tradicionales* in Putumayo (Murui Muina, Inga, Kamëntsá, Siona) and Zenú resguardos in Sucre/Córdoba |
+| **Government counterpart formalisation** | Letter of support / formal MOU with UNGRD or Fondo Adaptación for institutional anchoring beyond the existing UN-system relationship |
 
 ### First-pilot access
 
@@ -34,13 +43,17 @@ A clear path to deploying community stations in **at least 3 of the 14 anchor mu
 
 ## Why fund this rather than something else
 
-Three reasons:
+Four reasons:
 
-### 1. Marginal-cost-near-zero downstream
+### 1. The hardest part is already done — partners are at the table
+
+The most expensive and unpredictable part of any humanitarian-tech deployment is finding the field partner who will run the system on the ground when the network is down. We have those partnerships **across the full institutional spectrum**: indigenous water-rights organisations, NGO implementers, UN Colombia, NASA Lifelines program affiliation. That collapses the typical 12-18 month "find a partner" phase to zero.
+
+### 2. Marginal-cost-near-zero downstream
 
 Most of the cost is upfront engineering. Once humaid is deployed in 14 municipalities, **adding the next 14 costs roughly 10% of the first 14**. This is closer to public-infrastructure economics than SaaS economics. It scales out without a proportional cost increase.
 
-### 2. Already de-risked
+### 3. Already de-risked
 
 We are not asking funders to back a research bet. The pieces are demonstrably built:
 - 471 bilingual Q&A pairs, validated, retrieval-tested.
@@ -51,7 +64,7 @@ We are not asking funders to back a research bet. The pieces are demonstrably bu
 
 The remaining work is **integration, deployment, and field validation** — the high-value, lower-risk part of the curve.
 
-### 3. The next emergency is already on the calendar
+### 4. The next emergency is already on the calendar
 
 - IDEAM forecasts El Niño 2026 onset.
 - UNGRD has issued Circular 028 de 2026 for preparedness.

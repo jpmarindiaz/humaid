@@ -1,6 +1,17 @@
-# Traction — what's already built
+# Traction — what's already built *and* who's already aligned
 
-humaid is not a slide deck. It's a working set of components, several of which are demonstrably running today.
+humaid is not a slide deck. It's a working set of components with the implementing partners already at the table.
+
+## Programme & partners — the part most projects are missing
+
+| | |
+|---|---|
+| **NASA Lifelines program** | humaid is an affiliated project under the program |
+| **United Nations in Colombia** | partnership on their data and AI governance strategy — humaid as reference case for AI-in-humanitarian-action governance |
+| **Indigenous water-rights organisations (Putumayo)** | co-designing the local app and community stations on their territory; cultural and legal standing as *autoridades tradicionales* |
+| **NGO implementing partners** | humanitarian organisations with active operational presence in La Mojana and Putumayo aligned for field deployment under existing donor frameworks (CERF, ECHO, USAID-BHA, SIDA, Colombia HRP) |
+
+This is the part of the traction story that **changes how the rest of the deck reads**. See [partners.md](./partners.md) for the full picture.
 
 ## Built and committed
 
