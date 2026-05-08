@@ -1,0 +1,574 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.7167,
+          8.25
+        ]
+      },
+      "properties": {
+        "id": "san_jacinto_del_cauca",
+        "name": "San Jacinto del Cauca, Bolívar",
+        "municipality": "San Jacinto del Cauca",
+        "department": "Bolívar",
+        "region": "la_mojana",
+        "notes": "Site of Cara de Gato dike — primary breach location",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.1389,
+          8.3128
+        ]
+      },
+      "properties": {
+        "id": "ayapel",
+        "name": "Ayapel, Córdoba",
+        "municipality": "Ayapel",
+        "department": "Córdoba",
+        "region": "la_mojana",
+        "notes": "2024: 23% muni + 44% cropland flooded; Ciénaga de Ayapel wetland",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.0319,
+          8.9275
+        ]
+      },
+      "properties": {
+        "id": "san_benito_abad",
+        "name": "San Benito Abad, Sucre",
+        "municipality": "San Benito Abad",
+        "department": "Sucre",
+        "region": "la_mojana",
+        "notes": "2024: 29% muni + 35% cropland + 32% grassland flooded",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.5392,
+          8.4694
+        ]
+      },
+      "properties": {
+        "id": "guaranda",
+        "name": "Guaranda, Sucre",
+        "municipality": "Guaranda",
+        "department": "Sucre",
+        "region": "la_mojana",
+        "notes": "Caño Rabón > 3.6m in 2025; Alto San Matías, Humo Candelaria, Mamón",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.6356,
+          8.5417
+        ]
+      },
+      "properties": {
+        "id": "majagual",
+        "name": "Majagual, Sucre",
+        "municipality": "Majagual",
+        "department": "Sucre",
+        "region": "la_mojana",
+        "notes": "Sincelejito (Alianza Común La Mojana hub); Pumpuma, Los Ossas",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.1147,
+          8.7906
+        ]
+      },
+      "properties": {
+        "id": "caimito",
+        "name": "Caimito, Sucre",
+        "municipality": "Caimito",
+        "department": "Sucre",
+        "region": "la_mojana",
+        "notes": "Persistent encharcamientos through 2025",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.7197,
+          8.8125
+        ]
+      },
+      "properties": {
+        "id": "sucre_cabecera",
+        "name": "Sucre (cabecera), Sucre",
+        "municipality": "Sucre (cabecera)",
+        "department": "Sucre",
+        "region": "la_mojana",
+        "notes": "Urban + departmental seat impact",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.1283,
+          8.6622
+        ]
+      },
+      "properties": {
+        "id": "san_marcos",
+        "name": "San Marcos, Sucre",
+        "municipality": "San Marcos",
+        "department": "Sucre",
+        "region": "la_mojana",
+        "notes": "Secondary impact zone",
+        "event_count": 6,
+        "events": [
+          {
+            "event_id": "cara_de_gato_2021",
+            "date": "2021-08-27",
+            "description": "Cara de Gato dike breach #1; start of La Niña 2021–2023 chronic crisis"
+          },
+          {
+            "event_id": "la_mojana_peak_2022",
+            "date": "2022-04-17",
+            "description": "~590,000 ha flooded nationwide; ~136,000 ha La Mojana"
+          },
+          {
+            "event_id": "cara_de_gato_2024",
+            "date": "2024-05-06",
+            "description": "Cara de Gato breach #2 (after Feb 2024 rebuild)"
+          },
+          {
+            "event_id": "los_arrastres_2024",
+            "date": "2024-05-08",
+            "description": "Los Arrastres dike breach (event #2 of May 2024)"
+          },
+          {
+            "event_id": "la_mojana_peak_2024",
+            "date": "2024-06-11",
+            "description": "Peak inundation 2024 (~860,000 ha nationwide)"
+          },
+          {
+            "event_id": "cara_de_gato_2025",
+            "date": "2025-08-27",
+            "description": "Cara de Gato breach #3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6534,
+          1.1463
+        ]
+      },
+      "properties": {
+        "id": "mocoa",
+        "name": "Mocoa, Putumayo",
+        "municipality": "Mocoa",
+        "department": "Putumayo",
+        "region": "putumayo",
+        "notes": "2017 avalancha torrencial; 6 watercourses; 17 barrios destroyed",
+        "event_count": 1,
+        "events": [
+          {
+            "event_id": "mocoa_avalancha_2017",
+            "date": "2017-04-01",
+            "description": "Avalancha torrencial; 6 watercourses; 17 barrios destroyed"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.4972,
+          0.5036
+        ]
+      },
+      "properties": {
+        "id": "puerto_asis",
+        "name": "Puerto Asís, Putumayo",
+        "municipality": "Puerto Asís",
+        "department": "Putumayo",
+        "region": "putumayo",
+        "notes": "2025 calamidad pública; albergue; Río Putumayo",
+        "event_count": 1,
+        "events": [
+          {
+            "event_id": "putumayo_decreto_0472_2025",
+            "date": "2025-07-23",
+            "description": "Gobernación emits Decreto 0472 — calamidad pública departamental"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.4072,
+          0.9636
+        ]
+      },
+      "properties": {
+        "id": "puerto_guzman",
+        "name": "Puerto Guzmán, Putumayo",
+        "municipality": "Puerto Guzmán",
+        "department": "Putumayo",
+        "region": "putumayo",
+        "notes": "2025 calamidad pública",
+        "event_count": 1,
+        "events": [
+          {
+            "event_id": "putumayo_decreto_0472_2025",
+            "date": "2025-07-23",
+            "description": "Gobernación emits Decreto 0472 — calamidad pública departamental"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9667,
+          1.1875
+        ]
+      },
+      "properties": {
+        "id": "colon_putumayo",
+        "name": "Colón, Putumayo",
+        "municipality": "Colón",
+        "department": "Putumayo",
+        "region": "putumayo",
+        "notes": "Alto Putumayo; 2025 affected",
+        "event_count": 1,
+        "events": [
+          {
+            "event_id": "putumayo_decreto_0472_2025",
+            "date": "2025-07-23",
+            "description": "Gobernación emits Decreto 0472 — calamidad pública departamental"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0033,
+          1.1467
+        ]
+      },
+      "properties": {
+        "id": "santiago_putumayo",
+        "name": "Santiago, Putumayo",
+        "municipality": "Santiago",
+        "department": "Putumayo",
+        "region": "putumayo",
+        "notes": "Alto Putumayo; 2025 affected",
+        "event_count": 1,
+        "events": [
+          {
+            "event_id": "putumayo_decreto_0472_2025",
+            "date": "2025-07-23",
+            "description": "Gobernación emits Decreto 0472 — calamidad pública departamental"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.7822,
+          -0.1933
+        ]
+      },
+      "properties": {
+        "id": "puerto_leguizamo",
+        "name": "Puerto Leguízamo, Putumayo",
+        "municipality": "Puerto Leguízamo",
+        "department": "Putumayo",
+        "region": "putumayo",
+        "notes": "Bajo Putumayo; 10 Apr 2025 calamidad pública (Decreto)",
+        "event_count": 2,
+        "events": [
+          {
+            "event_id": "puerto_leguizamo_calamidad_2025",
+            "date": "2025-04-10",
+            "description": "Puerto Leguízamo declares calamidad pública"
+          },
+          {
+            "event_id": "putumayo_decreto_0472_2025",
+            "date": "2025-07-23",
+            "description": "Gobernación emits Decreto 0472 — calamidad pública departamental"
+          }
+        ]
+      }
+    }
+  ]
+}

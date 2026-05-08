@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Colombia flood events — La Mojana &amp; Putumayo</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+  <style>
+    :root {
+      --mojana: #2563eb;
+      --putumayo: #ea580c;
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; color: var(--text); background: var(--bg); }
+    #app { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+    #sidebar { background: var(--panel); border-right: 1px solid var(--border); padding: 16px; overflow-y: auto; }
+    #map { height: 100%; }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    .subtitle { font-size: 12px; color: var(--muted); margin: 0 0 16px; }
+    .filter-group { margin-bottom: 16px; }
+    .filter-group h2 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    label.row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 4px; cursor: pointer; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-dot.mojana { background: var(--mojana); }
+    .legend-dot.putumayo { background: var(--putumayo); }
+    select, input[type=range] { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 6px; font-size: 13px; }
+    .event-list { max-height: 40vh; overflow-y: auto; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+    .event { font-size: 12px; padding: 8px; border-radius: 4px; margin-bottom: 6px; background: var(--bg); border-left: 3px solid var(--border); cursor: pointer; }
+    .event:hover { background: #0b1220; }
+    .event.mojana { border-left-color: var(--mojana); }
+    .event.putumayo { border-left-color: var(--putumayo); }
+    .event .date { color: var(--muted); font-size: 11px; }
+    .event .place { font-weight: 500; margin: 2px 0; }
+    .event .desc { color: var(--muted); }
+    .mapboxgl-popup-content { background: var(--panel); color: var(--text); padding: 12px; border-radius: 6px; max-width: 280px; }
+    .mapboxgl-popup-tip { border-top-color: var(--panel) !important; border-bottom-color: var(--panel) !important; }
+    .mapboxgl-popup-close-button { color: var(--muted); font-size: 18px; }
+    .popup-title { font-weight: 600; margin: 0 0 4px; font-size: 14px; }
+    .popup-meta { color: var(--muted); font-size: 11px; margin: 0 0 8px; }
+    .popup-events { font-size: 12px; }
+    .popup-event { padding: 4px 0; border-top: 1px solid var(--border); }
+    .popup-event:first-child { border-top: 0; }
+    .token-warn { background: #7f1d1d; color: #fee2e2; padding: 8px; font-size: 12px; border-radius: 4px; margin-bottom: 12px; }
+    a { color: #60a5fa; }
+    .stat { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .stat strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <h1>Colombia flood events</h1>
+      <p class="subtitle">La Mojana &amp; Putumayo — anchors for satellite-image tagging</p>
+
+      <div id="token-warn" class="token-warn" style="display:none">
+        Set a Mapbox token: edit <code>index.html</code> and replace <code>MAPBOX_TOKEN</code>, or open with <code>?token=&lt;your-pk&gt;</code>.
+      </div>
+
+      <div class="filter-group">
+        <h2>Region</h2>
+        <label class="row"><input type="checkbox" id="f-mojana" checked /><span class="legend-dot mojana"></span>La Mojana</label>
+        <label class="row"><input type="checkbox" id="f-putumayo" checked /><span class="legend-dot putumayo"></span>Putumayo</label>
+      </div>
+
+      <div class="filter-group">
+        <h2>Event</h2>
+        <select id="f-event"><option value="">All events</option></select>
+      </div>
+
+      <div class="filter-group">
+        <h2>Year</h2>
+        <select id="f-year"><option value="">All years</option></select>
+      </div>
+
+      <div id="stats"></div>
+
+      <div class="event-list" id="event-list"></div>
+    </aside>
+    <div id="map"></div>
+  </div>
+
+  <script>
+    // ---- Mapbox token. Three ways to set:
+    //   1. Replace MAPBOX_TOKEN below with a pk.* token.
+    //   2. ?token=pk.... in the URL.
+    //   3. localStorage.setItem('mapboxToken', 'pk....') in devtools.
+    const MAPBOX_TOKEN = 'MAPBOX_TOKEN'
+    const urlToken = new URLSearchParams(location.search).get('token')
+    const lsToken = (typeof localStorage !== 'undefined' && localStorage.getItem('mapboxToken')) || null
+    const token = urlToken || lsToken || MAPBOX_TOKEN
+    if (token === 'MAPBOX_TOKEN') {
+      document.getElementById('token-warn').style.display = 'block'
+    }
+    mapboxgl.accessToken = token
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      center: [-75.5, 4.5], // Colombia
+      zoom: 5.2,
+    })
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right')
+    map.addControl(new mapboxgl.ScaleControl({ unit: 'metric' }), 'bottom-right')
+
+    // ---- Load data and wire up.
+    let geojson = null
+    let allRows = [] // flat events.json
+    let popup = null
+
+    async function load() {
+      const [g, r] = await Promise.all([
+        fetch('data/locations.geojson').then((x) => x.json()),
+        fetch('data/events.json').then((x) => x.json()),
+      ])
+      geojson = g
+      allRows = r
+    }
+
+    function regionColor(region) { return region === 'la_mojana' ? '#2563eb' : '#ea580c' }
+
+    function popupHtml(props) {
+      const events = props.events || []
+      const evHtml = events
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map((e) => `<div class="popup-event"><strong>${e.date}</strong><br><span style="color:var(--muted)">${escape(e.description)}</span></div>`)
+        .join('')
+      const region = props.region === 'la_mojana' ? 'La Mojana' : 'Putumayo'
+      return `
+        <div class="popup-title">${escape(props.municipality)}, ${escape(props.department)}</div>
+        <div class="popup-meta">${region} — ${props.lat?.toFixed?.(4) ?? ''}, ${props.lon?.toFixed?.(4) ?? ''}</div>
+        ${props.notes ? `<div class="popup-meta">${escape(props.notes)}</div>` : ''}
+        <div class="popup-events">${evHtml || '<em style="color:var(--muted)">No events match current filters</em>'}</div>
+      `
+    }
+    function escape(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+    }
+
+    // ---- Filtering. Filters are cumulative (AND). Filtering an event means
+    // we keep only locations that have at least one matching event, and we
+    // attach only matching events to those locations. Same for year.
+    function filterState() {
+      return {
+        regions: new Set(['la_mojana', 'putumayo'].filter((r) => document.getElementById(`f-${r.split('_').pop()}`).checked)),
+        eventId: document.getElementById('f-event').value,
+        year: document.getElementById('f-year').value,
+      }
+    }
+    function filtered() {
+      const f = filterState()
+      const features = geojson.features
+        .filter((feat) => f.regions.has(feat.properties.region))
+        .map((feat) => {
+          const events = (feat.properties.events || []).filter((e) => {
+            if (f.eventId && e.event_id !== f.eventId) return false
+            if (f.year && !e.date.startsWith(f.year)) return false
+            return true
+          })
+          return { ...feat, properties: { ...feat.properties, events, event_count: events.length } }
+        })
+        .filter((feat) => {
+          // If a specific event or year is selected, hide locations with no
+          // matching events. Without a filter, show every location regardless
+          // of event count (many anchor places have no events on file yet).
+          if (f.eventId || f.year) return feat.properties.event_count > 0
+          return true
+        })
+      return { type: 'FeatureCollection', features }
+    }
+
+    function refresh() {
+      const fc = filtered()
+      const src = map.getSource('locations')
+      if (src) src.setData(fc)
+      renderSidebarList(fc)
+      const totalEvents = fc.features.reduce((n, f) => n + f.properties.event_count, 0)
+      document.getElementById('stats').innerHTML = `
+        <div class="stat"><strong>${fc.features.length}</strong> locations</div>
+        <div class="stat"><strong>${totalEvents}</strong> event-rows</div>
+      `
+    }
+
+    function renderSidebarList(fc) {
+      const rows = []
+      for (const f of fc.features) {
+        for (const e of f.properties.events) {
+          rows.push({
+            ...e,
+            municipality: f.properties.municipality,
+            department: f.properties.department,
+            region: f.properties.region,
+            lon: f.geometry.coordinates[0],
+            lat: f.geometry.coordinates[1],
+          })
+        }
+      }
+      rows.sort((a, b) => a.date.localeCompare(b.date) || a.municipality.localeCompare(b.municipality))
+      const html = rows
+        .map((r) =>
+          `<div class="event ${r.region === 'la_mojana' ? 'mojana' : 'putumayo'}" data-lon="${r.lon}" data-lat="${r.lat}">
+             <div class="date">${r.date}</div>
+             <div class="place">${escape(r.municipality)}, ${escape(r.department)}</div>
+             <div class="desc">${escape(r.description)}</div>
+           </div>`
+        )
+        .join('')
+      const el = document.getElementById('event-list')
+      el.innerHTML = html || '<div class="stat">No events match current filters</div>'
+      el.querySelectorAll('.event').forEach((node) => {
+        node.addEventListener('click', () => {
+          const lon = Number(node.dataset.lon)
+          const lat = Number(node.dataset.lat)
+          map.flyTo({ center: [lon, lat], zoom: 9, speed: 1.5 })
+        })
+      })
+    }
+
+    function populateSelectors() {
+      const events = Array.from(new Set(allRows.map((r) => r.event_id))).sort()
+      const evSel = document.getElementById('f-event')
+      for (const id of events) {
+        const r = allRows.find((row) => row.event_id === id)
+        const opt = document.createElement('option')
+        opt.value = id
+        opt.textContent = `${r.date}  ${id}`
+        evSel.appendChild(opt)
+      }
+      const years = Array.from(new Set(allRows.map((r) => r.date.slice(0, 4)))).sort()
+      const ySel = document.getElementById('f-year')
+      for (const y of years) {
+        const opt = document.createElement('option')
+        opt.value = y
+        opt.textContent = y
+        ySel.appendChild(opt)
+      }
+    }
+
+    map.on('load', async () => {
+      await load()
+      populateSelectors()
+
+      map.addSource('locations', { type: 'geojson', data: filtered() })
+      map.addLayer({
+        id: 'loc-circles',
+        type: 'circle',
+        source: 'locations',
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'], ['get', 'event_count'],
+            0, 6,
+            5, 10,
+            10, 14,
+          ],
+          'circle-color': ['match', ['get', 'region'], 'la_mojana', '#2563eb', 'putumayo', '#ea580c', '#999'],
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#fff',
+          'circle-opacity': 0.85,
+        },
+      })
+      map.addLayer({
+        id: 'loc-labels',
+        type: 'symbol',
+        source: 'locations',
+        layout: {
+          'text-field': ['get', 'municipality'],
+          'text-size': 11,
+          'text-offset': [0, 1.4],
+          'text-anchor': 'top',
+        },
+        paint: { 'text-color': '#fff', 'text-halo-color': '#0f172a', 'text-halo-width': 1.2 },
+      })
+
+      map.on('mouseenter', 'loc-circles', () => (map.getCanvas().style.cursor = 'pointer'))
+      map.on('mouseleave', 'loc-circles', () => (map.getCanvas().style.cursor = ''))
+      map.on('click', 'loc-circles', (e) => {
+        const f = e.features[0]
+        if (popup) popup.remove()
+        popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '320px' })
+          .setLngLat(f.geometry.coordinates)
+          .setHTML(popupHtml({ ...f.properties, events: JSON.parse(f.properties.events), lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] }))
+          .addTo(map)
+      })
+
+      ;['f-mojana', 'f-putumayo', 'f-event', 'f-year'].forEach((id) => {
+        document.getElementById(id).addEventListener('change', refresh)
+      })
+      refresh()
+    })
+  </script>
+</body>
+</html>
