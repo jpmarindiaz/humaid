@@ -17,7 +17,20 @@ knowledge-base/
 ├── merge.ts                Validates + concatenates chunks into qa-pairs.csv
 ├── qa-pairs.csv            Final merged dataset — 471 rows
 ├── qa-stats.json           Counts by role, phase, region, topic
+├── rag/                    Local semantic search (Nomic via Ollama → DuckDB)
+├── kb.duckdb               Pre-built embedding index (committed; ~2.3 MB)
+├── deno.json               Tasks: merge, build, ask
 └── README.md               This file
+```
+
+## Retrieval
+
+A simple Q&A retriever lives under `rag/`. It embeds each pair once into
+`kb.duckdb` (committed so nothing needs to be rebuilt) and runs cosine
+similarity in DuckDB. See `rag/README.md` for details.
+
+```bash
+deno task ask "How do I evacuate when the river rises overnight?" --text --k 3
 ```
 
 ## Schema
