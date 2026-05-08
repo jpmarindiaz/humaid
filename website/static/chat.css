@@ -477,8 +477,198 @@ a:hover { text-decoration: underline; }
 
 .docs-list { display: flex; flex-direction: column; gap: 10px; }
 
-/* Flood tab uses single-column */
-.flood-tab { display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+/* ───── Flood board (2 columns + recent log) ───── */
+
+.flood-board {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.flood-board-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 0;
+  align-items: stretch;
+  min-height: 0;
+}
+.board-col {
+  padding: 28px 28px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-width: 0;
+}
+.board-col-tester {
+  border-right: 1px solid var(--line);
+}
+.board-col-curated {
+  background: var(--bg-deep);
+}
+.col-head h2 {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 1.25rem; color: var(--ink); margin: 0 0 6px;
+}
+.col-head p { font-size: 0.92rem; color: var(--ink-2); margin: 0; }
+
+/* Result card (model tester) */
+
+.result {
+  margin-top: 6px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+}
+.result-idle {
+  background: var(--bg-deep); color: var(--muted);
+  font-style: italic; text-align: center;
+}
+.result-busy {
+  background: var(--bg-deep); color: var(--ink-2);
+  border-left: 3px solid var(--terracotta);
+  animation: pulse 1.5s infinite;
+}
+.result-error {
+  background: #fef0e6; border: 1px solid rgba(163, 67, 28, 0.35);
+  color: var(--terra-2);
+}
+.result-noalert {
+  background: var(--paper); border: 1px solid var(--line);
+}
+.result-published {
+  background: linear-gradient(180deg, #fff7e6 0%, var(--paper) 80%);
+  border: 1px solid var(--terracotta);
+}
+.result-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 0 0 10px;
+  font-size: 0.86rem; color: var(--ink-2);
+}
+.result-tag {
+  display: inline-block;
+  background: var(--bg-deep); color: var(--ink-2);
+  padding: 2px 10px; border-radius: 999px;
+  font-size: 0.74rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.result-tag.tag-pub { background: var(--terracotta); color: var(--bg); }
+.result-id {
+  font-family: "SF Mono", Menlo, monospace;
+  color: var(--terra-2); font-weight: 700;
+}
+.result-latency {
+  margin-left: auto;
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 0.78rem; color: var(--muted);
+}
+.result-meta {
+  margin: 8px 0 0; font-size: 0.85rem; color: var(--ink-2);
+  border-top: 1px solid var(--line); padding-top: 8px;
+}
+
+.label-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 14px;
+  font-size: 0.85rem;
+}
+@media (max-width: 1100px) {
+  .label-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Curated alert cards */
+
+.curated-list { display: flex; flex-direction: column; gap: 14px; }
+.curated-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex; gap: 14px;
+  transition: border-color 140ms ease;
+}
+.curated-card:hover { border-color: rgba(163, 67, 28, 0.3); }
+.curated-thumb {
+  width: 110px; height: 110px;
+  flex-shrink: 0;
+  border-radius: 8px; object-fit: cover;
+  border: 1px solid var(--line);
+}
+.curated-text {
+  display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1;
+}
+.curated-text header {
+  display: flex; align-items: center; gap: 8px;
+}
+.curated-severity {
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(163, 67, 28, 0.13); color: var(--terra-2);
+}
+.curated-text h4 {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 1rem; margin: 2px 0 0; color: var(--ink); line-height: 1.25;
+}
+.curated-loc { font-size: 0.78rem; color: var(--muted); margin: 0; font-family: "SF Mono", Menlo, monospace; }
+.curated-desc { font-size: 0.86rem; color: var(--ink-2); margin: 0; }
+.curated-status {
+  margin: 6px 0 0; font-size: 0.82rem; font-weight: 600;
+}
+.curated-status-done  { color: var(--green); }
+.curated-status-error { color: var(--terra-2); }
+.curated-publish-btn {
+  align-self: flex-start; margin-top: 4px;
+  background: var(--terracotta); border-color: var(--terracotta);
+  font-size: 0.88rem; padding: 8px 14px;
+}
+.curated-publish-btn:hover:not(:disabled) {
+  background: var(--terra-2); border-color: var(--terra-2);
+}
+
+/* Recent activity strip (bottom of flood board) */
+
+.recent-log {
+  border-top: 1px solid var(--line);
+  background: var(--bg-deep);
+  padding: 18px 28px;
+}
+.recent-log h3 {
+  font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+  font-size: 1rem; margin: 0 0 10px; color: var(--ink);
+}
+.recent-log .muted { color: var(--muted); font-weight: 400; }
+.recent-list {
+  display: flex; gap: 10px; overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+.recent-card {
+  display: flex; gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  flex-shrink: 0;
+  width: 320px;
+}
+.recent-card img {
+  width: 56px; height: 56px; border-radius: 4px; object-fit: cover;
+  flex-shrink: 0;
+}
+.recent-meta {
+  display: grid; grid-template-columns: 1fr; gap: 1px;
+  font-size: 0.74rem; color: var(--ink-2);
+  min-width: 0;
+}
+.recent-sev {
+  font-weight: 700; font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+.recent-sev-severe   { color: var(--terracotta); }
+.recent-sev-moderate { color: #c2540e; }
+.recent-sev-minor    { color: #a87317; }
+.recent-id { font-family: "SF Mono", Menlo, monospace; color: var(--ink); }
+.recent-loc { color: var(--ink); font-weight: 500; }
+.recent-coords, .recent-source { color: var(--muted); font-size: 0.7rem; }
+.recent-msg { color: var(--ink-2); font-style: italic; font-size: 0.7rem; }
 
 /* ───── Source card ───── */
 
@@ -769,6 +959,8 @@ a:hover { text-decoration: underline; }
   .kb-split { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
   .kb-chat { border-right: 0; border-bottom: 1px solid var(--line); }
   .kb-docs { max-height: 40vh; }
+  .flood-board-cols { grid-template-columns: 1fr; }
+  .board-col-tester { border-right: 0; border-bottom: 1px solid var(--line); }
 }
 
 @media (max-width: 720px) {

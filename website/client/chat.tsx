@@ -1,11 +1,15 @@
 /** @jsxRuntime automatic */
 /** @jsxImportSource react */
-// humaid demo — two tabs in editorial-light theme:
+// humaid demo — two tabs:
 //
 //   Knowledge base   chat thread + filtered document repository, side-by-side
-//                    (role/region/phase filters apply to BOTH the QA search
-//                    and which docs are highlighted as "in scope")
-//   Flood detection  4-image upload OR one of 3 pre-loaded sample pairs
+//                    role/region/phase filters apply to both QA search and
+//                    which docs are highlighted as "in scope"
+//
+//   Flood detection  2-column workbench (no chat thread):
+//     left  — model tester (drop before/after, run model, auto-publish if eligible)
+//     right — curated test alerts (click any to publish instantly)
+//     bottom — recent-activity log of alerts published this session
 
 import { createRoot } from "react-dom/client";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -80,19 +84,9 @@ interface AlertRecord {
 
 type ChatPayload =
   | { kind: "qa"; query: string; matches: QaMatch[] }
-  | { kind: "flood"; ok: true; labels: FloodLabels; latency_ms: number; sample_id?: string }
+  | { kind: "flood"; ok: true; labels: FloodLabels; latency_ms: number }
   | { kind: "flood"; ok: false; error: string }
-  | { kind: "alert-published"; alert: AlertRecord }
-  | { kind: "alert-rejected"; reason: string; labels: FloodLabels }
   | { kind: "error"; error: string };
-
-const FLOOD_SLOTS = [
-  { field: "pre_rgb",  label: "Baseline · RGB" },
-  { field: "pre_swir", label: "Baseline · SWIR" },
-  { field: "cur_rgb",  label: "Current · RGB" },
-  { field: "cur_swir", label: "Current · SWIR" },
-] as const;
-type FloodField = typeof FLOOD_SLOTS[number]["field"];
 
 const ROLES = [
   { value: "",                     label: "All roles" },
@@ -119,10 +113,8 @@ const PHASES = [
 ] as const;
 
 interface UserText { kind: "text"; text: string; ts: number; role: string; region: string; phase: string; }
-interface UserFlood { kind: "flood-submit"; previews: Record<FloodField, string>; sampleId?: string; ts: number; }
-type UserTurn = UserText | UserFlood;
 interface AssistantTurn { kind: "assistant"; payload: ChatPayload; ts: number; }
-type Turn = UserTurn | AssistantTurn;
+type Turn = UserText | AssistantTurn;
 
 type Tab = "kb" | "flood";
 
@@ -130,140 +122,21 @@ type Tab = "kb" | "flood";
 
 function App() {
   const [tab, setTab] = useState<Tab>("kb");
+
+  // KB-tab state (the chat thread)
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState("");
   const [role, setRole] = useState("");
   const [region, setRegion] = useState("");
   const [phase, setPhase] = useState("");
-  const [floodFiles, setFloodFiles] = useState<Partial<Record<FloodField, Blob>>>({});
-  const [floodPreviews, setFloodPreviews] = useState<Partial<Record<FloodField, string>>>({});
-  const [activeSample, setActiveSample] = useState<string | undefined>(undefined);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  // The most recently retrieved docs (slug set) — used by the docs panel
-  // to highlight which sources the model just cited.
   const [citedSlugs, setCitedSlugs] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [turns]);
-
-  function attachFloodFile(field: FloodField, file: File | null) {
-    if (!file) {
-      setFloodFiles((f) => { const c = { ...f }; delete c[field]; return c; });
-      setFloodPreviews((p) => { const c = { ...p }; delete c[field]; return c; });
-      setActiveSample(undefined);
-      return;
-    }
-    const url = URL.createObjectURL(file);
-    setFloodFiles((f) => ({ ...f, [field]: file }));
-    setFloodPreviews((p) => ({ ...p, [field]: url }));
-    setActiveSample(undefined);
-  }
-
-  async function loadSample(s: FloodSample) {
-    setSending(true);
-    setError(null);
-    try {
-      const fields: FloodField[] = ["pre_rgb", "pre_swir", "cur_rgb", "cur_swir"];
-      const blobs: Partial<Record<FloodField, Blob>> = {};
-      const previews: Partial<Record<FloodField, string>> = {};
-      for (const f of fields) {
-        const r = await fetch(s.paths[f]);
-        if (!r.ok) throw new Error(`failed to load ${f}: ${r.status}`);
-        const b = await r.blob();
-        blobs[f] = b;
-        previews[f] = URL.createObjectURL(b);
-      }
-      setFloodFiles(blobs);
-      setFloodPreviews(previews);
-      setActiveSample(s.id);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  /** One-shot: load images, run inference, auto-publish if eligible.
-   *  Each phase pushes a turn into the thread so the user sees progress. */
-  async function runAndPublish(s: FloodSample) {
-    if (sending) return;
-    setError(null);
-    setSending(true);
-
-    const previews: Record<FloodField, string> = {
-      pre_rgb:  s.paths.pre_rgb,
-      pre_swir: s.paths.pre_swir,
-      cur_rgb:  s.paths.cur_rgb,
-      cur_swir: s.paths.cur_swir,
-    };
-    setTurns((p) => [...p, { kind: "flood-submit", previews, sampleId: s.id, ts: Date.now() }]);
-
-    try {
-      const fields: FloodField[] = ["pre_rgb", "pre_swir", "cur_rgb", "cur_swir"];
-      const blobs: Record<FloodField, Blob> = {} as never;
-      for (const f of fields) {
-        const r = await fetch(s.paths[f]);
-        if (!r.ok) throw new Error(`failed to load ${f}: ${r.status}`);
-        blobs[f] = await r.blob();
-      }
-
-      const form = new FormData();
-      for (const f of fields) form.append(f, blobs[f], `${f}.png`);
-      const resp = await fetch("/api/chat", { method: "POST", body: form });
-      const payload = (await resp.json()) as ChatPayload;
-
-      if (payload.kind !== "flood" || !payload.ok) {
-        const err = payload.kind === "flood" ? payload.error
-                  : payload.kind === "error" ? payload.error
-                  : "unknown error";
-        setTurns((p) => [...p, { kind: "assistant", payload: { kind: "error", error: err }, ts: Date.now() }]);
-        return;
-      }
-      payload.sample_id = s.id;
-      setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
-
-      const labels = payload.labels;
-      const eligible = labels.flood_present && labels.populated_area_affected && !labels.image_quality_limited;
-      if (!eligible) {
-        const reason = !labels.flood_present              ? "model didn't detect a flood"
-                     : !labels.populated_area_affected    ? "no populated area visible"
-                     :                                       "image quality limited";
-        setTurns((p) => [...p, {
-          kind: "assistant",
-          payload: { kind: "alert-rejected", reason, labels },
-          ts: Date.now(),
-        }]);
-        return;
-      }
-
-      const pubResp = await fetch("/api/alerts", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ sample_id: s.id, labels }),
-      });
-      const data = await pubResp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
-      if (data.ok && data.alert) {
-        setTurns((p) => [...p, { kind: "assistant", payload: { kind: "alert-published", alert: data.alert! }, ts: Date.now() }]);
-      } else {
-        setTurns((p) => [...p, {
-          kind: "assistant",
-          payload: { kind: "alert-rejected", reason: data.error ?? "rejected", labels },
-          ts: Date.now(),
-        }]);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-      setFloodFiles({});
-      setFloodPreviews({});
-      setActiveSample(undefined);
-    }
-  }
 
   async function sendKb(e: FormEvent) {
     e.preventDefault();
@@ -271,11 +144,9 @@ function App() {
     if (!text || sending) return;
     setError(null);
     setSending(true);
-
     const userTurn: UserText = { kind: "text", text, role, region, phase, ts: Date.now() };
     setTurns((p) => [...p, userTurn]);
     setInput("");
-
     try {
       const resp = await fetch("/api/chat", {
         method: "POST",
@@ -289,206 +160,8 @@ function App() {
       });
       const payload = (await resp.json()) as ChatPayload;
       setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
-      if (payload.kind === "qa") {
-        setCitedSlugs(extractCitedSlugs(payload.matches));
-      }
+      if (payload.kind === "qa") setCitedSlugs(extractCitedSlugs(payload.matches));
       if (!resp.ok && "error" in payload) setError(payload.error);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  async function sendFlood(e: FormEvent) {
-    e.preventDefault();
-    if (sending) return;
-    const missing = FLOOD_SLOTS.filter((s) => !floodFiles[s.field]).map((s) => s.field);
-    if (missing.length) {
-      setError(`Need all 4 images. Missing: ${missing.join(", ")}`);
-      return;
-    }
-    setError(null);
-    setSending(true);
-
-    const sampleIdForRun = activeSample;  // capture before we reset
-    const previews = floodPreviews as Record<FloodField, string>;
-    setTurns((p) => [...p, { kind: "flood-submit", previews, sampleId: sampleIdForRun, ts: Date.now() }]);
-
-    const form = new FormData();
-    for (const slot of FLOOD_SLOTS) {
-      const blob = floodFiles[slot.field]!;
-      const filename = blob instanceof File ? blob.name : `${slot.field}.png`;
-      form.append(slot.field, blob, filename);
-    }
-
-    try {
-      const resp = await fetch("/api/chat", { method: "POST", body: form });
-      const payload = (await resp.json()) as ChatPayload;
-      // Tag the flood payload with sample_id so the bubble can offer
-      // "Publish alert" without us needing additional state.
-      if (payload.kind === "flood" && payload.ok && sampleIdForRun) {
-        (payload as Extract<ChatPayload, { kind: "flood"; ok: true }>).sample_id = sampleIdForRun;
-      }
-      setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
-      setFloodFiles({});
-      setFloodPreviews({});
-      setActiveSample(undefined);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  async function publishAlert(sampleId: string, labels: FloodLabels) {
-    setSending(true);
-    setError(null);
-    try {
-      const resp = await fetch("/api/alerts", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ sample_id: sampleId, labels }),
-      });
-      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
-      if (data.ok && data.alert) {
-        setTurns((p) => [...p, {
-          kind: "assistant",
-          payload: { kind: "alert-published", alert: data.alert! },
-          ts: Date.now(),
-        }]);
-      } else {
-        setTurns((p) => [...p, {
-          kind: "assistant",
-          payload: { kind: "alert-rejected", reason: data.error ?? "rejected", labels },
-          ts: Date.now(),
-        }]);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  /** Send the alert directly using the sample's ground-truth labels —
-   *  no model run, no threshold check. Used for the "📡 Send alert"
-   *  primary CTA on each sample card. Visible in /api/alerts within
-   *  ~half a second; the desktop app picks it up on next poll. */
-  async function sendSampleAlert(sample: FloodSample, message?: string) {
-    if (sending) return;
-    setError(null);
-    setSending(true);
-    setTurns((p) => [...p, {
-      kind: "flood-submit",
-      previews: {
-        pre_rgb:  sample.paths.pre_rgb,
-        pre_swir: sample.paths.pre_swir,
-        cur_rgb:  sample.paths.cur_rgb,
-        cur_swir: sample.paths.cur_swir,
-      },
-      sampleId: sample.id,
-      ts: Date.now(),
-    }]);
-    try {
-      const resp = await fetch("/api/alerts", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ sample_id: sample.id, manual: true, message }),
-      });
-      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
-      if (data.ok && data.alert) {
-        setTurns((p) => [...p, {
-          kind: "assistant",
-          payload: { kind: "alert-published", alert: data.alert! },
-          ts: Date.now(),
-        }]);
-      } else {
-        setError(data.error ?? "publish failed");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  /** Run the flood model on a user-uploaded before/after pair. The
-   *  model expects 4 tiles (pre+cur × RGB+SWIR); since the upload
-   *  section only collects 2 RGB tiles we duplicate them into the SWIR
-   *  slots. Output is degraded vs the real 4-band input but the model
-   *  still runs and returns the 7-key JSON. */
-  async function runUploadedModel(before: File, after: File) {
-    if (sending) return;
-    setError(null);
-    setSending(true);
-
-    const previews: Record<FloodField, string> = {
-      pre_rgb:  URL.createObjectURL(before),
-      pre_swir: URL.createObjectURL(before),
-      cur_rgb:  URL.createObjectURL(after),
-      cur_swir: URL.createObjectURL(after),
-    };
-    setTurns((p) => [...p, { kind: "flood-submit", previews, ts: Date.now() }]);
-
-    try {
-      const form = new FormData();
-      form.append("pre_rgb",  before, "pre_rgb.png");
-      form.append("pre_swir", before, "pre_swir.png");
-      form.append("cur_rgb",  after,  "cur_rgb.png");
-      form.append("cur_swir", after,  "cur_swir.png");
-      const resp = await fetch("/api/chat", { method: "POST", body: form });
-      const payload = (await resp.json()) as ChatPayload;
-      setTurns((p) => [...p, { kind: "assistant", payload, ts: Date.now() }]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setSending(false);
-    }
-  }
-
-  /** Custom manual alert from the upload section. Server uses the
-   *  generic upload thumbnail; coordinates default to 0,0 if user
-   *  doesn't supply them. */
-  async function sendCustomAlert(payload: {
-    region: "la-mojana" | "putumayo";
-    location_label: string;
-    severity: "minor" | "moderate" | "severe";
-    message?: string;
-    lon?: number;
-    lat?: number;
-    previews?: Record<FloodField, string>;
-  }) {
-    if (sending) return;
-    setError(null);
-    setSending(true);
-    if (payload.previews) {
-      setTurns((p) => [...p, { kind: "flood-submit", previews: payload.previews!, ts: Date.now() }]);
-    }
-    try {
-      const resp = await fetch("/api/alerts", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          manual: true,
-          region: payload.region,
-          location_label: payload.location_label,
-          severity: payload.severity,
-          message: payload.message,
-          lon: payload.lon,
-          lat: payload.lat,
-        }),
-      });
-      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
-      if (data.ok && data.alert) {
-        setTurns((p) => [...p, {
-          kind: "assistant",
-          payload: { kind: "alert-published", alert: data.alert! },
-          ts: Date.now(),
-        }]);
-      } else {
-        setError(data.error ?? "publish failed");
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -500,9 +173,6 @@ function App() {
     setTurns([]);
     setError(null);
     setInput("");
-    setFloodFiles({});
-    setFloodPreviews({});
-    setActiveSample(undefined);
     setCitedSlugs(new Set());
   }
 
@@ -518,30 +188,24 @@ function App() {
 
       <Tabs tab={tab} onChange={setTab} />
 
-      <ProfileBar
-        role={role} setRole={setRole}
-        region={region} setRegion={setRegion}
-        phase={phase} setPhase={setPhase}
-      />
+      {tab === "kb" && (
+        <ProfileBar
+          role={role} setRole={setRole}
+          region={region} setRegion={setRegion}
+          phase={phase} setPhase={setPhase}
+        />
+      )}
 
       {tab === "kb" && (
         <KbTab
           turns={turns} sending={sending} error={error} scrollRef={scrollRef}
           input={input} setInput={setInput}
-          role={role} region={region} phase={phase}
+          region={region}
           onSubmit={sendKb}
           citedSlugs={citedSlugs}
         />
       )}
-      {tab === "flood" && (
-        <FloodTab
-          turns={turns} sending={sending} error={error} scrollRef={scrollRef}
-          onSendSampleAlert={sendSampleAlert}
-          onRunAndPublish={runAndPublish}
-          onSendCustomAlert={sendCustomAlert}
-          onRunUploadedModel={runUploadedModel}
-        />
-      )}
+      {tab === "flood" && <FloodTab />}
     </div>
   );
 }
@@ -560,8 +224,6 @@ function extractCitedSlugs(matches: QaMatch[]): Set<string> {
   return out;
 }
 
-// ── Tabs ──────────────────────────────────────────────────────────────
-
 function Tabs({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
   const item = (t: Tab, label: string, hint: string) => (
     <button
@@ -576,7 +238,7 @@ function Tabs({ tab, onChange }: { tab: Tab; onChange: (t: Tab) => void }) {
   return (
     <div className="tabs">
       {item("kb",    "Knowledge base",   "laptop · 471 Q&A · 17 source PDFs")}
-      {item("flood", "Flood detection",  "satellite · llama-server + lfm2-flood")}
+      {item("flood", "Flood detection",  "satellite · llama-server + lfm2-flood · alerts")}
     </div>
   );
 }
@@ -606,13 +268,13 @@ function ProfileBar({
   );
 }
 
-// ── Knowledge-base tab: chat (left) + docs (right) ────────────────────
+// ── KB tab (chat + docs panel) ────────────────────────────────────────
 
 function KbTab(props: {
   turns: Turn[]; sending: boolean; error: string | null;
   scrollRef: React.RefObject<HTMLDivElement | null>;
   input: string; setInput: (s: string) => void;
-  role: string; region: string; phase: string;
+  region: string;
   onSubmit: (e: FormEvent) => void;
   citedSlugs: Set<string>;
 }) {
@@ -622,7 +284,7 @@ function KbTab(props: {
         <div ref={props.scrollRef} className="scroll">
           <div className="thread">
             {props.turns.length === 0 && <KbWelcome onPick={props.setInput} />}
-            {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
+            {props.turns.map((t, i) => <KbTurnBubble key={i} turn={t} />)}
             {props.sending && <div className="thinking">retrieving…</div>}
             {props.error && <div className="error-bubble">{props.error}</div>}
           </div>
@@ -672,517 +334,28 @@ function KbWelcome({ onPick }: { onPick: (s: string) => void }) {
       </p>
       <div className="suggestions">
         {suggestions.map((s) => (
-          <button key={s} type="button" className="suggestion" onClick={() => onPick(s)}>
-            {s}
-          </button>
+          <button key={s} type="button" className="suggestion" onClick={() => onPick(s)}>{s}</button>
         ))}
       </div>
     </div>
   );
 }
 
-// ── Document repository panel ─────────────────────────────────────────
-
-function DocsPanel({ region, citedSlugs }: { region: string; citedSlugs: Set<string> }) {
-  const [sources, setSources] = useState<Source[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/sources")
-      .then((r) => r.json())
-      .then((d) => setSources(d.sources))
-      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
-  }, []);
-
-  // Filter rules:
-  //   - region empty                → show all
-  //   - region la-mojana | putumayo → show that region + national + global
-  //   - region generic              → show all (the KB's "generic" maps to no doc filter)
-  const visible = useMemo(() => {
-    if (!sources) return [] as Source[];
-    if (!region || region === "generic") return sources;
-    return sources.filter((s) => s.region === region || s.region === "national" || s.region === "global");
-  }, [sources, region]);
-
-  // When citations exist, sort cited first (within filtered set).
-  const sorted = useMemo(() => {
-    return [...visible].sort((a, b) => {
-      const ac = citedSlugs.has(a.slug) ? 0 : 1;
-      const bc = citedSlugs.has(b.slug) ? 0 : 1;
-      if (ac !== bc) return ac - bc;
-      return b.year - a.year;
-    });
-  }, [visible, citedSlugs]);
-
-  return (
-    <div className="docs-panel">
-      <header className="docs-panel-head">
-        <p className="docs-panel-title">Source documents</p>
-        <p className="docs-panel-meta">
-          {sources
-            ? `${visible.length} of ${sources.length} shown${region ? ` · region: ${region}` : ""}${citedSlugs.size ? ` · ${citedSlugs.size} cited` : ""}`
-            : "loading…"}
-        </p>
-      </header>
-      <div className="docs-list">
-        {error && <div className="error-bubble">{error}</div>}
-        {!sources && <div className="thinking">loading sources…</div>}
-        {sorted.map((s) => (
-          <SourceCard key={s.slug} source={s} cited={citedSlugs.has(s.slug)} />
-        ))}
+function KbTurnBubble({ turn }: { turn: Turn }) {
+  if (turn.kind === "text") {
+    const filterLine = [turn.role, turn.region, turn.phase].filter(Boolean).join(" · ");
+    return (
+      <div className="user-bubble">
+        <div className="user-bubble-text">{turn.text}</div>
+        {filterLine && <p className="user-bubble-meta">filtering by {filterLine}</p>}
       </div>
-    </div>
-  );
-}
-
-function SourceCard({ source, cited }: { source: Source; cited: boolean }) {
-  return (
-    <article className={`source-card${cited ? " source-card-cited" : ""}`}>
-      <header>
-        <span className={`region-pill region-${source.region}`}>{source.region}</span>
-        <span className="source-meta">{source.year} · {source.publisher}</span>
-        {cited && <span className="cited-pill">cited</span>}
-      </header>
-      <h3>{source.title}</h3>
-      <p>{source.summary}</p>
-      <p className="source-slug">{source.slug}.md</p>
-    </article>
-  );
-}
-
-// ── Flood tab ─────────────────────────────────────────────────────────
-
-function FloodTab(props: {
-  turns: Turn[]; sending: boolean; error: string | null;
-  scrollRef: React.RefObject<HTMLDivElement | null>;
-  onSendSampleAlert: (s: FloodSample, message?: string) => void;
-  onRunAndPublish: (s: FloodSample) => void;
-  onSendCustomAlert: (p: {
-    region: "la-mojana" | "putumayo";
-    location_label: string;
-    severity: "minor" | "moderate" | "severe";
-    message?: string;
-    lon?: number;
-    lat?: number;
-    previews?: Record<FloodField, string>;
-  }) => void;
-  onRunUploadedModel: (before: File, after: File) => void;
-}) {
-  const [samples, setSamples] = useState<FloodSample[] | null>(null);
-
-  useEffect(() => {
-    fetch("/api/samples")
-      .then((r) => r.json())
-      .then((d) => setSamples(d.samples))
-      .catch(() => {});
-  }, []);
-
-  return (
-    <div className="flood-tab">
-      <div ref={props.scrollRef} className="scroll">
-        <div className="thread">
-          {props.turns.length === 0 && (
-            <FloodWelcome
-              samples={samples}
-              sending={props.sending}
-              onSendSampleAlert={props.onSendSampleAlert}
-              onRunAndPublish={props.onRunAndPublish}
-              onSendCustomAlert={props.onSendCustomAlert}
-              onRunUploadedModel={props.onRunUploadedModel}
-            />
-          )}
-          {props.turns.length > 0 && samples && !props.sending && (
-            <SampleStrip samples={samples} onSendSampleAlert={props.onSendSampleAlert} />
-          )}
-          {props.turns.map((t, i) => <TurnBubble key={i} turn={t} />)}
-          {props.sending && <div className="thinking">publishing alert…</div>}
-          {props.error && <div className="error-bubble">{props.error}</div>}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FloodWelcome({
-  samples, sending, onSendSampleAlert, onRunAndPublish, onSendCustomAlert, onRunUploadedModel,
-}: {
-  samples: FloodSample[] | null;
-  sending: boolean;
-  onSendSampleAlert: (s: FloodSample, message?: string) => void;
-  onRunAndPublish: (s: FloodSample) => void;
-  onSendCustomAlert: (p: {
-    region: "la-mojana" | "putumayo";
-    location_label: string;
-    severity: "minor" | "moderate" | "severe";
-    message?: string;
-    lon?: number;
-    lat?: number;
-    previews?: Record<FloodField, string>;
-  }) => void;
-  onRunUploadedModel: (before: File, after: File) => void;
-}) {
-  return (
-    <div className="welcome welcome-wide">
-      <p className="welcome-title">Satellite flood detection · alert simulator</p>
-      <p className="welcome-sub">
-        Click <strong>📡 Send alert</strong> on either scenario below to publish a flood
-        alert with the dataset's verified labels — desktop app picks it up
-        on the next poll. The "Run model" link runs the bundled LFM2-VL
-        first; if its labels pass the threshold, the alert publishes
-        automatically.
-      </p>
-      {samples && (
-        <div className="sample-grid">
-          {samples.map((s) => (
-            <SampleCard
-              key={s.id}
-              sample={s}
-              sending={sending}
-              onSendAlert={onSendSampleAlert}
-              onRunModel={onRunAndPublish}
-            />
-          ))}
-        </div>
-      )}
-      <UploadSection
-        sending={sending}
-        onPublish={onSendCustomAlert}
-        onRunModel={onRunUploadedModel}
-      />
-    </div>
-  );
-}
-
-function SampleCard({ sample, sending, onSendAlert, onRunModel }: {
-  sample: FloodSample;
-  sending: boolean;
-  onSendAlert: (s: FloodSample, message?: string) => void;
-  onRunModel: (s: FloodSample) => void;
-}) {
-  return (
-    <article className="sample-card sample-card-cta">
-      <div className="sample-thumbs">
-        <img src={sample.paths.pre_rgb} alt="pre RGB" />
-        <img src={sample.paths.cur_rgb} alt="current RGB" />
-      </div>
-      <div className="sample-text">
-        <span className={`region-pill region-${sample.region}`}>{sample.region}</span>
-        <h4>{sample.event_label}</h4>
-        <p className="sample-loc">{sample.location_label} · {sample.lat.toFixed(3)}, {sample.lon.toFixed(3)}</p>
-        <p className="sample-desc">{sample.description}</p>
-        <div className="sample-actions">
-          <button
-            type="button"
-            onClick={() => onSendAlert(sample)}
-            disabled={sending}
-            className="primary-btn sample-run-btn"
-          >
-            {sending ? "publishing…" : "📡  Send alert"}
-          </button>
-          <button
-            type="button"
-            onClick={() => onRunModel(sample)}
-            disabled={sending}
-            className="ghost-link"
-          >
-            or run the model first
-          </button>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function SampleStrip({
-  samples, onSendSampleAlert,
-}: {
-  samples: FloodSample[];
-  onSendSampleAlert: (s: FloodSample, message?: string) => void;
-}) {
-  return (
-    <div className="sample-strip">
-      <span className="sample-strip-label">Send another:</span>
-      {samples.map((s) => (
-        <button
-          key={s.id} type="button"
-          onClick={() => onSendSampleAlert(s)}
-          className="sample-strip-btn"
-          title={s.description}
-        >
-          📡 {s.event_label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-// ── Upload section ────────────────────────────────────────────────────
-
-function UploadSection({
-  sending, onPublish, onRunModel,
-}: {
-  sending: boolean;
-  onPublish: (p: {
-    region: "la-mojana" | "putumayo";
-    location_label: string;
-    severity: "minor" | "moderate" | "severe";
-    message?: string;
-    lon?: number;
-    lat?: number;
-    previews?: Record<FloodField, string>;
-  }) => void;
-  onRunModel: (before: File, after: File) => void;
-}) {
-  const [before, setBefore] = useState<File | null>(null);
-  const [after, setAfter] = useState<File | null>(null);
-  const [region, setRegion] = useState<"la-mojana" | "putumayo">("la-mojana");
-  const [locationLabel, setLocationLabel] = useState("Custom location");
-  const [severity, setSeverity] = useState<"minor" | "moderate" | "severe">("moderate");
-  const [message, setMessage] = useState("");
-  const [lat, setLat] = useState("");
-  const [lon, setLon] = useState("");
-
-  const beforePreview = before ? URL.createObjectURL(before) : undefined;
-  const afterPreview  = after  ? URL.createObjectURL(after)  : undefined;
-  const havePair = before && after;
-
-  function publish() {
-    if (!locationLabel.trim()) return;
-    const previews = before && after && beforePreview && afterPreview ? {
-      pre_rgb:  beforePreview,
-      pre_swir: beforePreview,
-      cur_rgb:  afterPreview,
-      cur_swir: afterPreview,
-    } as Record<FloodField, string> : undefined;
-    onPublish({
-      region,
-      location_label: locationLabel.trim(),
-      severity,
-      message: message.trim() || undefined,
-      lat: lat ? parseFloat(lat) : undefined,
-      lon: lon ? parseFloat(lon) : undefined,
-      previews,
-    });
+    );
   }
-
-  return (
-    <section className="upload-section">
-      <div className="upload-head">
-        <h3>Or upload your own pair</h3>
-        <p>Drop a before / after image. Run the flood model to see what it
-        outputs, or send a manual alert directly with the severity you set
-        below — useful for cases the satellite hasn't caught yet.</p>
-      </div>
-      <div className="upload-grid">
-        <UploadSlot label="Before" file={before} preview={beforePreview} onChange={setBefore} />
-        <UploadSlot label="After"  file={after}  preview={afterPreview}  onChange={setAfter} />
-      </div>
-      <div className="upload-fields">
-        <label>
-          <span>Location</span>
-          <input
-            type="text"
-            value={locationLabel}
-            onChange={(e) => setLocationLabel(e.target.value)}
-            placeholder="e.g. Vereda Sincelejito, San Marcos"
-          />
-        </label>
-        <label>
-          <span>Region</span>
-          <select value={region} onChange={(e) => setRegion(e.target.value as never)}>
-            <option value="la-mojana">La Mojana</option>
-            <option value="putumayo">Putumayo</option>
-          </select>
-        </label>
-        <label>
-          <span>Severity</span>
-          <select value={severity} onChange={(e) => setSeverity(e.target.value as never)}>
-            <option value="minor">minor</option>
-            <option value="moderate">moderate</option>
-            <option value="severe">severe</option>
-          </select>
-        </label>
-        <label>
-          <span>Lat (optional)</span>
-          <input type="text" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="8.25" />
-        </label>
-        <label>
-          <span>Lon (optional)</span>
-          <input type="text" value={lon} onChange={(e) => setLon(e.target.value)} placeholder="-74.71" />
-        </label>
-      </div>
-      <label className="upload-message">
-        <span>Message (optional)</span>
-        <textarea
-          rows={2}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Water rising past the bridge near the school. Need evacuation transport at the polideportivo."
-        />
-      </label>
-      <div className="upload-actions">
-        <button
-          type="button"
-          onClick={() => havePair && onRunModel(before!, after!)}
-          disabled={sending || !havePair}
-          className="ghost-btn upload-run-btn"
-          title={havePair ? "Run lfm2-flood on the uploaded pair" : "Upload a before + after image first"}
-        >
-          {sending ? "running…" : "🛰  Run flood model"}
-        </button>
-        <button
-          type="button"
-          onClick={publish}
-          disabled={sending || !locationLabel.trim()}
-          className="primary-btn upload-publish-btn"
-        >
-          {sending ? "publishing…" : "📡  Send manual alert"}
-        </button>
-      </div>
-      <p className="upload-note">
-        The flood model trained on 4 Sentinel-2 bands (RGB + SWIR, pre + current).
-        Uploads with just 2 RGB tiles still run — the SWIR slots are duplicated
-        from the RGB pair, so output quality is lower than the pre-loaded scenarios.
-      </p>
-    </section>
-  );
-}
-
-function UploadSlot({ label, file, preview, onChange }: {
-  label: string;
-  file: File | null;
-  preview: string | undefined;
-  onChange: (f: File | null) => void;
-}) {
-  const [dragOver, setDragOver] = useState(false);
-
-  function handleDrop(e: React.DragEvent<HTMLLabelElement>) {
-    e.preventDefault();
-    setDragOver(false);
-    const f = e.dataTransfer.files?.[0];
-    if (!f) return;
-    if (!f.type.startsWith("image/")) return;
-    onChange(f);
-  }
-
-  return (
-    <label
-      className={`upload-slot${dragOver ? " upload-slot-dragover" : ""}`}
-      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; }}
-      onDragEnter={(e) => { e.preventDefault(); setDragOver(true); }}
-      onDragLeave={(e) => { e.preventDefault(); setDragOver(false); }}
-      onDrop={handleDrop}
-    >
-      <div className="upload-slot-tile">
-        {preview
-          ? <img src={preview} alt={label} />
-          : <span className="upload-slot-placeholder">
-              {label}<br/>
-              <span className="upload-slot-hint">drop image or click</span>
-            </span>}
-      </div>
-      <span className="upload-slot-label">{label}{file ? ` · ${file.name.slice(0, 18)}` : ""}</span>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
-      />
-    </label>
-  );
-}
-
-function SamplePicker({ samples, activeSample, onPick }: {
-  samples: FloodSample[]; activeSample: string | undefined;
-  onPick: (s: FloodSample) => void;
-}) {
-  return (
-    <div className="sample-picker">
-      <span className="sample-picker-label">Try a sample:</span>
-      {samples.map((s) => (
-        <button
-          key={s.id}
-          type="button"
-          onClick={() => onPick(s)}
-          className={`sample-picker-btn${activeSample === s.id ? " sample-picker-btn-active" : ""}`}
-          title={s.description}
-        >
-          {s.event_label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function FloodSlot({
-  slot, preview, onAttach,
-}: {
-  slot: { field: FloodField; label: string };
-  preview: string | undefined;
-  onAttach: (field: FloodField, file: File | null) => void;
-}) {
-  return (
-    <label className="flood-slot">
-      <div className="flood-slot-tile">
-        {preview
-          ? <img src={preview} alt={slot.field} />
-          : <span className="flood-slot-placeholder">{slot.label}<br/>+</span>}
-      </div>
-      <span className="flood-slot-label">{slot.label}</span>
-      <input
-        type="file"
-        accept="image/png"
-        onChange={(e) => onAttach(slot.field, e.target.files?.[0] ?? null)}
-      />
-    </label>
-  );
-}
-
-// ── Bubbles ───────────────────────────────────────────────────────────
-
-function TurnBubble({ turn }: { turn: Turn }) {
-  if (turn.kind === "text") return <UserTextBubble t={turn} />;
-  if (turn.kind === "flood-submit") return <UserFloodBubble t={turn} />;
-  return <AssistantBubble t={turn} />;
-}
-
-function UserTextBubble({ t }: { t: UserText }) {
-  const filterLine = [t.role, t.region, t.phase].filter(Boolean).join(" · ");
-  return (
-    <div className="user-bubble">
-      <div className="user-bubble-text">{t.text}</div>
-      {filterLine && <p className="user-bubble-meta">filtering by {filterLine}</p>}
-    </div>
-  );
-}
-
-function UserFloodBubble({ t }: { t: UserFlood }) {
-  return (
-    <div className="user-bubble user-bubble-flood">
-      {t.sampleId && <p className="user-bubble-meta">sample: {t.sampleId}</p>}
-      <div className="user-flood-grid">
-        {FLOOD_SLOTS.map((s) => (
-          <div key={s.field} className="user-flood-tile">
-            <img src={t.previews[s.field]} alt={s.field} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AssistantBubble({ t }: { t: AssistantTurn }) {
-  const p = t.payload;
+  const p = turn.payload;
   if (p.kind === "error") {
     return <div className="assistant-bubble assistant-error">{p.error}</div>;
   }
   if (p.kind === "qa") return <QaResult matches={p.matches} />;
-  if (p.kind === "flood") {
-    return p.ok
-      ? <FloodResult labels={p.labels} latencyMs={p.latency_ms} />
-      : <div className="assistant-bubble assistant-error">flood detection failed: {p.error}</div>;
-  }
-  if (p.kind === "alert-published") return <AlertPublishedBubble alert={p.alert} />;
-  if (p.kind === "alert-rejected") return <AlertRejectedBubble reason={p.reason} />;
   return null;
 }
 
@@ -1228,77 +401,438 @@ function QaResult({ matches }: { matches: QaMatch[] }) {
   );
 }
 
-function FloodResult({ labels, latencyMs }: { labels: FloodLabels; latencyMs: number }) {
-  const sevClass = `severity-${labels.flood_severity}`;
+// ── Documents panel (right side of KB tab) ────────────────────────────
+
+function DocsPanel({ region, citedSlugs }: { region: string; citedSlugs: Set<string> }) {
+  const [sources, setSources] = useState<Source[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    fetch("/api/sources")
+      .then((r) => r.json())
+      .then((d) => setSources(d.sources))
+      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
+  }, []);
+  const visible = useMemo(() => {
+    if (!sources) return [] as Source[];
+    if (!region || region === "generic") return sources;
+    return sources.filter((s) => s.region === region || s.region === "national" || s.region === "global");
+  }, [sources, region]);
+  const sorted = useMemo(() => {
+    return [...visible].sort((a, b) => {
+      const ac = citedSlugs.has(a.slug) ? 0 : 1;
+      const bc = citedSlugs.has(b.slug) ? 0 : 1;
+      if (ac !== bc) return ac - bc;
+      return b.year - a.year;
+    });
+  }, [visible, citedSlugs]);
   return (
-    <div className="assistant-bubble flood-bubble">
-      <div className="flood-bubble-head">
-        <span>flood detection · lfm2-flood</span>
-        <span className="flood-latency">{latencyMs} ms</span>
-      </div>
-      <div className="flood-headline">
-        <span className={`flood-verdict${labels.flood_present ? " flood-yes" : ""}`}>
-          {labels.flood_present ? "FLOOD" : "no flood"}
-        </span>
-        <span className={`flood-severity ${sevClass}`}>severity: {labels.flood_severity}</span>
-        <span className="flood-coverage">water {labels.water_coverage_pct_estimate}</span>
-      </div>
-      {labels.image_quality_limited && (
-        <div className="flood-warn">⚠ image quality limited — treat other fields as low-confidence</div>
-      )}
-      <div className="flood-fields">
-        <Field label="populated area">{yn(labels.populated_area_affected)}</Field>
-        <Field label="infrastructure">{yn(labels.infrastructure_at_risk)}</Field>
-        <Field label="river overflow">{yn(labels.river_overflow_visible)}</Field>
-        <Field label="quality limited">{yn(labels.image_quality_limited)}</Field>
+    <div className="docs-panel">
+      <header className="docs-panel-head">
+        <p className="docs-panel-title">Source documents</p>
+        <p className="docs-panel-meta">
+          {sources
+            ? `${visible.length} of ${sources.length} shown${region ? ` · region: ${region}` : ""}${citedSlugs.size ? ` · ${citedSlugs.size} cited` : ""}`
+            : "loading…"}
+        </p>
+      </header>
+      <div className="docs-list">
+        {error && <div className="error-bubble">{error}</div>}
+        {!sources && <div className="thinking">loading sources…</div>}
+        {sorted.map((s) => (
+          <article key={s.slug} className={`source-card${citedSlugs.has(s.slug) ? " source-card-cited" : ""}`}>
+            <header>
+              <span className={`region-pill region-${s.region}`}>{s.region}</span>
+              <span className="source-meta">{s.year} · {s.publisher}</span>
+              {citedSlugs.has(s.slug) && <span className="cited-pill">cited</span>}
+            </header>
+            <h3>{s.title}</h3>
+            <p>{s.summary}</p>
+            <p className="source-slug">{s.slug}.md</p>
+          </article>
+        ))}
       </div>
     </div>
   );
 }
 
-function AlertPublishedBubble({ alert }: { alert: AlertRecord }) {
-  const ts = new Date(alert.timestamp);
-  const tauriCurl = `curl 'https://humaid.app/api/alerts?region=${alert.region}&since=${encodeURIComponent(new Date(ts.getTime() - 1000).toISOString())}'`;
+// ── Flood tab — 2-column workbench ────────────────────────────────────
+
+function FloodTab() {
+  const [recentAlerts, setRecentAlerts] = useState<AlertRecord[]>([]);
+  function appendAlert(a: AlertRecord) {
+    setRecentAlerts((p) => [a, ...p].slice(0, 10));
+  }
   return (
-    <div className="assistant-bubble alert-bubble">
-      <div className="alert-bubble-head">
-        <span className="alert-id">📡 {alert.id}</span>
-        <span className="alert-ts">{ts.toLocaleString()}</span>
+    <div className="flood-board">
+      <div className="flood-board-cols">
+        <ModelTester onAlertPublished={appendAlert} />
+        <CuratedAlerts onAlertPublished={appendAlert} />
       </div>
-      <div className="alert-thumb-wrap">
-        <img src={alert.thumbnail_url} alt={`${alert.location_label} after`} className="alert-thumb" />
-      </div>
-      <div className="alert-headline">
-        <span className={`alert-severity alert-severity-${alert.severity}`}>{alert.severity.toUpperCase()}</span>
-        <span className="alert-location">{alert.location_label}</span>
-      </div>
-      <p className="alert-coords">
-        📍 {alert.coordinates.lat.toFixed(4)}°, {alert.coordinates.lon.toFixed(4)}° · region: {alert.region} · source: {alert.source.kind}
-      </p>
-      {alert.message && <p className="alert-message">"{alert.message}"</p>}
-      {alert.recommended_qa_ids.length > 0 && (
-        <div className="alert-qa">
-          <p className="alert-qa-label">Recommended Q&amp;A (auto-opens on the desktop app):</p>
-          <p className="alert-qa-ids">
-            {alert.recommended_qa_ids.map((id) => <span key={id} className="pill">{id}</span>)}
-          </p>
-        </div>
-      )}
-      <details className="alert-curl">
-        <summary>desktop app polling endpoint</summary>
-        <pre>{tauriCurl}</pre>
-      </details>
+      <RecentAlertsLog alerts={recentAlerts} />
     </div>
   );
 }
 
-function AlertRejectedBubble({ reason }: { reason: string }) {
+// ── Column 1: model tester ────────────────────────────────────────────
+
+interface ModelStatus {
+  phase: "idle" | "running" | "labels" | "publishing" | "published" | "no-alert" | "error";
+  labels?: FloodLabels;
+  latencyMs?: number;
+  alert?: AlertRecord;
+  reason?: string;
+  error?: string;
+}
+
+function ModelTester({ onAlertPublished }: { onAlertPublished: (a: AlertRecord) => void }) {
+  const [before, setBefore] = useState<File | null>(null);
+  const [after, setAfter]   = useState<File | null>(null);
+  const [region, setRegion] = useState<"la-mojana" | "putumayo">("la-mojana");
+  const [locationLabel, setLocationLabel] = useState("Custom location");
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<ModelStatus>({ phase: "idle" });
+
+  const beforePreview = useMemo(() => before ? URL.createObjectURL(before) : undefined, [before]);
+  const afterPreview  = useMemo(() => after  ? URL.createObjectURL(after)  : undefined, [after]);
+
+  async function run() {
+    if (!before || !after || status.phase === "running" || status.phase === "publishing") return;
+    setStatus({ phase: "running" });
+    try {
+      const form = new FormData();
+      form.append("pre_rgb",  before, "pre_rgb.png");
+      form.append("pre_swir", before, "pre_swir.png");
+      form.append("cur_rgb",  after,  "cur_rgb.png");
+      form.append("cur_swir", after,  "cur_swir.png");
+      const resp = await fetch("/api/chat", { method: "POST", body: form });
+      const payload = (await resp.json()) as ChatPayload;
+      if (payload.kind !== "flood" || !payload.ok) {
+        const err = payload.kind === "flood" ? payload.error
+                  : payload.kind === "error" ? payload.error
+                  : "unknown error";
+        setStatus({ phase: "error", error: err });
+        return;
+      }
+      const labels = payload.labels;
+      const eligible = labels.flood_present && labels.populated_area_affected && !labels.image_quality_limited;
+      if (!eligible) {
+        const reason = !labels.flood_present              ? "model didn't detect a flood"
+                     : !labels.populated_area_affected    ? "no populated area visible"
+                     :                                       "image quality limited";
+        setStatus({ phase: "no-alert", labels, latencyMs: payload.latency_ms, reason });
+        return;
+      }
+
+      // Auto-publish.
+      setStatus({ phase: "publishing", labels, latencyMs: payload.latency_ms });
+      const pubResp = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          manual: true,
+          region,
+          location_label: locationLabel.trim() || "Custom location",
+          severity: labels.flood_severity === "none" ? "minor" : labels.flood_severity,
+          message: message.trim() || undefined,
+          lat: lat ? parseFloat(lat) : undefined,
+          lon: lon ? parseFloat(lon) : undefined,
+          labels,
+        }),
+      });
+      const data = await pubResp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
+      if (data.ok && data.alert) {
+        setStatus({ phase: "published", labels, latencyMs: payload.latency_ms, alert: data.alert });
+        onAlertPublished(data.alert);
+      } else {
+        setStatus({ phase: "error", labels, error: data.error ?? "publish failed" });
+      }
+    } catch (err) {
+      setStatus({ phase: "error", error: err instanceof Error ? err.message : String(err) });
+    }
+  }
+
+  function clear() {
+    setBefore(null); setAfter(null);
+    setStatus({ phase: "idle" });
+  }
+
+  const busy = status.phase === "running" || status.phase === "publishing";
+  const canRun = !!before && !!after && !busy;
+
   return (
-    <div className="assistant-bubble assistant-error">
-      Alert not published: {reason}
+    <section className="board-col board-col-tester">
+      <header className="col-head">
+        <h2>Test the flood model</h2>
+        <p>Drop a before / after pair. The model runs onboard inference; if a populated-area flood is detected, the alert publishes automatically.</p>
+      </header>
+
+      <div className="upload-grid">
+        <UploadSlot label="Before" file={before} preview={beforePreview} onChange={setBefore} />
+        <UploadSlot label="After"  file={after}  preview={afterPreview}  onChange={setAfter} />
+      </div>
+
+      <div className="upload-fields">
+        <label>
+          <span>Location</span>
+          <input type="text" value={locationLabel} onChange={(e) => setLocationLabel(e.target.value)}
+            placeholder="e.g. Vereda Sincelejito, San Marcos" />
+        </label>
+        <label>
+          <span>Region</span>
+          <select value={region} onChange={(e) => setRegion(e.target.value as never)}>
+            <option value="la-mojana">La Mojana</option>
+            <option value="putumayo">Putumayo</option>
+          </select>
+        </label>
+        <label>
+          <span>Lat</span>
+          <input type="text" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="8.25" />
+        </label>
+        <label>
+          <span>Lon</span>
+          <input type="text" value={lon} onChange={(e) => setLon(e.target.value)} placeholder="-74.71" />
+        </label>
+      </div>
+      <label className="upload-message">
+        <span>Message (optional)</span>
+        <textarea
+          rows={2}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Water rising past the bridge near the school."
+        />
+      </label>
+
+      <div className="upload-actions">
+        <button type="button" onClick={run} disabled={!canRun} className="primary-btn">
+          {status.phase === "running"    ? "🛰  running model…"
+            : status.phase === "publishing" ? "📡  publishing alert…"
+            : "🛰  Run model + publish if alert detected"}
+        </button>
+        {(status.phase !== "idle" && status.phase !== "running" && status.phase !== "publishing") && (
+          <button type="button" onClick={clear} className="ghost-btn">clear</button>
+        )}
+      </div>
+
+      <ModelResult status={status} />
+    </section>
+  );
+}
+
+function UploadSlot({ label, file, preview, onChange }: {
+  label: string;
+  file: File | null;
+  preview: string | undefined;
+  onChange: (f: File | null) => void;
+}) {
+  const [dragOver, setDragOver] = useState(false);
+  function handleDrop(e: React.DragEvent<HTMLLabelElement>) {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith("image/")) return;
+    onChange(f);
+  }
+  return (
+    <label
+      className={`upload-slot${dragOver ? " upload-slot-dragover" : ""}`}
+      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; }}
+      onDragEnter={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={(e) => { e.preventDefault(); setDragOver(false); }}
+      onDrop={handleDrop}
+    >
+      <div className="upload-slot-tile">
+        {preview
+          ? <img src={preview} alt={label} />
+          : <span className="upload-slot-placeholder">
+              {label}<br/>
+              <span className="upload-slot-hint">drop image or click</span>
+            </span>}
+      </div>
+      <span className="upload-slot-label">{label}{file ? ` · ${file.name.slice(0, 18)}` : ""}</span>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+      />
+    </label>
+  );
+}
+
+function ModelResult({ status }: { status: ModelStatus }) {
+  if (status.phase === "idle") {
+    return (
+      <div className="result result-idle">
+        Drop a before / after pair above to run the model.
+      </div>
+    );
+  }
+  if (status.phase === "running") {
+    return <div className="result result-busy">🛰 running lfm2-flood — first call on a fresh isolate takes ~60 s.</div>;
+  }
+  if (status.phase === "publishing") {
+    return <div className="result result-busy">📡 threshold met — publishing alert…</div>;
+  }
+  if (status.phase === "error") {
+    return <div className="result result-error">Error: {status.error}</div>;
+  }
+  if (status.phase === "no-alert" && status.labels) {
+    return (
+      <div className="result result-noalert">
+        <p className="result-head">
+          <span className="result-tag">no alert</span>
+          <span>· {status.reason}</span>
+          {status.latencyMs && <span className="result-latency">{status.latencyMs} ms</span>}
+        </p>
+        <FloodLabelGrid labels={status.labels} />
+      </div>
+    );
+  }
+  if (status.phase === "published" && status.alert && status.labels) {
+    const a = status.alert;
+    return (
+      <div className="result result-published">
+        <p className="result-head">
+          <span className="result-tag tag-pub">📡 alert published</span>
+          <span className="result-id">{a.id}</span>
+          {status.latencyMs && <span className="result-latency">{status.latencyMs} ms</span>}
+        </p>
+        <FloodLabelGrid labels={status.labels} />
+        <p className="result-meta">
+          {a.severity.toUpperCase()} · {a.location_label} · {a.coordinates.lat.toFixed(3)}, {a.coordinates.lon.toFixed(3)}
+        </p>
+      </div>
+    );
+  }
+  return null;
+}
+
+function FloodLabelGrid({ labels }: { labels: FloodLabels }) {
+  return (
+    <div className="label-grid">
+      <Field label="flood">{labels.flood_present ? "yes" : "no"}</Field>
+      <Field label="severity">{labels.flood_severity}</Field>
+      <Field label="water">{labels.water_coverage_pct_estimate}</Field>
+      <Field label="populated">{yn(labels.populated_area_affected)}</Field>
+      <Field label="infra at risk">{yn(labels.infrastructure_at_risk)}</Field>
+      <Field label="river overflow">{yn(labels.river_overflow_visible)}</Field>
+      <Field label="quality limited">{yn(labels.image_quality_limited)}</Field>
     </div>
   );
 }
+
+// ── Column 2: curated test alerts ─────────────────────────────────────
+
+function CuratedAlerts({ onAlertPublished }: { onAlertPublished: (a: AlertRecord) => void }) {
+  const [samples, setSamples] = useState<FloodSample[] | null>(null);
+  useEffect(() => {
+    fetch("/api/samples").then((r) => r.json()).then((d) => setSamples(d.samples)).catch(() => {});
+  }, []);
+  return (
+    <section className="board-col board-col-curated">
+      <header className="col-head">
+        <h2>Curated test alerts</h2>
+        <p>Each card publishes an alert immediately using the dataset's verified ground-truth labels — no model in the loop, always succeeds.</p>
+      </header>
+      <div className="curated-list">
+        {samples?.map((s) => (
+          <CuratedCard key={s.id} sample={s} onAlertPublished={onAlertPublished} />
+        ))}
+        {!samples && <div className="thinking">loading curated alerts…</div>}
+      </div>
+    </section>
+  );
+}
+
+function CuratedCard({ sample, onAlertPublished }: {
+  sample: FloodSample;
+  onAlertPublished: (a: AlertRecord) => void;
+}) {
+  const [state, setState] = useState<{ phase: "idle" | "publishing" | "done" | "error"; alert?: AlertRecord; error?: string }>({ phase: "idle" });
+
+  async function publish() {
+    if (state.phase === "publishing") return;
+    setState({ phase: "publishing" });
+    try {
+      const resp = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sample_id: sample.id, manual: true }),
+      });
+      const data = await resp.json() as { ok: boolean; alert?: AlertRecord; error?: string };
+      if (data.ok && data.alert) {
+        setState({ phase: "done", alert: data.alert });
+        onAlertPublished(data.alert);
+      } else {
+        setState({ phase: "error", error: data.error ?? "publish failed" });
+      }
+    } catch (err) {
+      setState({ phase: "error", error: err instanceof Error ? err.message : String(err) });
+    }
+  }
+
+  return (
+    <article className="curated-card">
+      <img className="curated-thumb" src={sample.thumbnail} alt={sample.event_label} />
+      <div className="curated-text">
+        <header>
+          <span className={`region-pill region-${sample.region}`}>{sample.region}</span>
+          <span className="curated-severity sev-{sample.ground_truth_labels.flood_severity}">
+            {sample.ground_truth_labels.flood_severity}
+          </span>
+        </header>
+        <h4>{sample.event_label}</h4>
+        <p className="curated-loc">{sample.location_label} · {sample.lat.toFixed(3)}, {sample.lon.toFixed(3)}</p>
+        <p className="curated-desc">{sample.description}</p>
+        {state.phase === "done" && state.alert && (
+          <p className="curated-status curated-status-done">✓ {state.alert.id} published</p>
+        )}
+        {state.phase === "error" && (
+          <p className="curated-status curated-status-error">✗ {state.error}</p>
+        )}
+        <button
+          type="button"
+          onClick={publish}
+          disabled={state.phase === "publishing"}
+          className="primary-btn curated-publish-btn"
+        >
+          {state.phase === "publishing" ? "publishing…" : state.phase === "done" ? "📡 Publish another" : "📡 Send alert"}
+        </button>
+      </div>
+    </article>
+  );
+}
+
+// ── Recent alerts log (bottom strip on flood tab) ─────────────────────
+
+function RecentAlertsLog({ alerts }: { alerts: AlertRecord[] }) {
+  if (alerts.length === 0) return null;
+  return (
+    <section className="recent-log">
+      <h3>Recently published <span className="muted">· this session</span></h3>
+      <div className="recent-list">
+        {alerts.map((a) => (
+          <article key={a.id} className="recent-card">
+            <img src={a.thumbnail_url} alt={a.location_label} />
+            <div className="recent-meta">
+              <span className={`recent-sev recent-sev-${a.severity}`}>{a.severity.toUpperCase()}</span>
+              <span className="recent-id">{a.id}</span>
+              <span className="recent-loc">{a.location_label}</span>
+              <span className="recent-coords">{a.coordinates.lat.toFixed(3)}, {a.coordinates.lon.toFixed(3)}</span>
+              <span className="recent-source">source: {a.source.kind}</span>
+              {a.message && <span className="recent-msg">"{a.message.slice(0, 60)}"</span>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ── Small atoms ───────────────────────────────────────────────────────
 
 function yn(b: boolean) { return b ? "yes" : "no"; }
 
