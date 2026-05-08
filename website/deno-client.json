@@ -1,0 +1,15 @@
+{
+  "//": "Used by `deno bundle --config deno-client.json`. Separate from deno.json because the client needs React's JSX runtime, not Hono's.",
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "lib": ["dom", "dom.iterable", "esnext"]
+  },
+  "imports": {
+    "react": "npm:react@^19.0.0",
+    "react/jsx-runtime": "npm:react@^19.0.0/jsx-runtime",
+    "react-dom": "npm:react-dom@^19.0.0",
+    "react-dom/client": "npm:react-dom@^19.0.0/client"
+  }
+}

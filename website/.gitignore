@@ -1,0 +1,9 @@
+# Downloaded by `deno task fetch-binaries` — re-fetched on Deno Deploy build.
+# Don't commit binaries / GGUFs / mmproj — they're hundreds of MB each.
+bin/
+
+# Deno-managed npm shim populated by `nodeModulesDir: "auto"`.
+node_modules/
+
+# Stale staging dir if a fetch was interrupted.
+bin/.staging/
