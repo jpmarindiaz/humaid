@@ -171,10 +171,15 @@ console.log('\n=== 3. Convert HF → mmproj GGUF (F16) ===')
 if (!args.force && (await exists(mmprojPath))) {
   console.log(`(reusing existing ${mmprojPath}; pass --force to rebuild)`)
 } else {
+  // Upstream convert_hf_to_gguf.py --mmproj fails on leap-finetune's full-FT
+  // merged checkpoints because they contain a top-level lm_head.weight that
+  // the MmprojModel filter only catches via "language_model." prefix. Our
+  // wrapper monkeypatches the LFM2VLModel filter to also drop lm_head.*.
+  // See scripts/convert_mmproj_lfm2vl.py for the why.
   await run([
     'uv', 'run',
     ...pyDeps,
-    'python3', converter,
+    'python3', 'scripts/convert_mmproj_lfm2vl.py',
     sourceDir,
     '--outfile', mmprojPath,
     '--outtype', 'f16',

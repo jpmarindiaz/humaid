@@ -184,10 +184,77 @@ After step 10, your `eval:compare` table should look something like (target colu
 
 The hard ceiling for the student is **inter-labeler agreement on the ground truth** (~0.66–0.68). Beating that requires either better labelers or a tighter schema. See [`docs/05-findings.md`](docs/05-findings.md).
 
-## Common gotchas
+## What we actually ran (May 2026) — gotchas + fixes
 
-- **The base model scored 0.00 on the first run** — that was a real bug in `src/evaluate.ts` (we weren't injecting the JSON schema into the local backend's prompt; only the Anthropic backend got it via `tool_use`). Fixed; both backends now grammar-constrain the output. If you see 0.00 again, check that `response_format: {type: 'json_schema', ...}` is being sent.
-- **Sentinel-2 cloud cover.** Wet-season tropical acquisitions are 50%+ clouded. `image_quality_limited=true` is the abstention signal — model behavior on cloudy tiles is supposed to be conservative, not hallucinated.
+The first time we ran the full pipeline end-to-end we hit five things worth flagging. None of them are blockers anymore — they're all fixed in this repo — but if you fork this and start over, here's what to expect.
+
+### 1. Image paths in the JSONL need an `image_root`
+
+Symptom: `leap-finetune` aborted with `Sample 0, message 0, content 0: image not loadable: images/.../rgb.png` during dataset validation.
+
+Cause: `build_dataset.ts` writes image paths relative to the JSONL location (`images/...`). The validator calls `PIL.Image.open("images/...")` against the container's cwd, not the JSONL's directory, so the relative path fails to resolve.
+
+Fix (already in `configs/flood_modal.yaml`):
+```yaml
+dataset:
+  path: "/finetune-flood/data/flood_train.jsonl"
+  image_root: "/finetune-flood/data"   # prepended to relative image paths
+```
+
+### 2. `convert_hf_to_gguf.py --mmproj` chokes on `lm_head.weight`
+
+Symptom: `ValueError: Can not map tensor 'lm_head.weight'` during the mmproj conversion step of `deno task package`.
+
+Cause: `leap-finetune`'s full-FT merged checkpoint un-ties `lm_head` from `embed_tokens` and saves it at the **top level** of `model.safetensors` (not under the `language_model.` prefix). The base `MmprojModel.filter_tensors` in `convert_hf_to_gguf.py` only filters out tensors with `language_model.` in the name, so the orphan `lm_head.weight` slips through and trips `map_tensor_name`.
+
+Fix: [`scripts/convert_mmproj_lfm2vl.py`](scripts/convert_mmproj_lfm2vl.py) is a small Python wrapper that imports the brewed `convert_hf_to_gguf.py` as a module, monkeypatches `LFM2VLModel.filter_tensors` to also drop top-level `lm_head.*` tensors, then forwards `sys.argv` to the upstream `main()`. `package.ts` calls our wrapper instead of the brewed script directly. Survives `brew upgrade`.
+
+### 3. OpenMP duplicate-library abort
+
+Symptom: macOS dialog `"Python ... abort() called"` after running `deno task package`. Process trace points at `Python 3.14` from `uv run --with torch`. Console error before the crash: `OMP: Error #15: Initializing libomp.dylib, but found libomp.dylib already initialized.`
+
+Cause: PyTorch's bundled `libomp.dylib` clashes with Apple's system `libomp.dylib` when both get loaded into the same Python process under `uv run`.
+
+Fix: `convert_mmproj_lfm2vl.py` sets `KMP_DUPLICATE_LIB_OK=TRUE` before importing torch. Already in the script.
+
+### 4. The base-LFM2.5 baseline reported 0.00 overall
+
+Symptom: `deno task eval --backend local` returned `overall: 0.00` for the un-fine-tuned base model. Nothing wrong with the model — every per-field accuracy was 0.
+
+Cause: `src/evaluate.ts:llamaServerBackend` was sending a prose system prompt and a "reply with JSON" instruction, but **nothing telling the model which JSON keys to emit**. The Anthropic backend forces the schema via `tool_use` with `input_schema=FLOOD_LABEL_SCHEMA`. The local backend wasn't doing the equivalent. The base LFM2.5 improvised key names like `tile_pair`, `current_window`, `swir_baseline` — all of which scored 0/7 against our schema.
+
+Fix: `evaluate.ts:llamaServerBackend` now sends `response_format: {type: 'json_schema', ...}` (llama.cpp grammar-constrains the output) plus an explicit field list in the user prompt as a fallback. With this, the same base model scored 0.44 overall.
+
+### 5. SimSat connection drops at high concurrency
+
+Symptom: `deno task fetch --concurrency 4` hits `client error (SendRequest): connection closed before message completed` part-way through.
+
+Cause: SimSat proxies to AWS Element84 STAC. With 4 concurrent windows × 4 parallel candidate probes per window = 16 simultaneous outbound requests, the Element84 endpoint occasionally drops connections.
+
+Fix: Default fetcher concurrency is 2 (windows in flight). Probes within a window stay parallel. `fetchSentinelWithRetry` does 3 retries with linear backoff for any individual call.
+
+### 6. Other known limitations (not bugs)
+
+- **Mocoa 2017 has no usable Sentinel-2 pre tile.** The pipeline manually fetches a 2017-08-15 stand-in baseline; the annotation flags this with a `note` field. See `docs/03-labeling.md`.
 - **mmproj + Ollama don't mix yet.** Ollama can't bundle the vision projector cleanly for LFM2-VL. Use `llama-server` (which `deno task serve` wraps) for vision inference.
-- **Mocoa 2017 has no usable Sentinel-2 pre tile.** The pipeline manually fetches a 2017-08 stand-in baseline; the annotation flags this.
-- **SimSat connection drops at high concurrency.** Default `--concurrency 2` for `fetch` is the sweet spot; the parallel candidate probes inside each window do the rest.
+- **Schema's hardest fields are inherently noisy.** `flood_severity` and `water_coverage_pct_estimate` are subjective enums — Opus self-consistency is 0.43 and 0.70 respectively. The student model's ceiling on these fields is the labeler's noise floor.
+
+## Reference: what we got after one run
+
+Numbers from May 2026, ~$0.50 of Modal H100 credits, ~70s of training on 88 paired samples × 3 epochs:
+
+| field | opus oracle (n=30) | sonnet oracle (n=110) | LFM2.5-VL base (n=110) | **lfm2-flood ft + real mmproj (n=110)** |
+|---|--:|--:|--:|--:|
+| valid_json | 1.00 | 1.00 | 1.00 | 1.00 |
+| fields_present | 1.00 | 1.00 | 1.00 | 1.00 |
+| flood_present | 0.67 | 0.66 | 0.66 | 0.66 |
+| flood_severity | 0.43 | 0.49 | 0.29 | 0.29 |
+| water_coverage | 0.70 | 0.62 | 0.37 | 0.35 |
+| populated_area | 0.73 | 0.69 | 0.51 | 0.51 |
+| infrastructure | 0.73 | 0.69 | 0.54 | 0.54 |
+| river_overflow | 0.67 | 0.65 | 0.60 | 0.60 |
+| `image_quality_limited` | 0.83 | 0.84 | 0.10 | **0.90** |
+| **overall** | **0.68** | 0.66 | 0.44 | **0.55** |
+| latency (s) | 3.87 | 3.74 | 0.53 | 0.53 |
+
+Key reading: **+11 points overall (0.44 → 0.55)** but the gain is concentrated in one field (`image_quality_limited`: 0.10 → 0.90). The other 6 fields essentially didn't move. With this much data the model learned the dataset's strong cloud prior, not the visual change-detection. To beat 0.55 you need 5–10× more data, ideally Sentinel-1 SAR (cloud-independent), or a tighter schema dropping the high-noise fields.

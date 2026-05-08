@@ -10,14 +10,16 @@
     "package": "deno run -A src/package.ts",
     "serve": "deno run -A src/serve.ts",
     "eval": "deno run -A --env-file=.env src/evaluate.ts",
-    "eval:compare": "deno run -A src/eval_compare.ts"
+    "eval:compare": "deno run -A src/eval_compare.ts",
+    "app": "deno run -A --env-file=.env app/server.ts"
   },
   "imports": {
     "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@^0.40.1",
     "@std/cli": "jsr:@std/cli@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.8",
     "@std/fs": "jsr:@std/fs@^1.0.5",
-    "@std/encoding": "jsr:@std/encoding@^1.0.5"
+    "@std/encoding": "jsr:@std/encoding@^1.0.5",
+    "hono": "jsr:@hono/hono@^4.6.0"
   },
   "fmt": {
     "lineWidth": 100,

@@ -11,12 +11,13 @@ model_name: "LFM2.5-VL-450M"
 training_type: "vlm_sft"
 
 dataset:
-  # Volume mounts at /finetune-flood (see modal.output_dir below). The JSONL
-  # references images by paths relative to its own directory, e.g.
-  # "images/dhaka_bangladesh/2024-08-15/rgb.png", which resolve to
-  # /finetune-flood/data/images/... at runtime.
+  # Volume mounts at /finetune-flood (see modal.output_dir below). JSONL
+  # rows reference images by relative paths like
+  # "images/mocoa/mocoa_avalancha_2017/event/baseline/rgb.png".
+  # image_root is prepended to those paths so PIL can open them.
   path: "/finetune-flood/data/flood_train.jsonl"
   type: "vlm_sft"
+  image_root: "/finetune-flood/data"
   test_size: 0.05
 
 training_config:
